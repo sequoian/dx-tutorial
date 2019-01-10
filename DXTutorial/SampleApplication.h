@@ -13,6 +13,8 @@ protected:
 	bool ProcessWindowMessages();
 
 public:
+	SampleApplication();
+	~SampleApplication();
 	void StartUp();
 	void ShutDown();
 	void Run();

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <d3d11.h>
+#include <cassert>
 
 class Graphics
 {
@@ -9,6 +10,8 @@ private:
 	ID3D11DeviceContext* m_context;
 
 public:
+	Graphics();
+	~Graphics();
 	void StartUp();
 	void ShutDown();
 	IDXGISwapChain* CreateSwapChain(HWND hwnd);

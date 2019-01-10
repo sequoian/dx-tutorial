@@ -11,6 +11,8 @@ private:
 	ID3D11RenderTargetView* m_rtv;
 
 public:
+	SampleWindow();
+	~SampleWindow();
 	PCWSTR  ClassName() const { return L"Sample Window Class"; }
 	LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	void StartUp(Graphics* graphics);

@@ -1,12 +1,29 @@
 #include "SampleApplication.h"
 
 
+SampleApplication::SampleApplication()
+{
+}
+
+
+SampleApplication::~SampleApplication()
+{
+	ShutDown();
+}
+
+
 void SampleApplication::StartUp()
 {
-	m_graphics = Graphics();
+	static bool called;
+	if (called)
+	{
+		assert(0);
+		return;
+	}
+	called = true;
+
 	m_graphics.StartUp();
 
-	m_window = SampleWindow();
 	m_window.StartUp(&m_graphics);
 
 	ShowWindow(m_window.Window(), 1);

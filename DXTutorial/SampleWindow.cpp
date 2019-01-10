@@ -1,8 +1,27 @@
 #include "SampleWindow.h"
 
 
+SampleWindow::SampleWindow()
+{
+}
+
+
+SampleWindow::~SampleWindow()
+{
+	ShutDown();
+}
+
+
 void SampleWindow::StartUp(Graphics* graphics)
 {
+	static bool called;
+	if (called)
+	{
+		assert(0);
+		return;
+	}
+	called = true;
+
 	// create window
 	Create(L"DX Tutorial", WS_OVERLAPPEDWINDOW);
 

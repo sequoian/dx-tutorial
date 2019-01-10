@@ -4,12 +4,13 @@
 class ClearSample : public SampleApplication
 {
 public:
-	void Render()
+	virtual void Render() override
 	{
 		float clearColor[4] = { 0, 1, 0.75, 1 };
 		m_graphics.ClearRenderTarget(m_window.GetRenderTargetView(), clearColor);
 	}
 };
+
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow)
 {
