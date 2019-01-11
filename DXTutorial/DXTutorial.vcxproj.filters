@@ -41,5 +41,8 @@
     <ClInclude Include="Graphics.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="WriteLog.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

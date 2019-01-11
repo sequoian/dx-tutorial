@@ -1,5 +1,6 @@
 #pragma once
 
+#include <stdio.h>
 #include "Graphics.h"
 #include "SampleWindow.h"
 
@@ -8,6 +9,7 @@ class SampleApplication
 protected:
 	Graphics m_graphics;
 	SampleWindow m_window;
+	bool initialized;
 
 protected:
 	bool ProcessWindowMessages();
@@ -15,7 +17,7 @@ protected:
 public:
 	SampleApplication();
 	~SampleApplication();
-	void StartUp();
+	bool StartUp();
 	void ShutDown();
 	void Run();
 	virtual void Update();

@@ -3,6 +3,7 @@
 
 SampleApplication::SampleApplication()
 {
+	initialized = false;
 }
 
 
@@ -12,21 +13,29 @@ SampleApplication::~SampleApplication()
 }
 
 
-void SampleApplication::StartUp()
+bool SampleApplication::StartUp()
 {
-	static bool called;
-	if (called)
+	// make sure startup is only called once
+	assert(!initialized);
+	initialized = true;
+
+	// Create console for printf output
+	AllocConsole();
+	freopen("CONOUT$", "w", stdout);
+
+	if (!m_graphics.StartUp())
 	{
-		assert(0);
-		return;
+		return false;
 	}
-	called = true;
 
-	m_graphics.StartUp();
-
-	m_window.StartUp(&m_graphics);
+	if (!m_window.StartUp(&m_graphics))
+	{
+		return false;
+	}
 
 	ShowWindow(m_window.Window(), 1);
+
+	return true;
 }
 
 
@@ -35,6 +44,8 @@ void SampleApplication::ShutDown()
 	m_window.ShutDown();
 
 	m_graphics.ShutDown();
+
+	FreeConsole();
 }
 
 

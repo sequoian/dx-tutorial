@@ -3,6 +3,8 @@
 
 Graphics::Graphics()
 {
+	m_device = NULL;
+	m_context = NULL;
 }
 
 
@@ -12,15 +14,10 @@ Graphics::~Graphics()
 }
 
 
-void Graphics::StartUp()
+bool Graphics::StartUp()
 {
-	static bool called;
-	if (called)
-	{
-		assert(0);
-		return;
-	}
-	called = true;
+	// make sure startup is only called once
+	assert(m_device == NULL);
 
 	ID3D11Device* device = NULL;
 	ID3D11DeviceContext* context = NULL;
@@ -39,7 +36,8 @@ void Graphics::StartUp()
 	if (hr != S_OK)
 	{
 		// failed to create the D3D device (usually means no hardware support)
-		MessageBox(NULL, L"Failed to create the D3D device", NULL, MB_OK);
+		WriteLog("Failed to create the D3D device\n");
+		return false;
 	}
 	else
 	{
@@ -47,6 +45,8 @@ void Graphics::StartUp()
 		m_device = device;
 		m_context = context;
 	}
+
+	return true;
 }
 
 
@@ -73,7 +73,8 @@ IDXGISwapChain* Graphics::CreateSwapChain(HWND hwnd)
 	HRESULT hr = m_device->QueryInterface(IID_PPV_ARGS(&dxgidevice));
 	if (hr != S_OK)
 	{
-		MessageBox(NULL, L"Failed to get DXGI device", NULL, MB_OK);
+		WriteLog("Failed to get DXGI device\n");
+		return NULL;
 	}
 
 	// Get the adapter interface from the DXGI device (AKA the video card interface)
@@ -81,7 +82,8 @@ IDXGISwapChain* Graphics::CreateSwapChain(HWND hwnd)
 	hr = dxgidevice->GetAdapter(&adapter);
 	if (hr != S_OK)
 	{
-		MessageBox(NULL, L"Failed to get DXGI interface", NULL, MB_OK);
+		WriteLog("Failed to get DXGI interface\n");
+		return NULL;
 	}
 
 	// Get the DXGI factory from the adapter (we need this to create a swap chain)
@@ -89,7 +91,8 @@ IDXGISwapChain* Graphics::CreateSwapChain(HWND hwnd)
 	hr = adapter->GetParent(IID_PPV_ARGS(&factory));
 	if (hr != S_OK)
 	{
-		MessageBox(NULL, L"Failed to get DXGI factory", NULL, MB_OK);
+		WriteLog("Failed to get DXGI factory\n");
+		return NULL;
 	}
 
 	// Use this function to get the current dimensions of the window
@@ -137,7 +140,8 @@ IDXGISwapChain* Graphics::CreateSwapChain(HWND hwnd)
 	if (hr != S_OK)
 	{
 		// Handle error. failed to create swap chain
-		MessageBox(NULL, L"Failed to create the swap chain", NULL, MB_OK);
+		WriteLog("Failed to create the swap chain\n");
+		return NULL;
 	}
 
 	return swapChain;
@@ -151,7 +155,8 @@ ID3D11RenderTargetView* Graphics::CreateRTViewFromSwapChain(IDXGISwapChain* swap
 	HRESULT hr = swapChain->GetBuffer(0, IID_PPV_ARGS(&buffer));
 	if (hr != S_OK)
 	{
-		MessageBox(NULL, L"Failed to get back buffer from swap chain", NULL, MB_OK);
+		WriteLog("Failed to get back buffer from swap chain\n");
+		return NULL;
 	}
 
 	// Create a RenderTargetView (RTV) from the buffer resource.
@@ -160,7 +165,8 @@ ID3D11RenderTargetView* Graphics::CreateRTViewFromSwapChain(IDXGISwapChain* swap
 	hr = m_device->CreateRenderTargetView(buffer, NULL, &rtv);
 	if (hr != S_OK)
 	{
-		MessageBox(NULL, L"Failed to create RTV", NULL, MB_OK);
+		WriteLog("Failed to create RTV\n");
+		return NULL;
 	}
 
 	// We're done with the buffer now

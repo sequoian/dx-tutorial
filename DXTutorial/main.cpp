@@ -1,6 +1,5 @@
 #include "SampleApplication.h"
 
-
 class ClearSample : public SampleApplication
 {
 public:
@@ -15,7 +14,13 @@ public:
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow)
 {
 	ClearSample sample;
-	sample.StartUp();
+	if (!sample.StartUp())
+	{
+		MessageBox(NULL, L"Failed to initialize the application", L"ERROR", MB_OK);
+		return 1;
+	}
 	sample.Run();
 	sample.ShutDown();
+
+	return 0;
 }

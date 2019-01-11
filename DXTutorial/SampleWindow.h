@@ -4,6 +4,7 @@
 #include "BaseWindow.h"
 #include "Graphics.h"
 
+
 class SampleWindow : public BaseWindow<SampleWindow>
 {
 private:
@@ -15,7 +16,7 @@ public:
 	~SampleWindow();
 	PCWSTR  ClassName() const { return L"Sample Window Class"; }
 	LRESULT HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
-	void StartUp(Graphics* graphics);
+	bool StartUp(Graphics* graphics);
 	void ShutDown();
 	void Present();
 	ID3D11RenderTargetView* GetRenderTargetView() const { return m_rtv; }

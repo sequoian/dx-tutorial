@@ -2,6 +2,7 @@
 
 #include <d3d11.h>
 #include <cassert>
+#include "WriteLog.h"
 
 class Graphics
 {
@@ -12,7 +13,7 @@ private:
 public:
 	Graphics();
 	~Graphics();
-	void StartUp();
+	bool StartUp();
 	void ShutDown();
 	IDXGISwapChain* CreateSwapChain(HWND hwnd);
 	ID3D11RenderTargetView* CreateRTViewFromSwapChain(IDXGISwapChain* swapChain);

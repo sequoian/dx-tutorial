@@ -3,6 +3,8 @@
 
 SampleWindow::SampleWindow()
 {
+	m_swapChain = NULL;
+	m_rtv = NULL;
 }
 
 
@@ -12,22 +14,25 @@ SampleWindow::~SampleWindow()
 }
 
 
-void SampleWindow::StartUp(Graphics* graphics)
+bool SampleWindow::StartUp(Graphics* graphics)
 {
-	static bool called;
-	if (called)
-	{
-		assert(0);
-		return;
-	}
-	called = true;
+	// make sure startup is only called once
+	assert(m_swapChain == NULL);
 
 	// create window
 	Create(L"DX Tutorial", WS_OVERLAPPEDWINDOW);
 
-	m_swapChain = graphics->CreateSwapChain(m_hwnd);
+	if (!graphics->CreateSwapChain(m_hwnd))
+	{
+		return false;
+	}
 
-	m_rtv = graphics->CreateRTViewFromSwapChain(m_swapChain);
+	if (!graphics->CreateRTViewFromSwapChain(m_swapChain))
+	{
+		return false;
+	}
+	
+	return true;
 }
 
 
