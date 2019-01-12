@@ -41,7 +41,7 @@ public:
 			
 
 		m_rtState.SetRenderTarget(m_window.GetRenderTargetView());
-		m_rtState.SetClearColor(true, 1.0f, 0.0f, 0.0f, 1.0f);
+		m_rtState.SetClearColor(true, 0.0f, 0.0f, 0.0f, 1.0f);
 		m_rtState.SetSize(m_window.GetScreenWidth(), m_window.GetScreenHeight());
 
 		return true;

@@ -1,4 +1,5 @@
 #include <d3d11.h>
+#include "WriteLog.h"
 
 
 // Helper class to provide a description the binary layout and purpose of a

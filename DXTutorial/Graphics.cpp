@@ -26,7 +26,7 @@ bool Graphics::StartUp()
 		NULL,
 		D3D_DRIVER_TYPE_HARDWARE,
 		NULL,
-		0,
+		D3D11_CREATE_DEVICE_DEBUG,
 		&featureLevel,
 		1,
 		D3D11_SDK_VERSION,
@@ -350,7 +350,7 @@ void Graphics::UnbindRenderTargets()
 
 void Graphics::SetVertexBuffer(ID3D11Buffer* vb, unsigned int slot, unsigned int stride, unsigned int offset)
 {
-	m_context->IAGetVertexBuffers(slot, 1, &vb, &stride, &offset);
+	m_context->IASetVertexBuffers(slot, 1, &vb, &stride, &offset);
 }
 
 
