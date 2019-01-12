@@ -180,3 +180,198 @@ void Graphics::ClearRenderTarget(ID3D11RenderTargetView* rtv, float rgba[4])
 {
 	m_context->ClearRenderTargetView(rtv, rgba);
 }
+
+
+ID3DBlob* Graphics::CreateShaderFromFile(const wchar_t* fileName, const char* entryPoint, const char* target)
+{
+	ID3DBlob* codeBlob = nullptr;
+	ID3DBlob* errorBlob = nullptr;
+	HRESULT hr = D3DCompileFromFile(
+		fileName,
+		NULL,
+		D3D_COMPILE_STANDARD_FILE_INCLUDE,
+		entryPoint,
+		target,
+		D3DCOMPILE_OPTIMIZATION_LEVEL3,
+		0,
+		&codeBlob,
+		&errorBlob
+	);
+
+	if (hr != S_OK)
+	{
+		// handle error
+		if (errorBlob != nullptr)
+			WriteLog((char*)errorBlob->GetBufferPointer());
+			errorBlob->Release();
+		return nullptr;
+	}
+
+	return codeBlob;
+}
+
+
+ID3D11VertexShader* Graphics::CreateVertexShader(ID3DBlob* vsCode)
+{
+	ID3D11VertexShader* vertexShader = nullptr;
+
+	HRESULT hr = m_device->CreateVertexShader(
+		vsCode->GetBufferPointer(),
+		vsCode->GetBufferSize(),
+		NULL, &vertexShader
+	);
+
+	if (hr != S_OK)
+	{
+		WriteLog("Failed to create vertex shader\n");
+		return nullptr;
+	}
+
+	return vertexShader;
+}
+
+
+ID3D11PixelShader* Graphics::CreatePixelShader(ID3DBlob* psCode)
+{
+	ID3D11PixelShader* pixelShader = nullptr;
+
+	HRESULT hr = m_device->CreatePixelShader(
+		psCode->GetBufferPointer(), 
+		psCode->GetBufferSize(), 
+		NULL, &pixelShader
+	);
+
+	if (hr != S_OK)
+	{
+		WriteLog("Failed to create pixel shader\n");
+		return nullptr;
+	}
+
+	return pixelShader;
+}
+
+ID3D11InputLayout* Graphics::CreateInputLayout(ID3DBlob* vsCode, const VertexFormat& vbFmt)
+{
+	ID3D11InputLayout* layout = nullptr;
+
+	HRESULT hr = m_device->CreateInputLayout(
+		vbFmt.Inputs,
+		vbFmt.NumInputs,
+		vsCode->GetBufferPointer(),
+		vsCode->GetBufferSize(),
+		&layout
+	);
+
+	if (hr != S_OK)
+	{
+		WriteLog("Failed to create input layout\n");
+		return nullptr;
+	}
+
+	return layout;
+}
+
+
+ID3D11Buffer* Graphics::CreateVertexBuffer(unsigned int numVerts, unsigned int stride,
+	bool dynamic, bool gpuwrite, const void* data)
+{
+	D3D11_BUFFER_DESC desc = {};
+	desc.ByteWidth = numVerts * stride;
+	desc.StructureByteStride = stride;
+	desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+
+	if (dynamic)
+	{
+		desc.Usage = D3D11_USAGE_DYNAMIC;
+		desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	}
+	else if (gpuwrite)
+	{
+		desc.Usage = D3D11_USAGE_DEFAULT;
+	}
+	else
+	{
+		desc.Usage = D3D11_USAGE_IMMUTABLE;
+	}
+
+	D3D11_SUBRESOURCE_DATA initdata = {};
+	initdata.pSysMem = data;
+	initdata.SysMemPitch = numVerts * stride;
+
+	ID3D11Buffer* vb = nullptr;
+	HRESULT hr = m_device->CreateBuffer(
+		&desc,
+		data == nullptr ? nullptr : &initdata,
+		&vb
+	);
+
+	if (hr != S_OK)
+	{
+		WriteLog("Failed to create vertex buffer\n");
+		return nullptr;
+	}
+		
+	return vb;
+}
+
+void Graphics::SetViewport(unsigned int width, unsigned int height)
+{
+	D3D11_VIEWPORT viewport;
+	viewport.Width = (float)width;
+	viewport.Height = (float)height;
+	viewport.TopLeftX = 0;
+	viewport.TopLeftY = 0;
+	viewport.MinDepth = 0;
+	viewport.MaxDepth = 1;
+
+	m_context->RSSetViewports(1, &viewport);
+}
+
+
+void Graphics::BindRenderTargets(ID3D11RenderTargetView** rts, unsigned int numRTs)
+{
+	m_context->OMSetRenderTargets(numRTs, rts, NULL);
+
+}
+
+
+void Graphics::UnbindRenderTargets()
+{
+	m_context->OMSetRenderTargets(0, NULL, NULL);
+}
+
+
+void Graphics::SetVertexBuffer(ID3D11Buffer* vb, unsigned int slot, unsigned int stride, unsigned int offset)
+{
+	m_context->IAGetVertexBuffers(slot, 1, &vb, &stride, &offset);
+}
+
+
+void Graphics::SetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY topology)
+{
+	m_context->IASetPrimitiveTopology(topology);
+}
+
+
+void Graphics::SetInputLayout(ID3D11InputLayout* layout)
+{
+	m_context->IASetInputLayout(layout);
+}
+
+
+void Graphics::SetVertexShader(ID3D11VertexShader* vs)
+{
+	m_context->VSSetShader(vs, NULL, 0);
+}
+
+
+void Graphics::SetPixelShader(ID3D11PixelShader* ps)
+{
+	m_context->PSSetShader(ps, NULL, 0);
+}
+
+
+void Graphics::Draw(unsigned int numVertices, unsigned int startVertex)
+{
+	m_context->Draw(numVertices, startVertex);
+}

@@ -22,12 +22,14 @@ bool SampleWindow::StartUp(Graphics* graphics)
 	// create window
 	Create(L"DX Tutorial", WS_OVERLAPPEDWINDOW);
 
-	if (!graphics->CreateSwapChain(m_hwnd))
+	m_swapChain = graphics->CreateSwapChain(m_hwnd);
+	if (!m_swapChain)
 	{
 		return false;
 	}
 
-	if (!graphics->CreateRTViewFromSwapChain(m_swapChain))
+	m_rtv = graphics->CreateRTViewFromSwapChain(m_swapChain);
+	if (!m_rtv)
 	{
 		return false;
 	}
