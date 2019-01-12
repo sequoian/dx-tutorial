@@ -21,6 +21,15 @@ bool SampleWindow::StartUp(Graphics* graphics)
 
 	// create window
 	Create(L"DX Tutorial", WS_OVERLAPPEDWINDOW);
+	
+	// get screen size
+	RECT rect;
+	if (!GetClientRect(m_hwnd, &rect))
+	{
+		return false;
+	}
+	m_width = rect.right;
+	m_height = rect.bottom;
 
 	m_swapChain = graphics->CreateSwapChain(m_hwnd);
 	if (!m_swapChain)

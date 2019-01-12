@@ -10,6 +10,7 @@ class SampleWindow : public BaseWindow<SampleWindow>
 private:
 	IDXGISwapChain* m_swapChain;
 	ID3D11RenderTargetView* m_rtv;
+	unsigned int m_width, m_height;
 
 public:
 	SampleWindow();
@@ -20,4 +21,6 @@ public:
 	void ShutDown();
 	void Present();
 	ID3D11RenderTargetView* GetRenderTargetView() const { return m_rtv; }
+	unsigned int GetScreenWidth() const { return m_width; }
+	unsigned int GetScreenHeight() const { return m_height; }
 };

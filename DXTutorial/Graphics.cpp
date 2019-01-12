@@ -202,8 +202,15 @@ ID3DBlob* Graphics::CreateShaderFromFile(const wchar_t* fileName, const char* en
 	{
 		// handle error
 		if (errorBlob != nullptr)
+		{
 			WriteLog((char*)errorBlob->GetBufferPointer());
 			errorBlob->Release();
+		}
+		else
+		{
+			WriteLog("Failed to create shader from file\n");
+		}
+
 		return nullptr;
 	}
 

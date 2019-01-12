@@ -143,15 +143,21 @@
   <ItemGroup>
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Material.cpp" />
+    <ClCompile Include="RenderTargetState.cpp" />
     <ClCompile Include="SampleApplication.cpp" />
     <ClCompile Include="SampleWindow.cpp" />
+    <ClCompile Include="VertexBuffer.cpp" />
     <ClCompile Include="VertexFormat.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseWindow.h" />
     <ClInclude Include="Graphics.h" />
+    <ClInclude Include="Material.h" />
+    <ClInclude Include="RenderTargetState.h" />
     <ClInclude Include="SampleApplication.h" />
     <ClInclude Include="SampleWindow.h" />
+    <ClInclude Include="VertexBuffer.h" />
     <ClInclude Include="VertexFormat.h" />
     <ClInclude Include="WriteLog.h" />
   </ItemGroup>

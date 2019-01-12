@@ -17,8 +17,7 @@ public:
 	bool AddElement(DXGI_FORMAT fmt, unsigned int size, const char* semanticName,
 		unsigned int semanticIndex = 0,
 		unsigned int inputSlot = 0,
-		D3D11_INPUT_CLASSIFICATION inputSlotClass =
-		D3D11_INPUT_PER_VERTEX_DATA,
+		D3D11_INPUT_CLASSIFICATION inputSlotClass = D3D11_INPUT_PER_VERTEX_DATA,
 		unsigned int stepRate = 0);
 };
 
