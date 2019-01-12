@@ -3,6 +3,7 @@
 #include <d3d11.h>
 #include <cassert>
 #include <d3dcompiler.h>
+#include <DirectXTex.h>
 #include "WriteLog.h"
 #include "VertexFormat.h"
 
@@ -36,5 +37,21 @@ public:
 	void SetVertexShader(ID3D11VertexShader* vs);
 	void SetPixelShader(ID3D11PixelShader* ps);
 	void Draw(unsigned int numVertices, unsigned int startVertex = 0);
+	ID3D11Buffer* CreateIndexBuffer(unsigned int numIndices, bool dynamic, bool gpuwrite, const unsigned int* data);
+	ID3D11Buffer* CreateConstantBuffer(unsigned int size, bool dynamic, const void* data);
+	ID3D11Resource* CreateTextureFromTGAFile(const wchar_t* fileName);
+	ID3D11ShaderResourceView* CreateShaderResource(ID3D11Resource* res);
+	ID3D11SamplerState* CreateSampler(const D3D11_SAMPLER_DESC& samplerInfo);
+	void SetIndexBuffer(ID3D11Buffer* ib, unsigned int offset = 0);
+	void* MapBuffer(ID3D11Buffer* buffer);
+	void UnmapBuffer(ID3D11Buffer* buffer);
+	void SetVSShaderInputs(unsigned int slot, unsigned int numSlots, ID3D11ShaderResourceView* srvs[]);
+	void SetPSShaderInputs(unsigned int slot, unsigned int numSlots, ID3D11ShaderResourceView* srvs[]);
+	void SetVSConstantBuffers(unsigned int slot, unsigned int numSlots, ID3D11Buffer* buffers[]);
+	void SetPSConstantBuffers(unsigned int slot, unsigned int numSlots, ID3D11Buffer* buffers[]);
+	void SetVSSamplers(unsigned int slot, unsigned int numSlots, ID3D11SamplerState* samplers[]);
+	void SetPSSamplers(unsigned int slot, unsigned int numSlots, ID3D11SamplerState* samplers[]);
+	void DrawIndexed(unsigned int numIndices, unsigned int startIndex = 0, unsigned int startVertex = 0);
+
 
 };

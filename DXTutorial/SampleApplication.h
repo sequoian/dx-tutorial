@@ -17,9 +17,9 @@ protected:
 public:
 	SampleApplication();
 	~SampleApplication();
-	bool StartUp();
-	void ShutDown();
-	void Run();
+	virtual bool StartUp();
+	virtual void ShutDown();
+	virtual void Run();
 	virtual void Update();
 	virtual void Render();
 };

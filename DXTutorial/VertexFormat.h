@@ -22,6 +22,7 @@ public:
 		unsigned int stepRate = 0);
 };
 
+
 // Vertex data that contains a position and a color
 class VertPosColor
 {
@@ -31,6 +32,18 @@ public:
 
 	static VertexFormat GetVertexFormat();
 };
+
+
+// Vertex data that contains a position and a texture coordinate
+class VertPosUV
+{
+public:
+	float x, y, z;
+	float u, v;
+
+	static VertexFormat GetVertexFormat();
+};
+
 
 // Helper function to create a color uint from red, green, blue, and alpha values
 inline unsigned int MakeColorUInt(unsigned char r, unsigned char g, unsigned char b,

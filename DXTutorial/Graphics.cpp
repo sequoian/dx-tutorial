@@ -382,3 +382,209 @@ void Graphics::Draw(unsigned int numVertices, unsigned int startVertex)
 {
 	m_context->Draw(numVertices, startVertex);
 }
+
+
+ID3D11Buffer* Graphics::CreateIndexBuffer(unsigned int numIndices, bool dynamic, 
+	bool gpuwrite, const unsigned int* data)
+{
+	D3D11_BUFFER_DESC desc = {};
+	desc.ByteWidth = numIndices * sizeof(unsigned int);
+	desc.StructureByteStride = 0;
+	desc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+
+	if (dynamic)
+	{
+		desc.Usage = D3D11_USAGE_DYNAMIC;
+		desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	}
+	else if (gpuwrite)
+	{
+		desc.Usage = D3D11_USAGE_DEFAULT;
+	}
+	else
+	{
+		desc.Usage = D3D11_USAGE_IMMUTABLE;
+	}
+
+	D3D11_SUBRESOURCE_DATA initdata = {};
+	initdata.pSysMem = data;
+	initdata.SysMemPitch = numIndices * sizeof(unsigned int);
+
+	ID3D11Buffer* ib = nullptr;
+	HRESULT hr = m_device->CreateBuffer(
+		&desc,
+		data == nullptr ? nullptr : &initdata,
+		&ib
+	);
+
+	if (hr != S_OK)
+	{
+		WriteLog("Failed to create index buffer\n");
+		return nullptr;
+	}
+
+	return ib;
+}
+
+
+ID3D11Buffer* Graphics::CreateConstantBuffer(unsigned int size, bool dynamic, const void* data)
+{
+	D3D11_BUFFER_DESC desc = {};
+	desc.ByteWidth = size;
+	desc.StructureByteStride = 0;
+	desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+
+	if (dynamic)
+	{
+		desc.Usage = D3D11_USAGE_DYNAMIC;
+		desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	}
+	else
+	{
+		desc.Usage = D3D11_USAGE_IMMUTABLE;
+	}
+
+	D3D11_SUBRESOURCE_DATA initdata = {};
+	initdata.pSysMem = data;
+	initdata.SysMemPitch = size;
+
+	ID3D11Buffer* cb = nullptr;
+	HRESULT hr = m_device->CreateBuffer(
+		&desc,
+		data == nullptr ? nullptr : &initdata,
+		&cb
+	);
+
+	if (hr != S_OK)
+	{
+		WriteLog("Failed to create constant buffer\n");
+		return nullptr;
+	}
+
+	return cb;
+}
+
+
+ID3D11Resource* Graphics::CreateTextureFromTGAFile(const wchar_t* fileName)
+{
+	DirectX::ScratchImage img;
+
+	// Load file
+	HRESULT hr = DirectX::LoadFromTGAFile(fileName, NULL, img);
+	if (hr != S_OK)
+	{
+		WriteLog("Failed to load TGA file\n");
+		return nullptr;
+	}
+
+	ID3D11Resource* texture = nullptr;
+
+	// Create texture
+	hr = DirectX::CreateTexture(m_device, img.GetImages(), img.GetImageCount(), img.GetMetadata(), &texture);
+	if (hr != S_OK)
+	{
+		WriteLog("Failed to create texture\n");
+		return nullptr;
+	}
+
+	return texture;
+}
+
+
+ID3D11ShaderResourceView* Graphics::CreateShaderResource(ID3D11Resource* res)
+{
+	ID3D11ShaderResourceView* srv = nullptr;
+
+	HRESULT hr = m_device->CreateShaderResourceView(res, NULL, &srv);
+	if (hr != S_OK)
+	{
+		WriteLog("Failed to create shader resource view\n");
+		return nullptr;
+	}
+
+	return srv;
+}
+
+
+ID3D11SamplerState* Graphics::CreateSampler(const D3D11_SAMPLER_DESC& samplerInfo)
+{
+	ID3D11SamplerState* samplerState = nullptr;
+
+	HRESULT hr = m_device->CreateSamplerState(&samplerInfo, &samplerState);
+	if (hr != S_OK)
+	{
+		WriteLog("Failed to create sampler\n");
+		return nullptr;
+	}
+
+	return samplerState;
+}
+
+
+void Graphics::SetIndexBuffer(ID3D11Buffer* ib, unsigned int offset)
+{
+	m_context->IASetIndexBuffer(ib, DXGI_FORMAT_R32_UINT, offset);
+}
+
+
+void* Graphics::MapBuffer(ID3D11Buffer* buffer)
+{
+	D3D11_MAPPED_SUBRESOURCE res;
+
+	HRESULT hr = m_context->Map(buffer, 0, D3D11_MAP_WRITE_DISCARD, NULL, &res);
+	if (hr != S_OK)
+	{
+		WriteLog("Failed to map buffer\n");
+		return nullptr;
+	}
+
+	return res.pData;
+}
+
+
+void Graphics::UnmapBuffer(ID3D11Buffer* buffer)
+{
+	m_context->Unmap(buffer, 0);
+}
+
+
+void Graphics::SetVSShaderInputs(unsigned int slot, unsigned int numSlots, ID3D11ShaderResourceView* srvs[])
+{
+	m_context->VSSetShaderResources(slot, numSlots, srvs);
+}
+
+
+void Graphics::SetPSShaderInputs(unsigned int slot, unsigned int numSlots, ID3D11ShaderResourceView* srvs[])
+{
+	m_context->PSSetShaderResources(slot, numSlots, srvs);
+}
+
+
+void Graphics::SetVSConstantBuffers(unsigned int slot, unsigned int numSlots, ID3D11Buffer* buffers[])
+{
+	m_context->VSSetConstantBuffers(slot, numSlots, buffers);
+}
+
+
+void Graphics::SetPSConstantBuffers(unsigned int slot, unsigned int numSlots, ID3D11Buffer* buffers[])
+{
+	m_context->PSSetConstantBuffers(slot, numSlots, buffers);
+}
+
+
+void Graphics::SetVSSamplers(unsigned int slot, unsigned int numSlots, ID3D11SamplerState* samplers[])
+{
+	m_context->VSSetSamplers(slot, numSlots, samplers);
+}
+
+
+void Graphics::SetPSSamplers(unsigned int slot, unsigned int numSlots, ID3D11SamplerState* samplers[])
+{
+	m_context->PSSetSamplers(slot, numSlots, samplers);
+}
+
+
+void Graphics::DrawIndexed(unsigned int numIndices, unsigned int startIndex, unsigned int startVertex)
+{
+	m_context->DrawIndexed(numIndices, startIndex, startVertex);
+}
