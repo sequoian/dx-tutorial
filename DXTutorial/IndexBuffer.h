@@ -1,5 +1,6 @@
-#include "Graphics.h"
+#pragma once
 
+#include "Graphics.h"
 
 class IndexBuffer
 {

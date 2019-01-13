@@ -3,20 +3,22 @@
 #include "Material.h"
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
+#include "Model.h"
+#include "VertexFormat.h"
 
 #include <DirectXMath.h>
 using namespace DirectX;
 
-struct CubeConstants
+struct ModelConstants
 {
 	XMMATRIX m_world;
 	XMMATRIX m_viewproj;
 };
 
-class CubeSample : public SampleApplication
+class ModelSample : public SampleApplication
 {
 public:
-	virtual ~CubeSample()
+	virtual ~ModelSample()
 	{
 		if (m_sampler != nullptr)
 			m_sampler->Release();
@@ -31,13 +33,18 @@ public:
 		if (!SampleApplication::StartUp())
 			return false;
 
-		if (!m_cb.CreateConstantBuffer(m_graphics, sizeof(CubeConstants), true, nullptr))
+		if (!m_cb.CreateConstantBuffer(m_graphics, sizeof(ModelConstants), true,
+			nullptr))
 			return false;
 
-		if (!m_material.Load(m_graphics, L"Shaders/tutorial4.hlsl", VertPosUV::GetVertexFormat()))
+		if (!m_material.Load(m_graphics, L"Shaders/tutorial5.hlsl",
+			VertPosNormUVColor::GetVertexFormat()))
 			return false;
 
-		m_tex = m_graphics.CreateTextureFromTGAFile(L"Textures/stone.tga");
+		if (!m_model.LoadFromOBJ(m_graphics, "Assets/monkey.obj"))
+			return false;
+
+		m_tex = m_graphics.CreateTextureFromTGAFile(L"Assets/stone.tga");
 		if (m_tex == nullptr)
 			return false;
 
@@ -48,17 +55,17 @@ public:
 		D3D11_SAMPLER_DESC sampler;
 		sampler.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 		sampler.AddressU =
-		sampler.AddressV =
-		sampler.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+			sampler.AddressV =
+			sampler.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
 		sampler.MinLOD = -FLT_MAX;
 		sampler.MaxLOD = FLT_MAX;
 		sampler.MipLODBias = 0.0f;
 		sampler.MaxAnisotropy = 1;
 		sampler.ComparisonFunc = D3D11_COMPARISON_NEVER;
 		sampler.BorderColor[0] =
-		sampler.BorderColor[1] =
-		sampler.BorderColor[2] =
-		sampler.BorderColor[3] = 1.0f;
+			sampler.BorderColor[1] =
+			sampler.BorderColor[2] =
+			sampler.BorderColor[3] = 1.0f;
 
 		m_sampler = m_graphics.CreateSampler(sampler);
 		if (m_sampler == nullptr)
@@ -67,56 +74,6 @@ public:
 		m_material.SetConstantBuffer(0, m_cb);
 		m_material.AddShaderInput(m_srv);
 		m_material.AddShaderSampler(m_sampler);
-
-		VertPosUV vbData[24] = {
-			//  X       Y       Z       U       V
-			{ -1.0f,  -1.0f,  -1.0f,  0.0f,   1.0f }, // Back Face
-			{ -1.0f,   1.0f,  -1.0f,  0.0f,   0.0f },
-			{ 1.0f,   1.0f,  -1.0f,  1.0f,   0.0f },
-			{ 1.0f,  -1.0f,  -1.0f,  1.0f,   1.0f },
-
-			{ 1.0f,  -1.0f,   1.0f,  0.0f,   1.0f }, // Front Face
-			{ 1.0f,   1.0f,   1.0f,  0.0f,   0.0f },
-			{ -1.0f,   1.0f,   1.0f,  1.0f,   0.0f },
-			{ -1.0f,  -1.0f,   1.0f,  1.0f,   1.0f },
-
-			{ -1.0f,  -1.0f,   1.0f,  0.0f,   1.0f }, // Left Face
-			{ -1.0f,   1.0f,   1.0f,  0.0f,   0.0f },
-			{ -1.0f,   1.0f,  -1.0f,  1.0f,   0.0f },
-			{ -1.0f,  -1.0f,  -1.0f,  1.0f,   1.0f },
-
-			{ 1.0f,  -1.0f,  -1.0f,  0.0f,   1.0f }, // Right Face
-			{ 1.0f,   1.0f,  -1.0f,  0.0f,   0.0f },
-			{ 1.0f,   1.0f,   1.0f,  1.0f,   0.0f },
-			{ 1.0f,  -1.0f,   1.0f,  1.0f,   1.0f },
-
-			{ -1.0f,   1.0f,  -1.0f,  0.0f,   1.0f }, // Top Face
-			{ -1.0f,   1.0f,   1.0f,  0.0f,   0.0f },
-			{ 1.0f,   1.0f,   1.0f,  1.0f,   0.0f },
-			{ 1.0f,   1.0f,  -1.0f,  1.0f,   1.0f },
-
-
-			{ -1.0f,  -1.0f,   1.0f,  0.0f,   1.0f }, // Bottom Face
-			{ -1.0f,  -1.0f,  -1.0f,  0.0f,   0.0f },
-			{ 1.0f,  -1.0f,  -1.0f,  1.0f,   0.0f },
-			{ 1.0f,  -1.0f,   1.0f,  1.0f,   1.0f },
-		};
-
-		unsigned int indices[36] = {
-			0, 1, 2, 0, 2, 3,       // Back Face
-			4, 5, 6, 4, 6, 7,       // Front Face
-			8, 9, 10, 8, 10, 11,    // Left Face
-			12, 13, 14, 12, 14, 15, // Right Face
-			16, 17, 18, 16, 18, 19, // Top Face
-			20, 21, 22, 20, 22, 23, // Bottom Face
-		};
-
-		if (!m_vb.StartUp(m_graphics, VertPosUV::GetVertexFormat(), 24, false,
-			false, vbData))
-			return false;
-
-		if (!m_ib.StartUp(m_graphics, 36, false, false, indices))
-			return false;
 
 		m_rtState.SetRenderTarget(m_window.GetRenderTarget());
 		m_rtState.SetClearColor(true, 0.0f, 0.0f, 0.0f, 1.0f);
@@ -143,24 +100,22 @@ public:
 			float(m_window.GetScreenHeight()), 0.01f, 1000.0f);
 
 		// update our constants with data for this frame
-		CubeConstants consts;
+		ModelConstants consts;
 		consts.m_world = XMMatrixRotationRollPitchYaw(0.0f, m_time * 0.5f, 0.0f);
 		consts.m_viewproj = XMMatrixMultiply(view, proj);
 		m_cb.MapAndSet(m_graphics, consts);
 
 		m_rtState.Begin(m_graphics);
-		m_vb.Select(m_graphics, 0);
-		m_ib.Select(m_graphics);
+		m_model.Select(m_graphics);
 		m_material.Select(m_graphics);
-		m_graphics.DrawIndexed(36);
+		m_model.Draw(m_graphics);
 		m_rtState.End(m_graphics);
 	}
 
 private:
 	RenderTargetState m_rtState;
 	Material m_material;
-	VertexBuffer m_vb;
-	IndexBuffer m_ib;
+	Model m_model;
 	Buffer m_cb;
 	ID3D11Resource* m_tex = nullptr;
 	ID3D11ShaderResourceView* m_srv = nullptr;
@@ -170,9 +125,10 @@ private:
 
 
 
+
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow)
 {
-	CubeSample sample;
+	ModelSample sample;
 	if (!sample.StartUp())
 	{
 		MessageBox(NULL, L"Failed to initialize the application", L"ERROR", MB_OK);
