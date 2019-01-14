@@ -26,7 +26,7 @@ bool Graphics::StartUp()
 		NULL,
 		D3D_DRIVER_TYPE_HARDWARE,
 		NULL,
-		D3D11_CREATE_DEVICE_DEBUG,
+		0,
 		&featureLevel,
 		1,
 		D3D11_SDK_VERSION,

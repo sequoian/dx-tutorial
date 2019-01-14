@@ -1,6 +1,7 @@
 ## Project specifc
 
-shader-error.txt
+*.obj
+!*/Assets/*.obj
 
 ## Ignores for C++
 
@@ -11,7 +12,6 @@ shader-error.txt
 *.slo
 *.lo
 *.o
-*.obj
 
 # Precompiled Headers
 *.gch
