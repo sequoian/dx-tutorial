@@ -13,6 +13,8 @@ struct ModelConstants
 {
 	XMMATRIX m_world;
 	XMMATRIX m_viewproj;
+	XMVECTOR m_lightDirection;
+	XMVECTOR m_lightColor;
 };
 
 class ModelSample : public SampleApplication
@@ -43,7 +45,7 @@ public:
 			nullptr))
 			return false;
 
-		if (!m_material.Load(m_graphics, L"Shaders/tutorial5.hlsl",
+		if (!m_material.Load(m_graphics, L"Shaders/tutorial6.hlsl",
 			VertPosNormUVColor::GetVertexFormat()))
 			return false;
 
@@ -130,6 +132,8 @@ public:
 		ModelConstants consts;
 		consts.m_world = XMMatrixRotationRollPitchYaw(0.0f, m_time * 0.5f, 0.0f);
 		consts.m_viewproj = XMMatrixMultiply(view, proj);
+		consts.m_lightDirection = XMVector3Normalize(XMVectorSet(1.0f, 1.0f, -1.0f, 0.0f));
+		consts.m_lightColor = XMVectorSet(0.8f, 0.8f, 0.5f, 1.0f);
 		m_cb.MapAndSet(m_graphics, consts);
 
 		m_graphics.SetDepthStencilState(m_dss);

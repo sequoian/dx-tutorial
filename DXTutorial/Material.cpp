@@ -76,10 +76,12 @@ void Material::Select(Graphics& graphics)
 	graphics.SetVertexShader(m_vs);
 	graphics.SetPixelShader(m_ps);
 
-	// Hardcoded based on shader. TODO: softcode it. Separate arrays and getters/setters for vs and ps?
 	ID3D11Buffer* buff = m_cbs[0]->GetCurrentBuffer();
 	graphics.SetVSConstantBuffers(0, 1, &buff);
+	graphics.SetPSConstantBuffers(0, 1, &buff);
+	graphics.SetVSShaderInputs(0, 1, m_inputs);
 	graphics.SetPSShaderInputs(0, 1, m_inputs);
+	graphics.SetVSSamplers(0, 1, m_samplers);
 	graphics.SetPSSamplers(0, 1, m_samplers);
 }
 
