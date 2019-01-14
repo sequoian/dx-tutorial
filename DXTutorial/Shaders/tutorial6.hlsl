@@ -8,6 +8,7 @@ cbuffer Constants : register(b0)
 	row_major float4x4 viewProjMat;
 	float3 lightDirection;
 	float4 lightColor;
+	float4 ambientColor;
 }
 
 struct VSInput
@@ -48,7 +49,7 @@ float4 psmain(PSInput input) : SV_Target0
 	float3 l = lightDirection;
 	float ndotl = saturate(dot(n, l));
 
-	float3 color = albedo.rgb * lightColor * ndotl;
+	float3 color = albedo.rgb * (lightColor * ndotl + ambientColor);
 	return float4(color, 1.0f);
 
 }

@@ -15,6 +15,7 @@ struct ModelConstants
 	XMMATRIX m_viewproj;
 	XMVECTOR m_lightDirection;
 	XMVECTOR m_lightColor;
+	XMVECTOR m_ambientColor;
 };
 
 class ModelSample : public SampleApplication
@@ -134,6 +135,7 @@ public:
 		consts.m_viewproj = XMMatrixMultiply(view, proj);
 		consts.m_lightDirection = XMVector3Normalize(XMVectorSet(1.0f, 1.0f, -1.0f, 0.0f));
 		consts.m_lightColor = XMVectorSet(0.8f, 0.8f, 0.5f, 1.0f);
+		consts.m_ambientColor = XMVectorSet(0.1f, 0.1f, 0.2f, 1.0f);
 		m_cb.MapAndSet(m_graphics, consts);
 
 		m_graphics.SetDepthStencilState(m_dss);
