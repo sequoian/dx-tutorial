@@ -13,9 +13,11 @@ struct ModelConstants
 {
 	XMMATRIX m_world;
 	XMMATRIX m_viewproj;
+	XMVECTOR m_cameraPos;
 	XMVECTOR m_lightDirection;
 	XMVECTOR m_lightColor;
 	XMVECTOR m_ambientColor;
+	XMVECTOR m_specularColor;
 };
 
 class ModelSample : public SampleApplication
@@ -136,6 +138,8 @@ public:
 		consts.m_lightDirection = XMVector3Normalize(XMVectorSet(1.0f, 1.0f, -1.0f, 0.0f));
 		consts.m_lightColor = XMVectorSet(0.8f, 0.8f, 0.5f, 1.0f);
 		consts.m_ambientColor = XMVectorSet(0.1f, 0.1f, 0.2f, 1.0f);
+		consts.m_cameraPos = eyepos;
+		consts.m_specularColor = XMVectorSet(0.5f, 0.5f, 0.5f, 5.0f);
 		m_cb.MapAndSet(m_graphics, consts);
 
 		m_graphics.SetDepthStencilState(m_dss);

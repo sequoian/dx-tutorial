@@ -6,9 +6,11 @@ cbuffer Constants : register(b0)
 {
 	row_major float4x4 worldMat;
 	row_major float4x4 viewProjMat;
+	float3 cameraPos;
 	float3 lightDirection;
 	float4 lightColor;
 	float4 ambientColor;
+	float4 specularColor;
 }
 
 struct VSInput
@@ -24,7 +26,8 @@ struct PSInput
 	float4 pos : SV_Position;
 	float2 uv : UV;
 	float4 color : COLOR;
-	float3 normal: NORMAL;
+	float3 normal : NORMAL;
+	float3 viewDir : VIEWDIR;
 };
 
 PSInput vsmain(VSInput input)
@@ -37,19 +40,25 @@ PSInput vsmain(VSInput input)
 	output.color = input.color;
 	float3 normal = mul(input.normal, (float3x3)worldMat);
 	output.normal = normal;
+	output.viewDir = cameraPos - worldPos;
 
 	return output;
 }
 
 float4 psmain(PSInput input) : SV_Target0
 {
-	
 	float4 albedo = input.color * colorMap.Sample(linearSampler, input.uv);
 	float3 n = normalize(input.normal);
 	float3 l = lightDirection;
 	float ndotl = saturate(dot(n, l));
 
-	float3 color = albedo.rgb * (lightColor * ndotl + ambientColor);
+	// calculate specular highlight
+	float3 v = normalize(input.viewDir);
+	float3 r = 2 * ndotl * n - l;
+	float rdotv = saturate(dot(r, v));
+	float3 specular = specularColor.rgb * pow(rdotv, specularColor.a);
+
+	float3 color = albedo.rgb * (lightColor * ndotl + ambientColor) + specular;
 	return float4(color, 1.0f);
 
 }
