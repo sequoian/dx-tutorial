@@ -28,7 +28,7 @@ public:
 	ID3D11Buffer* CreateVertexBuffer(unsigned int numVerts, unsigned int stride,
 		bool dynamic, bool gpuwrite, const void* data);
 	void SetViewport(unsigned int width, unsigned int height);
-	void BindRenderTargets(ID3D11RenderTargetView** rts, unsigned int numRTs);
+	void BindRenderTargets(ID3D11RenderTargetView** rts, unsigned int numRTs, ID3D11DepthStencilView* dsv = nullptr);
 	void UnbindRenderTargets();
 	void SetVertexBuffer(ID3D11Buffer* vb, unsigned int slot, unsigned int stride,
 		unsigned int offset = 0);
@@ -52,6 +52,12 @@ public:
 	void SetVSSamplers(unsigned int slot, unsigned int numSlots, ID3D11SamplerState* samplers[]);
 	void SetPSSamplers(unsigned int slot, unsigned int numSlots, ID3D11SamplerState* samplers[]);
 	void DrawIndexed(unsigned int numIndices, unsigned int startIndex = 0, unsigned int startVertex = 0);
+	ID3D11Texture2D* CreateDepthBuffer(unsigned int width, unsigned int height, DXGI_FORMAT fmt);
+	ID3D11DepthStencilView* CreateDepthStencilView(ID3D11Texture2D* tex);
+	ID3D11DepthStencilState* CreateDepthStencilState( const D3D11_DEPTH_STENCIL_DESC& desc);
+	void ClearDepthStencil(ID3D11DepthStencilView* dsv, bool clearDepth, float depth, bool clearStencil, unsigned char stencil);
+	void SetDepthStencilState(ID3D11DepthStencilState* dss, unsigned int stencilRef = 0);
+
 
 
 };

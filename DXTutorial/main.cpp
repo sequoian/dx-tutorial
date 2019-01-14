@@ -26,6 +26,12 @@ public:
 			m_srv->Release();
 		if (m_tex != nullptr)
 			m_tex->Release();
+		if (m_dss != nullptr)
+			m_dss->Release();
+		if (m_dsv != nullptr)
+			m_dsv->Release();
+		if (m_depth != nullptr)
+			m_depth->Release();
 	}
 
 	virtual bool StartUp() override
@@ -52,6 +58,25 @@ public:
 		if (m_srv == nullptr)
 			return false;
 
+		m_depth = m_graphics.CreateDepthBuffer(m_window.GetScreenWidth(),
+			m_window.GetScreenHeight(), DXGI_FORMAT_D24_UNORM_S8_UINT);
+		if (m_depth == nullptr)
+			return false;
+
+		m_dsv = m_graphics.CreateDepthStencilView(m_depth);
+		if (m_dsv == nullptr)
+			return false;
+
+		D3D11_DEPTH_STENCIL_DESC dsdesc = {};
+		dsdesc.DepthEnable = true;
+		dsdesc.DepthFunc = D3D11_COMPARISON_LESS;
+		dsdesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+		dsdesc.StencilEnable = false;
+
+		m_dss = m_graphics.CreateDepthStencilState(dsdesc);
+		if (m_dss == nullptr)
+			return false;
+
 		D3D11_SAMPLER_DESC sampler;
 		sampler.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
 		sampler.AddressU =
@@ -76,7 +101,9 @@ public:
 		m_material.AddShaderSampler(m_sampler);
 
 		m_rtState.SetRenderTarget(m_window.GetRenderTarget());
+		m_rtState.SetDepthTarget(m_dsv);
 		m_rtState.SetClearColor(true, 0.0f, 0.0f, 0.0f, 1.0f);
+		m_rtState.SetClearDepthStencil(true, 1.0f);
 		m_rtState.SetSize(m_window.GetScreenWidth(), m_window.GetScreenHeight());
 
 		return true;
@@ -105,6 +132,7 @@ public:
 		consts.m_viewproj = XMMatrixMultiply(view, proj);
 		m_cb.MapAndSet(m_graphics, consts);
 
+		m_graphics.SetDepthStencilState(m_dss);
 		m_rtState.Begin(m_graphics);
 		m_model.Select(m_graphics);
 		m_material.Select(m_graphics);
@@ -120,11 +148,11 @@ private:
 	ID3D11Resource* m_tex = nullptr;
 	ID3D11ShaderResourceView* m_srv = nullptr;
 	ID3D11SamplerState* m_sampler = nullptr;
+	ID3D11Texture2D* m_depth = nullptr;
+	ID3D11DepthStencilView* m_dsv = nullptr;
+	ID3D11DepthStencilState* m_dss = nullptr;
 	float m_time = 0.0f;
 };
-
-
-
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow)
 {

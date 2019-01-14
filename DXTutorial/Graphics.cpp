@@ -335,9 +335,9 @@ void Graphics::SetViewport(unsigned int width, unsigned int height)
 }
 
 
-void Graphics::BindRenderTargets(ID3D11RenderTargetView** rts, unsigned int numRTs)
+void Graphics::BindRenderTargets(ID3D11RenderTargetView** rts, unsigned int numRTs, ID3D11DepthStencilView* dsv)
 {
-	m_context->OMSetRenderTargets(numRTs, rts, NULL);
+	m_context->OMSetRenderTargets(numRTs, rts, dsv);
 
 }
 
@@ -587,4 +587,72 @@ void Graphics::SetPSSamplers(unsigned int slot, unsigned int numSlots, ID3D11Sam
 void Graphics::DrawIndexed(unsigned int numIndices, unsigned int startIndex, unsigned int startVertex)
 {
 	m_context->DrawIndexed(numIndices, startIndex, startVertex);
+}
+
+
+ID3D11Texture2D* Graphics::CreateDepthBuffer(unsigned int width, unsigned int height, DXGI_FORMAT fmt)
+{
+	D3D11_TEXTURE2D_DESC desc;
+	desc.Width = width;
+	desc.Height = height;
+	desc.ArraySize = 1;
+	desc.MipLevels = 1;
+	desc.Format = fmt;
+	desc.CPUAccessFlags = 0;
+	desc.Usage = D3D11_USAGE_DEFAULT;
+	desc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	desc.MiscFlags = 0;
+	desc.SampleDesc.Count = 1;
+	desc.SampleDesc.Quality = 0;
+
+	ID3D11Texture2D* db = nullptr;
+	HRESULT hr = m_device->CreateTexture2D(&desc, NULL, &db);
+	if (hr != S_OK)
+	{
+		WriteLog("Failed to create depth buffer\n");
+		return nullptr;
+	}
+
+	return db;
+}
+
+
+ID3D11DepthStencilView* Graphics::CreateDepthStencilView(ID3D11Texture2D* tex)
+{
+	ID3D11DepthStencilView* dsv = nullptr;
+	HRESULT hr = m_device->CreateDepthStencilView(tex, NULL, &dsv);
+	if (hr != S_OK)
+	{
+		WriteLog("Failed to create depth stencil view\n");
+		return nullptr;
+	}
+
+	return dsv;
+}
+
+
+ID3D11DepthStencilState* Graphics::CreateDepthStencilState(const D3D11_DEPTH_STENCIL_DESC& desc)
+{
+	ID3D11DepthStencilState* dsState = nullptr;
+	HRESULT hr = m_device->CreateDepthStencilState(&desc, &dsState);
+	if (hr != S_OK)
+	{
+		WriteLog("Failed to create depth stencil state\n");
+		return nullptr;
+	}
+
+	return dsState;
+}
+
+
+void Graphics::ClearDepthStencil(ID3D11DepthStencilView* dsv, bool clearDepth, float depth, bool clearStencil, unsigned char stencil)
+{
+	// TODO: set clear flags based on function parameters
+	m_context->ClearDepthStencilView(dsv, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, depth, stencil);
+}
+
+
+void Graphics::SetDepthStencilState(ID3D11DepthStencilState* dss, unsigned int stencilRef)
+{
+	m_context->OMSetDepthStencilState(dss, stencilRef);
 }
