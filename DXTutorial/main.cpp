@@ -166,6 +166,7 @@ private:
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow)
 {
+	WriteLog("Hello, world!");
 	ModelSample sample;
 	if (!sample.StartUp())
 	{

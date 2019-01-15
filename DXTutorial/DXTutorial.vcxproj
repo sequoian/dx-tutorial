@@ -154,6 +154,7 @@
     <ClCompile Include="SampleWindow.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />
     <ClCompile Include="VertexFormat.cpp" />
+    <ClCompile Include="WriteLog.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseWindow.h" />
