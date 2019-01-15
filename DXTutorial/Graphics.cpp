@@ -36,7 +36,7 @@ bool Graphics::StartUp()
 	if (hr != S_OK)
 	{
 		// failed to create the D3D device (usually means no hardware support)
-		WriteLog("Failed to create the D3D device\n");
+		DEBUG_ERROR("Failed to create the D3D device\n");
 		return false;
 	}
 	else
@@ -73,7 +73,7 @@ IDXGISwapChain* Graphics::CreateSwapChain(HWND hwnd)
 	HRESULT hr = m_device->QueryInterface(IID_PPV_ARGS(&dxgidevice));
 	if (hr != S_OK)
 	{
-		WriteLog("Failed to get DXGI device\n");
+		DEBUG_ERROR("Failed to get DXGI device\n");
 		return NULL;
 	}
 
@@ -82,7 +82,7 @@ IDXGISwapChain* Graphics::CreateSwapChain(HWND hwnd)
 	hr = dxgidevice->GetAdapter(&adapter);
 	if (hr != S_OK)
 	{
-		WriteLog("Failed to get DXGI interface\n");
+		DEBUG_ERROR("Failed to get DXGI interface\n");
 		return NULL;
 	}
 
@@ -91,7 +91,7 @@ IDXGISwapChain* Graphics::CreateSwapChain(HWND hwnd)
 	hr = adapter->GetParent(IID_PPV_ARGS(&factory));
 	if (hr != S_OK)
 	{
-		WriteLog("Failed to get DXGI factory\n");
+		DEBUG_ERROR("Failed to get DXGI factory\n");
 		return NULL;
 	}
 
@@ -140,7 +140,7 @@ IDXGISwapChain* Graphics::CreateSwapChain(HWND hwnd)
 	if (hr != S_OK)
 	{
 		// Handle error. failed to create swap chain
-		WriteLog("Failed to create the swap chain\n");
+		DEBUG_ERROR("Failed to create the swap chain\n");
 		return NULL;
 	}
 
@@ -155,7 +155,7 @@ ID3D11RenderTargetView* Graphics::CreateRTViewFromSwapChain(IDXGISwapChain* swap
 	HRESULT hr = swapChain->GetBuffer(0, IID_PPV_ARGS(&buffer));
 	if (hr != S_OK)
 	{
-		WriteLog("Failed to get back buffer from swap chain\n");
+		DEBUG_ERROR("Failed to get back buffer from swap chain\n");
 		return NULL;
 	}
 
@@ -165,7 +165,7 @@ ID3D11RenderTargetView* Graphics::CreateRTViewFromSwapChain(IDXGISwapChain* swap
 	hr = m_device->CreateRenderTargetView(buffer, NULL, &rtv);
 	if (hr != S_OK)
 	{
-		WriteLog("Failed to create RTV\n");
+		DEBUG_ERROR("Failed to create RTV\n");
 		return NULL;
 	}
 
@@ -203,12 +203,12 @@ ID3DBlob* Graphics::CreateShaderFromFile(const wchar_t* fileName, const char* en
 		// handle error
 		if (errorBlob != nullptr)
 		{
-			WriteLog((char*)errorBlob->GetBufferPointer());
+			DEBUG_ERROR((char*)errorBlob->GetBufferPointer());
 			errorBlob->Release();
 		}
 		else
 		{
-			WriteLog("Failed to create shader from file\n");
+			DEBUG_ERROR("Failed to create shader from file\n");
 		}
 
 		return nullptr;
@@ -230,7 +230,7 @@ ID3D11VertexShader* Graphics::CreateVertexShader(ID3DBlob* vsCode)
 
 	if (hr != S_OK)
 	{
-		WriteLog("Failed to create vertex shader\n");
+		DEBUG_ERROR("Failed to create vertex shader\n");
 		return nullptr;
 	}
 
@@ -250,7 +250,7 @@ ID3D11PixelShader* Graphics::CreatePixelShader(ID3DBlob* psCode)
 
 	if (hr != S_OK)
 	{
-		WriteLog("Failed to create pixel shader\n");
+		DEBUG_ERROR("Failed to create pixel shader\n");
 		return nullptr;
 	}
 
@@ -271,7 +271,7 @@ ID3D11InputLayout* Graphics::CreateInputLayout(ID3DBlob* vsCode, const VertexFor
 
 	if (hr != S_OK)
 	{
-		WriteLog("Failed to create input layout\n");
+		DEBUG_ERROR("Failed to create input layout\n");
 		return nullptr;
 	}
 
@@ -314,7 +314,7 @@ ID3D11Buffer* Graphics::CreateVertexBuffer(unsigned int numVerts, unsigned int s
 
 	if (hr != S_OK)
 	{
-		WriteLog("Failed to create vertex buffer\n");
+		DEBUG_ERROR("Failed to create vertex buffer\n");
 		return nullptr;
 	}
 		
@@ -419,7 +419,7 @@ ID3D11Buffer* Graphics::CreateIndexBuffer(unsigned int numIndices, bool dynamic,
 
 	if (hr != S_OK)
 	{
-		WriteLog("Failed to create index buffer\n");
+		DEBUG_ERROR("Failed to create index buffer\n");
 		return nullptr;
 	}
 
@@ -457,7 +457,7 @@ ID3D11Buffer* Graphics::CreateConstantBuffer(unsigned int size, bool dynamic, co
 
 	if (hr != S_OK)
 	{
-		WriteLog("Failed to create constant buffer\n");
+		DEBUG_ERROR("Failed to create constant buffer\n");
 		return nullptr;
 	}
 
@@ -473,7 +473,7 @@ ID3D11Resource* Graphics::CreateTextureFromTGAFile(const wchar_t* fileName)
 	HRESULT hr = DirectX::LoadFromTGAFile(fileName, NULL, img);
 	if (hr != S_OK)
 	{
-		WriteLog("Failed to load TGA file\n");
+		DEBUG_ERROR("Failed to load TGA file\n");
 		return nullptr;
 	}
 
@@ -483,7 +483,7 @@ ID3D11Resource* Graphics::CreateTextureFromTGAFile(const wchar_t* fileName)
 	hr = DirectX::CreateTexture(m_device, img.GetImages(), img.GetImageCount(), img.GetMetadata(), &texture);
 	if (hr != S_OK)
 	{
-		WriteLog("Failed to create texture\n");
+		DEBUG_ERROR("Failed to create texture\n");
 		return nullptr;
 	}
 
@@ -498,7 +498,7 @@ ID3D11ShaderResourceView* Graphics::CreateShaderResource(ID3D11Resource* res)
 	HRESULT hr = m_device->CreateShaderResourceView(res, NULL, &srv);
 	if (hr != S_OK)
 	{
-		WriteLog("Failed to create shader resource view\n");
+		DEBUG_ERROR("Failed to create shader resource view\n");
 		return nullptr;
 	}
 
@@ -513,7 +513,7 @@ ID3D11SamplerState* Graphics::CreateSampler(const D3D11_SAMPLER_DESC& samplerInf
 	HRESULT hr = m_device->CreateSamplerState(&samplerInfo, &samplerState);
 	if (hr != S_OK)
 	{
-		WriteLog("Failed to create sampler\n");
+		DEBUG_ERROR("Failed to create sampler\n");
 		return nullptr;
 	}
 
@@ -534,7 +534,7 @@ void* Graphics::MapBuffer(ID3D11Buffer* buffer)
 	HRESULT hr = m_context->Map(buffer, 0, D3D11_MAP_WRITE_DISCARD, NULL, &res);
 	if (hr != S_OK)
 	{
-		WriteLog("Failed to map buffer\n");
+		DEBUG_ERROR("Failed to map buffer\n");
 		return nullptr;
 	}
 
@@ -609,7 +609,7 @@ ID3D11Texture2D* Graphics::CreateDepthBuffer(unsigned int width, unsigned int he
 	HRESULT hr = m_device->CreateTexture2D(&desc, NULL, &db);
 	if (hr != S_OK)
 	{
-		WriteLog("Failed to create depth buffer\n");
+		DEBUG_ERROR("Failed to create depth buffer\n");
 		return nullptr;
 	}
 
@@ -623,7 +623,7 @@ ID3D11DepthStencilView* Graphics::CreateDepthStencilView(ID3D11Texture2D* tex)
 	HRESULT hr = m_device->CreateDepthStencilView(tex, NULL, &dsv);
 	if (hr != S_OK)
 	{
-		WriteLog("Failed to create depth stencil view\n");
+		DEBUG_ERROR("Failed to create depth stencil view\n");
 		return nullptr;
 	}
 
@@ -637,7 +637,7 @@ ID3D11DepthStencilState* Graphics::CreateDepthStencilState(const D3D11_DEPTH_STE
 	HRESULT hr = m_device->CreateDepthStencilState(&desc, &dsState);
 	if (hr != S_OK)
 	{
-		WriteLog("Failed to create depth stencil state\n");
+		DEBUG_ERROR("Failed to create depth stencil state\n");
 		return nullptr;
 	}
 

@@ -39,7 +39,7 @@ bool OBJLoader::LoadFromFile(const char* filename, std::vector<Vertex>& vertices
 	if (!err.empty())
 	{
 		// `err` may contain warning message. May want to output it here
-		WriteLog(err.c_str());
+		DEBUG_ERROR(err.c_str());
 	}
 
 	if (!ret)

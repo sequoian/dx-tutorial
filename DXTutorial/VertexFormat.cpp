@@ -10,7 +10,7 @@ bool VertexFormat::AddElement(DXGI_FORMAT fmt, unsigned int size,
 	unsigned int index = NumInputs;
 	if (index >= MaxInputs)
 	{
-		WriteLog("Vertex format exceeds max inputs\n");
+		DEBUG_ERROR("Vertex format exceeds max inputs\n");
 		return false;
 	}
 
