@@ -150,6 +150,7 @@
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="OBJLoader.cpp" />
+    <ClCompile Include="Random.cpp" />
     <ClCompile Include="RenderTargetState.cpp" />
     <ClCompile Include="SampleApplication.cpp" />
     <ClCompile Include="SampleWindow.cpp" />
@@ -166,6 +167,7 @@
     <ClInclude Include="Material.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="OBJLoader.h" />
+    <ClInclude Include="Random.h" />
     <ClInclude Include="RenderTargetState.h" />
     <ClInclude Include="SampleApplication.h" />
     <ClInclude Include="SampleWindow.h" />
