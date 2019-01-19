@@ -1,6 +1,6 @@
 #include "WriteLog.h"
 
-// needed to use vsprintf
+// needed to use vsprintf in visual studio
 #ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS
 #endif
@@ -10,12 +10,27 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <assert.h>
-#include <sys/stat.h>
-#include <sys/types.h>
+#include <string>
 
 static FILE* file = nullptr;
 
-const char* fileName = "Output.log";
+const wchar_t* folderName = L"Logs";
+
+
+char* GetTimeStr(const char* format)
+{
+	time_t rawTime;
+	struct tm* timeInfo;
+	char buffer[80];
+
+	time(&rawTime);
+	timeInfo = localtime(&rawTime);
+
+	strftime(buffer, 80, format, timeInfo);
+
+	return buffer;
+}
+
 
 bool StartUpLogger()
 {
@@ -27,16 +42,29 @@ bool StartUpLogger()
 
 	assert(file == nullptr);
 
-	// open file stream
-	file = fopen(fileName, "w");
-	if (file == nullptr)
+	if (CreateDirectory(folderName, NULL) || ERROR_ALREADY_EXISTS == GetLastError())
 	{
-		DEBUG_ERROR("Could not open file: %s", fileName);
+		char fileName[100];
+		strcpy(fileName, "Logs/Output-");
+		strcat(fileName, GetTimeStr("[%F]-[%H-%M-%S].log"));
+
+		// open file stream
+		file = fopen(fileName, "w");
+		if (file == nullptr)
+		{
+			DEBUG_ERROR("Could not open file: %s", fileName);
+			return false;
+		}
+	}
+	else
+	{
+		DEBUG_ERROR("Could not create directory: %s", folderName);
 		return false;
 	}
 
 	return true;
 }
+
 
 void ShutDownLogger()
 {
@@ -54,21 +82,6 @@ void ShutDownLogger()
 }
 
 
-char* GetTimeStr()
-{
-	time_t rawTime;
-	struct tm* timeInfo;
-	char buffer[80];
-
-	time(&rawTime);
-	timeInfo = localtime(&rawTime);
-
-	strftime(buffer, 80, "[%F %T]: ", timeInfo);
-
-	return buffer;
-}
-
-
 int WriteLog(LogType type, const char* fmt, ...)
 {
 	const unsigned int maxChars = 1023;
@@ -80,7 +93,8 @@ int WriteLog(LogType type, const char* fmt, ...)
 	int charsWritten = vsprintf(msg, fmt, args);
 
 	// timestamp
-	strcpy(buffer, GetTimeStr());
+	strcpy(buffer, GetTimeStr("[%F %T]"));
+	strcat(buffer, ": ");
 
 	// log type
 	switch (type)

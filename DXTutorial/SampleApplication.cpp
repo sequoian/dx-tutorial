@@ -15,11 +15,14 @@ SampleApplication::~SampleApplication()
 
 bool SampleApplication::StartUp()
 {
-	StartUpLogger();
-
 	// make sure startup is only called once
 	assert(!initialized);
 	initialized = true;
+
+	if (!StartUpLogger())
+	{
+		return false;
+	}
 
 	if (!m_graphics.StartUp())
 	{
