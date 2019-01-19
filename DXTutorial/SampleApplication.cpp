@@ -15,13 +15,11 @@ SampleApplication::~SampleApplication()
 
 bool SampleApplication::StartUp()
 {
+	StartUpLogger();
+
 	// make sure startup is only called once
 	assert(!initialized);
 	initialized = true;
-
-	// Create console for printf output
-	AllocConsole();
-	freopen("CONOUT$", "w", stdout);
 
 	if (!m_graphics.StartUp())
 	{
@@ -45,7 +43,7 @@ void SampleApplication::ShutDown()
 
 	m_graphics.ShutDown();
 
-	FreeConsole();
+	ShutDownLogger();
 }
 
 
@@ -59,7 +57,6 @@ void SampleApplication::Run()
 
 		m_window.Present();
 	}
-
 }
 
 
