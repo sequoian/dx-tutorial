@@ -1,4 +1,5 @@
 #include "SampleWindow.h"
+#include "Assert.h"
 
 
 SampleWindow::SampleWindow()
@@ -17,7 +18,7 @@ SampleWindow::~SampleWindow()
 bool SampleWindow::StartUp(Graphics* graphics)
 {
 	// make sure startup is only called once
-	assert(m_swapChain == NULL);
+	ASSERT(m_swapChain == NULL);
 
 	// create window
 	Create(L"DX Tutorial", WS_OVERLAPPEDWINDOW);

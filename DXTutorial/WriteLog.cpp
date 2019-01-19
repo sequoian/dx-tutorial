@@ -9,8 +9,7 @@
 #include <ctime>
 #include <stdarg.h>
 #include <stdio.h>
-#include <assert.h>
-#include <string>
+#include "Assert.h"
 
 static FILE* file = nullptr;
 
@@ -40,7 +39,7 @@ bool StartUpLogger()
 	freopen("CONOUT$", "w", stdout);
 #endif
 
-	assert(file == nullptr);
+	ASSERT(file == nullptr);
 
 	if (CreateDirectory(folderName, NULL) || ERROR_ALREADY_EXISTS == GetLastError())
 	{

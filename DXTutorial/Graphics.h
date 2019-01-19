@@ -1,7 +1,6 @@
 #pragma once
 
 #include <d3d11.h>
-#include <cassert>
 #include <d3dcompiler.h>
 #include <DirectXTex.h>
 #include "WriteLog.h"

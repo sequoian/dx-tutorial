@@ -1,4 +1,5 @@
 #include "SampleApplication.h"
+#include "Assert.h"
 
 
 SampleApplication::SampleApplication()
@@ -16,7 +17,7 @@ SampleApplication::~SampleApplication()
 bool SampleApplication::StartUp()
 {
 	// make sure startup is only called once
-	assert(!initialized);
+	ASSERT(!initialized);
 	initialized = true;
 
 	if (!StartUpLogger())

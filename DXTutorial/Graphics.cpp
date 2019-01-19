@@ -1,5 +1,5 @@
 #include "Graphics.h"
-
+#include "Assert.h"
 
 Graphics::Graphics()
 {
@@ -17,7 +17,7 @@ Graphics::~Graphics()
 bool Graphics::StartUp()
 {
 	// make sure startup is only called once
-	assert(m_device == NULL);
+	ASSERT(m_device == NULL);
 
 	ID3D11Device* device = NULL;
 	ID3D11DeviceContext* context = NULL;

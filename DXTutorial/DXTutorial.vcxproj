@@ -142,6 +142,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Assert.cpp" />
     <ClCompile Include="Buffer.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="IndexBuffer.cpp" />
@@ -157,6 +158,7 @@
     <ClCompile Include="WriteLog.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Assert.h" />
     <ClInclude Include="BaseWindow.h" />
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="Graphics.h" />
