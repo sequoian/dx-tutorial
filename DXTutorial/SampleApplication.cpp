@@ -1,5 +1,6 @@
 #include "SampleApplication.h"
 #include "Assert.h"
+#include "Timer.h"
 
 
 SampleApplication::SampleApplication()
@@ -24,6 +25,8 @@ bool SampleApplication::StartUp()
 	{
 		return false;
 	}
+
+	Timer::InitTimers();
 
 	if (!m_graphics.StartUp())
 	{

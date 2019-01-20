@@ -5,6 +5,7 @@
 #include "IndexBuffer.h"
 #include "Model.h"
 #include "VertexFormat.h"
+#include "Timer.h"
 
 #include <DirectXMath.h>
 using namespace DirectX;
@@ -111,11 +112,14 @@ public:
 		m_rtState.SetClearDepthStencil(true, 1.0f);
 		m_rtState.SetSize(m_window.GetScreenWidth(), m_window.GetScreenHeight());
 
+		m_timer.Start();
+
 		return true;
 	}
 
 	virtual void Update() override
 	{
+		m_timer.Update();
 		m_time += 1.0f / 60.0f;
 	}
 
@@ -162,6 +166,7 @@ private:
 	ID3D11DepthStencilView* m_dsv = nullptr;
 	ID3D11DepthStencilState* m_dss = nullptr;
 	float m_time = 0.0f;
+	Timer m_timer;
 };
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow)
