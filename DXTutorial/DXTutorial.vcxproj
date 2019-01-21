@@ -157,6 +157,7 @@
     <ClCompile Include="RenderTargetState.cpp" />
     <ClCompile Include="SampleApplication.cpp" />
     <ClCompile Include="SampleWindow.cpp" />
+    <ClCompile Include="StringId.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />
     <ClCompile Include="VertexFormat.cpp" />
@@ -175,6 +176,7 @@
     <ClInclude Include="RenderTargetState.h" />
     <ClInclude Include="SampleApplication.h" />
     <ClInclude Include="SampleWindow.h" />
+    <ClInclude Include="StringId.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="VertexBuffer.h" />
     <ClInclude Include="VertexFormat.h" />
