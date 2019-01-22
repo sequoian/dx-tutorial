@@ -6,6 +6,7 @@
 #include "Model.h"
 #include "VertexFormat.h"
 #include "Timer.h"
+#include "Gamepad.h"
 
 #include <DirectXMath.h>
 using namespace DirectX;
@@ -114,6 +115,8 @@ public:
 
 		m_timer.Start();
 
+		m_gamepad.StartUp();
+
 		return true;
 	}
 
@@ -121,6 +124,8 @@ public:
 	{
 		m_timer.Update();
 		m_time += 1.0f / 60.0f;
+		
+		m_gamepad.Update();
 	}
 
 	virtual void Render() override
@@ -167,6 +172,7 @@ private:
 	ID3D11DepthStencilState* m_dss = nullptr;
 	float m_time = 0.0f;
 	Timer m_timer;
+	Gamepad m_gamepad;
 };
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow)

@@ -1,7 +1,5 @@
 #pragma once
 
-#include <Windows.h>
-#include <Xinput.h>
 #include <DirectXMath.h>
 using namespace DirectX;
 
@@ -15,14 +13,13 @@ enum GamepadButtons
 	BACK_BUTTON,
 	LEFT_THUMB,
 	RIGHT_THUMB,
-	RIGHT_SHOULDER,
 	LEFT_SHOULDER,
+	RIGHT_SHOULDER,
 	A_BUTTON,
 	B_BUTTON,
 	X_BUTTON,
 	Y_BUTTON
 };
-
 
 enum GamepadAxes
 {
@@ -34,11 +31,13 @@ enum GamepadAxes
 	RIGHT_TRIGGER
 };
 
-
 class Gamepad
 {
 public:
 	Gamepad();
+	~Gamepad();
+	bool StartUp();
+	void ShutDown();
 
 	// called every frame
 	bool Update();
@@ -59,7 +58,6 @@ private:
 	XMVECTOR NormalizeVector(XMVECTOR vector);
 
 private:
-	XINPUT_STATE m_state;
-	int m_controllerId;
-	float m_deadzone;
+	struct Impl;
+	Impl* m_impl = nullptr;
 };
