@@ -64,11 +64,6 @@ bool Keyboard::StartUp(SampleWindow& window)
 		return false;
 	}
 
-	if (!AcquireKeyboard())
-	{
-		return false;
-	}
-
 	return true;
 }
 
@@ -270,7 +265,7 @@ bool Keyboard::GetKeyState(KeyboardKeys key)
 
 	ASSERT_VERBOSE(key < s_numKeys, "Keyboard key not recognized");
 
-	return m_impl->keyboardState[s_keys[key]] * 0x80;
+	return (m_impl->keyboardState[s_keys[key]] * 0x80) != 0;
 }
 
 

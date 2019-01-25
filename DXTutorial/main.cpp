@@ -8,6 +8,7 @@
 #include "Timer.h"
 #include "Gamepad.h"
 #include "Keyboard.h"
+#include "Mouse.h"
 
 #include <DirectXMath.h>
 using namespace DirectX;
@@ -120,6 +121,8 @@ public:
 
 		m_keyboard.StartUp(m_window);
 
+		m_mouse.StartUp(m_window);
+
 		return true;
 	}
 
@@ -129,6 +132,7 @@ public:
 
 		m_gamepad.ShutDown();
 		m_keyboard.ShutDown();
+		m_mouse.ShutDown();
 	}
 
 	virtual void Update() override
@@ -138,6 +142,7 @@ public:
 		
 		m_gamepad.Update();
 		m_keyboard.Update();
+		m_mouse.Update();
 	}
 
 	virtual void Render() override
@@ -186,6 +191,7 @@ private:
 	Timer m_timer;
 	Gamepad m_gamepad;
 	Keyboard m_keyboard;
+	Mouse m_mouse;
 };
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow)

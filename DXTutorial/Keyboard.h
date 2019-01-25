@@ -1,6 +1,7 @@
 #pragma once
 
-enum KeyboardKeys {
+enum KeyboardKeys 
+{
 	KEY_ESCAPE,
 	KEY_1,
 	KEY_2,
