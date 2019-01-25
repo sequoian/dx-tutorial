@@ -7,6 +7,7 @@
 #include "VertexFormat.h"
 #include "Timer.h"
 #include "Gamepad.h"
+#include "Keyboard.h"
 
 #include <DirectXMath.h>
 using namespace DirectX;
@@ -117,7 +118,17 @@ public:
 
 		m_gamepad.StartUp();
 
+		m_keyboard.StartUp(m_window);
+
 		return true;
+	}
+
+	virtual void ShutDown() override
+	{
+		SampleApplication::ShutDown();
+
+		m_gamepad.ShutDown();
+		m_keyboard.ShutDown();
 	}
 
 	virtual void Update() override
@@ -126,6 +137,7 @@ public:
 		m_time += 1.0f / 60.0f;
 		
 		m_gamepad.Update();
+		m_keyboard.Update();
 	}
 
 	virtual void Render() override
@@ -173,6 +185,7 @@ private:
 	float m_time = 0.0f;
 	Timer m_timer;
 	Gamepad m_gamepad;
+	Keyboard m_keyboard;
 };
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow)

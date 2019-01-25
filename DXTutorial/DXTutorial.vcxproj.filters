@@ -69,6 +69,12 @@
     <ClCompile Include="Gamepad.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Keyboard.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Mouse.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseWindow.h">
@@ -123,6 +129,12 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Gamepad.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Keyboard.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Mouse.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
