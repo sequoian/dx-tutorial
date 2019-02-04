@@ -172,6 +172,7 @@
     <ClInclude Include="Assert.h" />
     <ClInclude Include="BaseWindow.h" />
     <ClInclude Include="Buffer.h" />
+    <ClInclude Include="ComponentPool.h" />
     <ClInclude Include="Gamepad.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="IndexBuffer.h" />
