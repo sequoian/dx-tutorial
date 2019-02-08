@@ -61,7 +61,7 @@ bool CompactPool<T>::GetObject(U64 handle, T& object)
 
 	if (Gen(handle) == Gen(remap))
 	{
-		object = pool[Idx(remap)];
+		object = m_pool[Idx(remap)];
 		return true;
 	}
 	else

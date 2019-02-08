@@ -148,6 +148,7 @@
     <ClCompile Include="Assert.cpp" />
     <ClCompile Include="Buffer.cpp" />
     <ClCompile Include="CompactPool.cpp" />
+    <ClCompile Include="ComponentSystem.cpp" />
     <ClCompile Include="Gamepad.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="IndexBuffer.cpp" />
@@ -175,6 +176,7 @@
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="CompactPool.h" />
     <ClInclude Include="ComponentPool.h" />
+    <ClInclude Include="ComponentSystem.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntityManager.h" />
     <ClInclude Include="Gamepad.h" />
