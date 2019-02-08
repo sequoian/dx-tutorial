@@ -147,6 +147,7 @@
   <ItemGroup>
     <ClCompile Include="Assert.cpp" />
     <ClCompile Include="Buffer.cpp" />
+    <ClCompile Include="CompactPool.cpp" />
     <ClCompile Include="Gamepad.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="IndexBuffer.cpp" />
@@ -172,7 +173,10 @@
     <ClInclude Include="Assert.h" />
     <ClInclude Include="BaseWindow.h" />
     <ClInclude Include="Buffer.h" />
+    <ClInclude Include="CompactPool.h" />
     <ClInclude Include="ComponentPool.h" />
+    <ClInclude Include="Entity.h" />
+    <ClInclude Include="EntityManager.h" />
     <ClInclude Include="Gamepad.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="IndexBuffer.h" />
@@ -189,6 +193,7 @@
     <ClInclude Include="SampleWindow.h" />
     <ClInclude Include="StringId.h" />
     <ClInclude Include="Timer.h" />
+    <ClInclude Include="Types.h" />
     <ClInclude Include="VertexBuffer.h" />
     <ClInclude Include="VertexFormat.h" />
     <ClInclude Include="WriteLog.h" />

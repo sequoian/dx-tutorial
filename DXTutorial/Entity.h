@@ -1,7 +1,6 @@
 #pragma once
 
 #include <stdint.h>
-#include <stdio.h>
 
 const unsigned int entityIndexBits = 32;
 const unsigned int entityGenerationBits = 32;

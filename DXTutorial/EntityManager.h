@@ -10,7 +10,7 @@ const unsigned int minFreeIndices = 2048;
 class EntityManager
 {
 public:
-	// Pass the number of entites expected to be created
+	// Pass the number of entities expected to be created
 	bool StartUp(unsigned int numEntities)
 	{
 		m_usedGenerations.reserve(numEntities);
@@ -31,7 +31,7 @@ public:
 			// Create a fresh index with the generation starting at 0
 			m_usedGenerations.push_back(0);
 			idx = m_usedGenerations.size() - 1;
-			assert(idx < (uint64_t)1 << entityIndexBits);
+			ASSERT(idx < (uint64_t)1 << entityIndexBits);
 		}
 
 		// Return entity, setting index and generation
