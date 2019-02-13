@@ -79,7 +79,16 @@ public:
 
 	inline const T* GetObjectConst(U64 handle) const
 	{
-		return GetObject(handle);
+		U64 remap = m_remapToPool[Idx(handle)];
+
+		if (Gen(handle) == Gen(remap))
+		{
+			return &m_pool[Idx(remap)];
+		}
+		else
+		{
+			return nullptr;
+		}
 	}
 
 
@@ -101,7 +110,7 @@ public:
 
 			// update pool idx to handle remap
 			U64 swappedHandle = m_remapToHandle.back();
-			m_remapToHandle[idxToPool] = back;
+			m_remapToHandle[idxToPool] = swappedHandle;
 			m_remapToHandle.pop_back();
 
 			// update handle to pool idx remap
@@ -125,7 +134,7 @@ public:
 
 	inline T* operator[] (I32 idx)
 	{
-		return m_pool[idx];
+		return &m_pool[idx];
 	}
 
 
@@ -175,12 +184,12 @@ private:
 	std::vector<T> m_pool;
 	std::vector<U64> m_remapToPool;
 	std::vector<U64> m_remapToHandle;
-	std::deque<U32> m_freedHandles;
+	std::deque<U64> m_freedHandles;
 
 	T m_next;
 	U32 m_numActive = 0;
 
 	static const U32 m_bitShift = 32;
-	static const U32 m_bitMask = (1 << m_bitShift) - 1;
+	static const U32 m_bitMask = (U32)((U64)1 << m_bitShift) - 1;
 	static const U32 m_minFree = 2048;
 };

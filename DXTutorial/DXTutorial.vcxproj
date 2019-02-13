@@ -188,10 +188,12 @@
     <ClInclude Include="OBJLoader.h" />
     <ClInclude Include="Random.h" />
     <ClInclude Include="RenderTargetState.h" />
+    <ClInclude Include="RotatorSystem.h" />
     <ClInclude Include="SampleApplication.h" />
     <ClInclude Include="SampleWindow.h" />
     <ClInclude Include="StringId.h" />
     <ClInclude Include="Timer.h" />
+    <ClInclude Include="TransformSystem.h" />
     <ClInclude Include="Types.h" />
     <ClInclude Include="VertexBuffer.h" />
     <ClInclude Include="VertexFormat.h" />

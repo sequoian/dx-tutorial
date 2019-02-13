@@ -152,5 +152,11 @@
     <ClInclude Include="ComponentSystem.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="TransformSystem.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RotatorSystem.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

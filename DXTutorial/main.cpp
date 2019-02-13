@@ -9,6 +9,8 @@
 #include "Gamepad.h"
 #include "Keyboard.h"
 #include "Mouse.h"
+#include "EntityManager.h"
+#include "TransformSystem.h"
 
 #include <DirectXMath.h>
 using namespace DirectX;
@@ -123,6 +125,15 @@ public:
 
 		m_mouse.StartUp(m_window);
 
+		m_entityManager.StartUp(0);
+		m_transformSystem.StartUp(0);
+
+		Entity e = m_entityManager.CreateEntity();
+		m_transformSystem.CreateComponent(e);
+
+		e = m_entityManager.CreateEntity();
+		m_transformSystem.CreateComponent(e);
+
 		return true;
 	}
 
@@ -138,11 +149,13 @@ public:
 	virtual void Update() override
 	{
 		m_timer.Update();
+		float dt = m_timer.GetDeltaTime();
 		m_time += 1.0f / 60.0f;
 		
 		m_gamepad.Update();
 		m_keyboard.Update();
 		m_mouse.Update();
+		m_transformSystem.Execute(dt);
 	}
 
 	virtual void Render() override
@@ -192,6 +205,8 @@ private:
 	Gamepad m_gamepad;
 	Keyboard m_keyboard;
 	Mouse m_mouse;
+	EntityManager m_entityManager;
+	TransformSystem m_transformSystem;
 };
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow)

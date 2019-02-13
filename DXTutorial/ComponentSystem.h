@@ -10,11 +10,12 @@ class ComponentSystem
 {
 public:
 	// execute system
-	virtual void Execute() = 0;
+	virtual void Execute(float deltaTime) = 0;
 
-	virtual inline bool StartUp(U32)
+	virtual inline bool StartUp(U32 numComponents)
 	{
 		m_pool.StartUp(numComponents);
+		return true;
 	}
 
 
@@ -45,7 +46,15 @@ public:
 
 	virtual inline const T* FindComponentConst(Entity e) const
 	{
-		return FindComponent(e);
+		auto itr = m_entityMap.find(e.id);
+		if (itr == m_entityMap.end())
+		{
+			return nullptr;
+		}
+		else
+		{
+			return GetComponentByHandleConst(itr->second);
+		}
 	}
 
 
@@ -57,7 +66,7 @@ public:
 
 	virtual inline const T* GetComponentByHandleConst(U64 handle) const
 	{
-		return GetComponentByHandle(handle);
+		return m_pool.GetObjectConst(handle);
 	}
 
 
@@ -80,7 +89,7 @@ public:
 	}
 
 
-private:
+protected:
 	CompactPool<T> m_pool;
 	std::unordered_map<U64, U64> m_entityMap;
 };

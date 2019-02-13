@@ -14,6 +14,7 @@ public:
 	bool StartUp(unsigned int numEntities)
 	{
 		m_usedGenerations.reserve(numEntities);
+		return true;
 	}
 
 	Entity CreateEntity()
