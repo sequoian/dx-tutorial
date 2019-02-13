@@ -75,12 +75,6 @@
     <ClCompile Include="Mouse.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CompactPool.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ComponentSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseWindow.h">
@@ -141,9 +135,6 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Mouse.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ComponentPool.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Entity.h">
