@@ -11,6 +11,7 @@
 #include "Mouse.h"
 #include "EntityManager.h"
 #include "TransformSystem.h"
+#include "RotatorSystem.h"
 
 #include <DirectXMath.h>
 using namespace DirectX;
@@ -125,14 +126,33 @@ public:
 
 		m_mouse.StartUp(m_window);
 
-		m_entityManager.StartUp(0);
-		m_transformSystem.StartUp(0);
+		m_entityManager.StartUp(3);
+		m_transformSystem.StartUp(3);
+		m_rotatorSystem.StartUp(3);
+		m_rotatorSystem.AddSystemRefs(&m_transformSystem);
 
+		// entity 1
 		Entity e = m_entityManager.CreateEntity();
-		m_transformSystem.CreateComponent(e);
+		U64 transformHandle = m_transformSystem.CreateComponent(e);
+		U64 rotatorHandle = m_rotatorSystem.CreateComponent(e);
+		RotatorComponent* rotator = m_rotatorSystem.GetComponentByHandle(rotatorHandle);
+		rotator->transform = transformHandle;
+		rotator->speed = 1;
 
+		// entity 2
 		e = m_entityManager.CreateEntity();
-		m_transformSystem.CreateComponent(e);
+		transformHandle = m_transformSystem.CreateComponent(e);
+		TransformComponent* t = m_transformSystem.GetComponentByHandle(transformHandle);
+		m_transformSystem.GetComponentByHandle(transformHandle)->transform *= DirectX::XMMatrixTranslation(-1, 1, -1);
+		rotatorHandle = m_rotatorSystem.CreateComponent(e);
+		rotator = m_rotatorSystem.GetComponentByHandle(rotatorHandle);
+		rotator->transform = transformHandle;
+		rotator->speed = 2;
+
+		// entity 3 (no rotation)
+		e = m_entityManager.CreateEntity();
+		transformHandle = m_transformSystem.CreateComponent(e);
+		m_transformSystem.GetComponentByHandle(transformHandle)->transform *= DirectX::XMMatrixTranslation(1, 0, 1);
 
 		return true;
 	}
@@ -155,6 +175,7 @@ public:
 		m_gamepad.Update();
 		m_keyboard.Update();
 		m_mouse.Update();
+		m_rotatorSystem.Execute(dt);
 		m_transformSystem.Execute(dt);
 	}
 
@@ -207,6 +228,7 @@ private:
 	Mouse m_mouse;
 	EntityManager m_entityManager;
 	TransformSystem m_transformSystem;
+	RotatorSystem m_rotatorSystem;
 };
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow)

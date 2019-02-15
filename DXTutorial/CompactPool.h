@@ -163,13 +163,13 @@ public:
 
 
 private:
-	inline U32 Gen(U64 handle) const
+	inline U32 Idx(U64 handle) const
 	{
 		return handle & m_bitMask;
 	}
 
 
-	inline U32 Idx(U64 handle) const
+	inline U32 Gen(U64 handle) const
 	{
 		return (handle >> m_bitShift) & m_bitMask;
 	}
@@ -190,6 +190,6 @@ private:
 	U32 m_numActive = 0;
 
 	static const U32 m_bitShift = 32;
-	static const U32 m_bitMask = (U32)((U64)1 << m_bitShift) - 1;
+	static const U32 m_bitMask = ((U64)1 << m_bitShift) - 1;
 	static const U32 m_minFree = 2048;
 };
