@@ -23,13 +23,14 @@ public:
 
 	inline void Execute(float deltaTime) override
 	{
-		deltaTime = 1.0 / 60.0; // for testing
 		for (U32 i = 0; i < m_pool.Size(); i++)
 		{
 			RotatorComponent* comp = m_pool[i];
 			TransformComponent* transform = m_transformSystem->GetComponentByHandle(comp->transform);
 			comp->angle += comp->speed * deltaTime;
-			transform->transform *= DirectX::XMMatrixRotationY(comp->angle);
+			XMVECTOR trans = transform->transform.r[3];
+			transform->transform = DirectX::XMMatrixRotationY(comp->angle);
+			transform->transform.r[3] = trans;
 		}
 	}
 

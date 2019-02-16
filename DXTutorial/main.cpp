@@ -134,6 +134,7 @@ public:
 		// entity 1
 		Entity e = m_entityManager.CreateEntity();
 		U64 transformHandle = m_transformSystem.CreateComponent(e);
+		m_transformSystem.GetComponentByHandle(transformHandle)->transform *= DirectX::XMMatrixTranslation(0, 0, 0);
 		U64 rotatorHandle = m_rotatorSystem.CreateComponent(e);
 		RotatorComponent* rotator = m_rotatorSystem.GetComponentByHandle(rotatorHandle);
 		rotator->transform = transformHandle;
@@ -142,8 +143,7 @@ public:
 		// entity 2
 		e = m_entityManager.CreateEntity();
 		transformHandle = m_transformSystem.CreateComponent(e);
-		TransformComponent* t = m_transformSystem.GetComponentByHandle(transformHandle);
-		m_transformSystem.GetComponentByHandle(transformHandle)->transform *= DirectX::XMMatrixTranslation(-1, 1, -1);
+		m_transformSystem.GetComponentByHandle(transformHandle)->transform *= DirectX::XMMatrixTranslation(3, 0, 0);
 		rotatorHandle = m_rotatorSystem.CreateComponent(e);
 		rotator = m_rotatorSystem.GetComponentByHandle(rotatorHandle);
 		rotator->transform = transformHandle;
@@ -152,7 +152,7 @@ public:
 		// entity 3 (no rotation)
 		e = m_entityManager.CreateEntity();
 		transformHandle = m_transformSystem.CreateComponent(e);
-		m_transformSystem.GetComponentByHandle(transformHandle)->transform *= DirectX::XMMatrixTranslation(1, 0, 1);
+		m_transformSystem.GetComponentByHandle(transformHandle)->transform *= DirectX::XMMatrixTranslation(0, 0, 0);
 
 		return true;
 	}
@@ -193,20 +193,37 @@ public:
 
 		// update our constants with data for this frame
 		ModelConstants consts;
-		consts.m_world = XMMatrixRotationRollPitchYaw(0.0f, m_time * 0.5f, 0.0f);
 		consts.m_viewproj = XMMatrixMultiply(view, proj);
 		consts.m_lightDirection = XMVector3Normalize(XMVectorSet(1.0f, 1.0f, -1.0f, 0.0f));
 		consts.m_lightColor = XMVectorSet(0.8f, 0.8f, 0.5f, 1.0f);
 		consts.m_ambientColor = XMVectorSet(0.1f, 0.1f, 0.2f, 1.0f);
 		consts.m_cameraPos = eyepos;
 		consts.m_specularColor = XMVectorSet(0.5f, 0.5f, 0.5f, 5.0f);
-		m_cb.MapAndSet(m_graphics, consts);
 
 		m_graphics.SetDepthStencilState(m_dss);
 		m_rtState.Begin(m_graphics);
 		m_model.Select(m_graphics);
 		m_material.Select(m_graphics);
+
+		TransformComponent* t = m_transformSystem[1];
+		consts.m_world = t->transform;
+		m_cb.MapAndSet(m_graphics, consts);
 		m_model.Draw(m_graphics);
+
+		//t = m_transformSystem[1];
+		//consts.m_world = t->transform;
+		//m_cb.MapAndSet(m_graphics, consts);
+		//m_model.Draw(m_graphics);
+
+
+		//for (int i = 0; i < m_transformSystem.Size(); ++i)
+		//{
+		//	TransformComponent* t = m_transformSystem[i];
+		//	consts.m_world = t->transform;
+		//	m_cb.MapAndSet(m_graphics, consts);
+		//	m_model.Draw(m_graphics);
+		//}
+
 		m_rtState.End(m_graphics);
 	}
 

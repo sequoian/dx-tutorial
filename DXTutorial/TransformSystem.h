@@ -17,9 +17,16 @@ class TransformSystem : public ComponentSystem<TransformComponent>
 public:
 	inline void Execute(float deltaTime) override
 	{
-		for (U32 i = 0; i < m_pool.Size(); i++)
-		{
-			TransformComponent* t = m_pool[i];
-		}
 	}
+
+	inline U32 Size()
+	{
+		return m_pool.Size();
+	}
+
+	inline TransformComponent* operator[] (I32 idx)
+	{
+		return m_pool[idx];
+	}
+
 };
