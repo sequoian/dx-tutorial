@@ -172,6 +172,7 @@
     <ClInclude Include="Assert.h" />
     <ClInclude Include="BaseWindow.h" />
     <ClInclude Include="Buffer.h" />
+    <ClInclude Include="CameraSystem.h" />
     <ClInclude Include="CompactPool.h" />
     <ClInclude Include="ComponentSystem.h" />
     <ClInclude Include="Entity.h" />

@@ -158,5 +158,8 @@
     <ClInclude Include="RotatorSystem.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="CameraSystem.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
