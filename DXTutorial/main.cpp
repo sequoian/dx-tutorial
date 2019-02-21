@@ -12,6 +12,7 @@
 #include "EntityManager.h"
 #include "TransformSystem.h"
 #include "RotatorSystem.h"
+#include "CameraSystem.h"
 
 #include <DirectXMath.h>
 using namespace DirectX;
@@ -126,10 +127,12 @@ public:
 
 		m_mouse.StartUp(m_window);
 
-		m_entityManager.StartUp(3);
-		m_transformSystem.StartUp(3);
-		m_rotatorSystem.StartUp(3);
+		m_entityManager.StartUp(4);
+		m_transformSystem.StartUp(4);
+		m_rotatorSystem.StartUp(4);
 		m_rotatorSystem.AddSystemRefs(&m_transformSystem);
+		m_cameraSystem.StartUp(1);
+		m_cameraSystem.AddSystemRefs(&m_transformSystem, &m_window);
 
 		// entity 1
 		Entity e = m_entityManager.CreateEntity();
@@ -154,6 +157,21 @@ public:
 		transformHandle = m_transformSystem.CreateComponent(e);
 		m_transformSystem.GetComponentByHandle(transformHandle)->transform *= DirectX::XMMatrixTranslation(0, 0, 0);
 
+		// camera
+		e = m_entityManager.CreateEntity();
+		transformHandle = m_transformSystem.CreateComponent(e);
+		m_transformSystem.GetComponentByHandle(transformHandle)->transform *= DirectX::XMMatrixTranslation(0.0f, 0.0f, -5.0f);
+		U64 cameraHandle = m_cameraSystem.CreateComponent(e);
+		CameraComponent* camera = m_cameraSystem.GetComponentByHandle(cameraHandle);
+		camera->transform = transformHandle;
+		camera->nearZ = 0.01f;
+		camera->farZ = 1000.0f;
+		camera->fov = 45.0f;
+		rotatorHandle = m_rotatorSystem.CreateComponent(e);
+		rotator = m_rotatorSystem.GetComponentByHandle(rotatorHandle);
+		rotator->transform = transformHandle;
+		rotator->speed = 2;
+
 		return true;
 	}
 
@@ -177,10 +195,12 @@ public:
 		m_mouse.Update();
 		m_rotatorSystem.Execute(dt);
 		m_transformSystem.Execute(dt);
+		m_cameraSystem.Execute(dt);
 	}
 
 	virtual void Render() override
 	{
+		/*
 		// hard-coded camera position and target
 		XMVECTOR eyepos = XMVectorSet(0.0f, 2.0f, -5.0f, 1.0f);
 		XMVECTOR target = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
@@ -191,13 +211,15 @@ public:
 		XMMATRIX proj = XMMatrixPerspectiveFovLH(45.0f, m_window.GetScreenWidth() /
 			float(m_window.GetScreenHeight()), 0.01f, 1000.0f);
 
+		*/
+
 		// update our constants with data for this frame
 		ModelConstants consts;
-		consts.m_viewproj = XMMatrixMultiply(view, proj);
+		consts.m_viewproj = m_cameraSystem[0]->viewProjMatrix;
 		consts.m_lightDirection = XMVector3Normalize(XMVectorSet(1.0f, 1.0f, -1.0f, 0.0f));
 		consts.m_lightColor = XMVectorSet(0.8f, 0.8f, 0.5f, 1.0f);
 		consts.m_ambientColor = XMVectorSet(0.1f, 0.1f, 0.2f, 1.0f);
-		consts.m_cameraPos = eyepos;
+		consts.m_cameraPos = m_transformSystem.GetComponentByHandle(m_cameraSystem[0]->transform)->transform.r[3];
 		consts.m_specularColor = XMVectorSet(0.5f, 0.5f, 0.5f, 5.0f);
 
 		m_graphics.SetDepthStencilState(m_dss);
@@ -205,15 +227,10 @@ public:
 		m_model.Select(m_graphics);
 		m_material.Select(m_graphics);
 
-		TransformComponent* t = m_transformSystem[1];
+		TransformComponent* t = m_transformSystem[0];
 		consts.m_world = t->transform;
 		m_cb.MapAndSet(m_graphics, consts);
 		m_model.Draw(m_graphics);
-
-		//t = m_transformSystem[1];
-		//consts.m_world = t->transform;
-		//m_cb.MapAndSet(m_graphics, consts);
-		//m_model.Draw(m_graphics);
 
 
 		//for (int i = 0; i < m_transformSystem.Size(); ++i)
@@ -246,6 +263,7 @@ private:
 	EntityManager m_entityManager;
 	TransformSystem m_transformSystem;
 	RotatorSystem m_rotatorSystem;
+	CameraSystem m_cameraSystem;
 };
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow)

@@ -20,7 +20,7 @@ struct CameraComponent
 class CameraSystem : public ComponentSystem<CameraComponent>
 {
 public:
-	CameraSystem(TransformSystem* transformSystem, SampleWindow* window)
+	void AddSystemRefs(TransformSystem* transformSystem, SampleWindow* window)
 	{
 		m_transformSystem = transformSystem;
 		m_window = window;
