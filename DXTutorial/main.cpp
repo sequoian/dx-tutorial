@@ -137,11 +137,11 @@ public:
 		// entity 1
 		Entity e = m_entityManager.CreateEntity();
 		U64 transformHandle = m_transformSystem.CreateComponent(e);
-		m_transformSystem.GetComponentByHandle(transformHandle)->transform *= DirectX::XMMatrixTranslation(0, 0, 0);
+		m_transformSystem.GetComponentByHandle(transformHandle)->transform *= DirectX::XMMatrixTranslation(-3, 0, 0);
 		U64 rotatorHandle = m_rotatorSystem.CreateComponent(e);
 		RotatorComponent* rotator = m_rotatorSystem.GetComponentByHandle(rotatorHandle);
 		rotator->transform = transformHandle;
-		rotator->speed = 1;
+		rotator->speed = -1;
 
 		// entity 2
 		e = m_entityManager.CreateEntity();
@@ -150,7 +150,7 @@ public:
 		rotatorHandle = m_rotatorSystem.CreateComponent(e);
 		rotator = m_rotatorSystem.GetComponentByHandle(rotatorHandle);
 		rotator->transform = transformHandle;
-		rotator->speed = 2;
+		rotator->speed = 1;
 
 		// entity 3 (no rotation)
 		e = m_entityManager.CreateEntity();
@@ -170,7 +170,7 @@ public:
 		rotatorHandle = m_rotatorSystem.CreateComponent(e);
 		rotator = m_rotatorSystem.GetComponentByHandle(rotatorHandle);
 		rotator->transform = transformHandle;
-		rotator->speed = 2;
+		rotator->speed = 0;
 
 		return true;
 	}
@@ -200,19 +200,6 @@ public:
 
 	virtual void Render() override
 	{
-		/*
-		// hard-coded camera position and target
-		XMVECTOR eyepos = XMVectorSet(0.0f, 2.0f, -5.0f, 1.0f);
-		XMVECTOR target = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
-
-		// generate view and projection matrices
-		XMMATRIX view = XMMatrixLookAtLH(eyepos, target, XMVectorSet(0.0f, 1.0f, 0.0f,
-			0.0f));
-		XMMATRIX proj = XMMatrixPerspectiveFovLH(45.0f, m_window.GetScreenWidth() /
-			float(m_window.GetScreenHeight()), 0.01f, 1000.0f);
-
-		*/
-
 		// update our constants with data for this frame
 		ModelConstants consts;
 		consts.m_viewproj = m_cameraSystem[0]->viewProjMatrix;
@@ -223,23 +210,18 @@ public:
 		consts.m_specularColor = XMVectorSet(0.5f, 0.5f, 0.5f, 5.0f);
 
 		m_graphics.SetDepthStencilState(m_dss);
+
 		m_rtState.Begin(m_graphics);
 		m_model.Select(m_graphics);
-		m_material.Select(m_graphics);
 
-		TransformComponent* t = m_transformSystem[0];
-		consts.m_world = t->transform;
-		m_cb.MapAndSet(m_graphics, consts);
-		m_model.Draw(m_graphics);
-
-
-		//for (int i = 0; i < m_transformSystem.Size(); ++i)
-		//{
-		//	TransformComponent* t = m_transformSystem[i];
-		//	consts.m_world = t->transform;
-		//	m_cb.MapAndSet(m_graphics, consts);
-		//	m_model.Draw(m_graphics);
-		//}
+		for (int i = 0; i < m_transformSystem.Size() - 1; ++i) // exclude camera for now
+		{
+			TransformComponent* t = m_transformSystem[i];
+			consts.m_world = t->transform;
+			m_cb.MapAndSet(m_graphics, consts);
+			m_material.Select(m_graphics);
+			m_model.Draw(m_graphics);
+		}
 
 		m_rtState.End(m_graphics);
 	}
