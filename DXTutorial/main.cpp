@@ -14,6 +14,7 @@
 #include "RotatorSystem.h"
 #include "CameraSystem.h"
 #include "MeshSystem.h"
+#include "FlyCamSystem.h"
 
 #include <DirectXMath.h>
 using namespace DirectX;
@@ -135,6 +136,8 @@ public:
 		m_cameraSystem.StartUp(1);
 		m_cameraSystem.AddSystemRefs(&m_transformSystem, &m_window);
 		m_meshSystem.StartUp(3);
+		m_flycamSystem.StartUp(3);
+		m_flycamSystem.AddSystemRefs(&m_gamepad, &m_transformSystem);
 
 		Entity e;
 		U64 transformHandle;
@@ -143,6 +146,7 @@ public:
 		U64 cameraHandle;
 		CameraComponent* camera;
 		MeshComponent* mesh;
+		FlyCamComponent* flycam;
 
 		// entity 1
 		e = m_entityManager.CreateEntity();
@@ -189,10 +193,12 @@ public:
 		camera->nearZ = 0.01f;
 		camera->farZ = 1000.0f;
 		camera->fov = 45.0f;
-		rotatorHandle = m_rotatorSystem.CreateComponent(e);
-		rotator = m_rotatorSystem.GetComponentByHandle(rotatorHandle);
-		rotator->transform = transformHandle;
-		rotator->speed = 0;
+		flycam = m_flycamSystem.GetComponentByHandle(m_flycamSystem.CreateComponent(e));
+		flycam->transform = transformHandle;
+		flycam->lookSpeed = 2;
+		flycam->moveSpeed = 8;
+		flycam->sprintSpeed = 18;
+		flycam->crawlSpeed = 2;
 
 		return true;
 	}
@@ -218,6 +224,7 @@ public:
 		m_rotatorSystem.Execute(dt);
 		m_transformSystem.Execute(dt);
 		m_cameraSystem.Execute(dt);
+		m_flycamSystem.Execute(dt);
 	}
 
 	virtual void Render() override
@@ -269,6 +276,7 @@ private:
 	RotatorSystem m_rotatorSystem;
 	CameraSystem m_cameraSystem;
 	MeshSystem m_meshSystem;
+	FlyCamSystem m_flycamSystem;
 };
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow)

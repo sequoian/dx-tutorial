@@ -177,6 +177,7 @@
     <ClInclude Include="ComponentSystem.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntityManager.h" />
+    <ClInclude Include="FlyCamSystem.h" />
     <ClInclude Include="Gamepad.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="IndexBuffer.h" />

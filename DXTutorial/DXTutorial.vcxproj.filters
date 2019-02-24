@@ -164,5 +164,8 @@
     <ClInclude Include="MeshSystem.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="FlyCamSystem.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
