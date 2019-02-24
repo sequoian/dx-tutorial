@@ -182,6 +182,7 @@
     <ClInclude Include="IndexBuffer.h" />
     <ClInclude Include="Keyboard.h" />
     <ClInclude Include="Material.h" />
+    <ClInclude Include="MeshSystem.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Mouse.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>

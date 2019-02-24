@@ -13,6 +13,7 @@
 #include "TransformSystem.h"
 #include "RotatorSystem.h"
 #include "CameraSystem.h"
+#include "MeshSystem.h"
 
 #include <DirectXMath.h>
 using namespace DirectX;
@@ -133,15 +134,28 @@ public:
 		m_rotatorSystem.AddSystemRefs(&m_transformSystem);
 		m_cameraSystem.StartUp(1);
 		m_cameraSystem.AddSystemRefs(&m_transformSystem, &m_window);
+		m_meshSystem.StartUp(3);
+
+		Entity e;
+		U64 transformHandle;
+		U64 rotatorHandle;
+		RotatorComponent* rotator;
+		U64 cameraHandle;
+		CameraComponent* camera;
+		MeshComponent* mesh;
 
 		// entity 1
-		Entity e = m_entityManager.CreateEntity();
-		U64 transformHandle = m_transformSystem.CreateComponent(e);
+		e = m_entityManager.CreateEntity();
+		transformHandle = m_transformSystem.CreateComponent(e);
 		m_transformSystem.GetComponentByHandle(transformHandle)->transform *= DirectX::XMMatrixTranslation(-3, 0, 0);
-		U64 rotatorHandle = m_rotatorSystem.CreateComponent(e);
-		RotatorComponent* rotator = m_rotatorSystem.GetComponentByHandle(rotatorHandle);
+		rotatorHandle = m_rotatorSystem.CreateComponent(e);
+		rotator = m_rotatorSystem.GetComponentByHandle(rotatorHandle);
 		rotator->transform = transformHandle;
 		rotator->speed = -1;
+		mesh = m_meshSystem.GetComponentByHandle(m_meshSystem.CreateComponent(e));
+		mesh->transform = transformHandle;
+		mesh->model = &m_model;
+		mesh->material = &m_material;
 
 		// entity 2
 		e = m_entityManager.CreateEntity();
@@ -151,18 +165,26 @@ public:
 		rotator = m_rotatorSystem.GetComponentByHandle(rotatorHandle);
 		rotator->transform = transformHandle;
 		rotator->speed = 1;
+		mesh = m_meshSystem.GetComponentByHandle(m_meshSystem.CreateComponent(e));
+		mesh->transform = transformHandle;
+		mesh->model = &m_model;
+		mesh->material = &m_material;
 
-		// entity 3 (no rotation)
+		// entity 3
 		e = m_entityManager.CreateEntity();
 		transformHandle = m_transformSystem.CreateComponent(e);
 		m_transformSystem.GetComponentByHandle(transformHandle)->transform *= DirectX::XMMatrixTranslation(0, 0, 0);
+		mesh = m_meshSystem.GetComponentByHandle(m_meshSystem.CreateComponent(e));
+		mesh->transform = transformHandle;
+		mesh->model = &m_model;
+		mesh->material = &m_material;
 
 		// camera
 		e = m_entityManager.CreateEntity();
 		transformHandle = m_transformSystem.CreateComponent(e);
 		m_transformSystem.GetComponentByHandle(transformHandle)->transform *= DirectX::XMMatrixTranslation(0.0f, 0.0f, -5.0f);
-		U64 cameraHandle = m_cameraSystem.CreateComponent(e);
-		CameraComponent* camera = m_cameraSystem.GetComponentByHandle(cameraHandle);
+		cameraHandle = m_cameraSystem.CreateComponent(e);
+		camera = m_cameraSystem.GetComponentByHandle(cameraHandle);
 		camera->transform = transformHandle;
 		camera->nearZ = 0.01f;
 		camera->farZ = 1000.0f;
@@ -212,15 +234,15 @@ public:
 		m_graphics.SetDepthStencilState(m_dss);
 
 		m_rtState.Begin(m_graphics);
-		m_model.Select(m_graphics);
 
-		for (int i = 0; i < m_transformSystem.Size() - 1; ++i) // exclude camera for now
+		for (int i = 0; i < m_meshSystem.Size(); ++i)
 		{
-			TransformComponent* t = m_transformSystem[i];
-			consts.m_world = t->transform;
+			MeshComponent* mesh = m_meshSystem[i];
+			consts.m_world = m_transformSystem.GetComponentByHandle(mesh->transform)->transform;
 			m_cb.MapAndSet(m_graphics, consts);
-			m_material.Select(m_graphics);
-			m_model.Draw(m_graphics);
+			mesh->model->Select(m_graphics);
+			mesh->material->Select(m_graphics);
+			mesh->model->Draw(m_graphics);
 		}
 
 		m_rtState.End(m_graphics);
@@ -246,6 +268,7 @@ private:
 	TransformSystem m_transformSystem;
 	RotatorSystem m_rotatorSystem;
 	CameraSystem m_cameraSystem;
+	MeshSystem m_meshSystem;
 };
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow)
