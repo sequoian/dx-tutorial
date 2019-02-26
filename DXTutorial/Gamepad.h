@@ -42,8 +42,8 @@ public:
 	// called every frame
 	bool Update();
 
-	bool GetButtonState(GamepadButtons button);
-	float GetAxisState(GamepadAxes axis);
+	bool GetButtonState(GamepadButtons button) const;
+	float GetAxisState(GamepadAxes axis) const;
 	XMVECTOR GetRightThumbstickVector();
 	XMVECTOR GetLeftThumbstickVector();
 
@@ -54,7 +54,7 @@ public:
 
 private:
 	bool CheckConnection();
-	float NormalizeThumbstick(int axis);
+	float NormalizeThumbstick(int axis) const;
 	XMVECTOR NormalizeVector(XMVECTOR vector);
 
 private:

@@ -150,6 +150,7 @@
     <ClCompile Include="Gamepad.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="IndexBuffer.cpp" />
+    <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material.cpp" />
@@ -181,6 +182,7 @@
     <ClInclude Include="Gamepad.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="IndexBuffer.h" />
+    <ClInclude Include="InputManager.h" />
     <ClInclude Include="Keyboard.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="MeshSystem.h" />

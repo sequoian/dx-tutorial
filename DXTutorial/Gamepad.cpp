@@ -73,7 +73,7 @@ bool Gamepad::Update()
 }
 
 
-bool Gamepad::GetButtonState(GamepadButtons button)
+bool Gamepad::GetButtonState(GamepadButtons button) const
 {
 	static const unsigned int s_buttons[] = {
 		XINPUT_GAMEPAD_DPAD_UP,
@@ -99,7 +99,7 @@ bool Gamepad::GetButtonState(GamepadButtons button)
 }
 
 
-float Gamepad::GetAxisState(GamepadAxes axis)
+float Gamepad::GetAxisState(GamepadAxes axis) const
 {
 	float axisState = 0;
 
@@ -197,7 +197,7 @@ bool Gamepad::CheckConnection()
 }
 
 
-float Gamepad::NormalizeThumbstick(int axis)
+float Gamepad::NormalizeThumbstick(int axis) const
 {
 	float normal = fmaxf(-1, (float)axis / 32767);
 	float thumbstick = (fabs(normal) < m_impl->m_deadzone ? 0 : (fabs(normal) - m_impl->m_deadzone) * (normal / fabs(normal)));

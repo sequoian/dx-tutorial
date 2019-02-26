@@ -6,9 +6,7 @@
 #include "Model.h"
 #include "VertexFormat.h"
 #include "Timer.h"
-#include "Gamepad.h"
-#include "Keyboard.h"
-#include "Mouse.h"
+#include "InputManager.h"
 #include "EntityManager.h"
 #include "TransformSystem.h"
 #include "RotatorSystem.h"
@@ -47,6 +45,8 @@ public:
 			m_dsv->Release();
 		if (m_depth != nullptr)
 			m_depth->Release();
+
+		ShutDown();
 	}
 
 	virtual bool StartUp() override
@@ -123,11 +123,7 @@ public:
 
 		m_timer.Start();
 
-		m_gamepad.StartUp();
-
-		m_keyboard.StartUp(m_window);
-
-		m_mouse.StartUp(m_window);
+		m_inputManager.StartUp(m_window);
 
 		m_entityManager.StartUp(4);
 		m_transformSystem.StartUp(4);
@@ -137,7 +133,7 @@ public:
 		m_cameraSystem.AddSystemRefs(&m_transformSystem, &m_window);
 		m_meshSystem.StartUp(3);
 		m_flycamSystem.StartUp(3);
-		m_flycamSystem.AddSystemRefs(&m_gamepad, &m_transformSystem);
+		m_flycamSystem.AddSystemRefs(&m_inputManager, &m_transformSystem);
 
 		Entity e;
 		U64 transformHandle;
@@ -207,9 +203,7 @@ public:
 	{
 		SampleApplication::ShutDown();
 
-		m_gamepad.ShutDown();
-		m_keyboard.ShutDown();
-		m_mouse.ShutDown();
+		m_inputManager.ShutDown();
 	}
 
 	virtual void Update() override
@@ -218,9 +212,9 @@ public:
 		float dt = m_timer.GetDeltaTime();
 		m_time += 1.0f / 60.0f;
 		
-		m_gamepad.Update();
-		m_keyboard.Update();
-		m_mouse.Update();
+		m_inputManager.UpdateAll();
+
+		// update systems
 		m_rotatorSystem.Execute(dt);
 		m_transformSystem.Execute(dt);
 		m_cameraSystem.Execute(dt);
@@ -268,9 +262,7 @@ private:
 	ID3D11DepthStencilState* m_dss = nullptr;
 	float m_time = 0.0f;
 	Timer m_timer;
-	Gamepad m_gamepad;
-	Keyboard m_keyboard;
-	Mouse m_mouse;
+	InputManager m_inputManager;
 	EntityManager m_entityManager;
 	TransformSystem m_transformSystem;
 	RotatorSystem m_rotatorSystem;

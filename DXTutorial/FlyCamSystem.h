@@ -2,7 +2,7 @@
 
 #include "ComponentSystem.h"
 #include "TransformSystem.h"
-#include "Gamepad.h"
+#include "InputManager.h"
 #include "WriteLog.h"
 
 
@@ -19,9 +19,9 @@ struct FlyCamComponent
 class FlyCamSystem : public ComponentSystem<FlyCamComponent>
 {
 public:
-	void AddSystemRefs(Gamepad* gamepad, TransformSystem* transformSystem)
+	void AddSystemRefs(InputManager* inputManager, TransformSystem* transformSystem)
 	{
-		m_gamepad = gamepad;
+		m_inputManager = inputManager;
 		m_transformSystem = transformSystem;
 	}
 
@@ -42,16 +42,16 @@ private:
 	inline void Move(XMMATRIX& transform, float moveSpeed, float sprintSpeed, float crawlSpeed, float dt)
 	{
 		// calculate move direction
-		float x = m_gamepad->GetAxisState(GamepadAxes::LEFT_THUMB_X);
-		float z = m_gamepad->GetAxisState(GamepadAxes::LEFT_THUMB_Y);
-		float down = m_gamepad->GetButtonState(GamepadButtons::LEFT_SHOULDER) ? -1 : 0;
-		float up = m_gamepad->GetButtonState(GamepadButtons::RIGHT_SHOULDER) ? 1 : 0;
+		float x = m_inputManager->GetGamepad().GetAxisState(GamepadAxes::LEFT_THUMB_X);
+		float z = m_inputManager->GetGamepad().GetAxisState(GamepadAxes::LEFT_THUMB_Y);
+		float down = m_inputManager->GetGamepad().GetButtonState(GamepadButtons::LEFT_SHOULDER) ? -1 : 0;
+		float up = m_inputManager->GetGamepad().GetButtonState(GamepadButtons::RIGHT_SHOULDER) ? 1 : 0;
 		float y = up + down;
 
 		// calculate movespeed
 		float ms;
-		float sprint = m_gamepad->GetAxisState(GamepadAxes::RIGHT_TRIGGER);
-		float crawl = m_gamepad->GetAxisState(GamepadAxes::LEFT_TRIGGER);
+		float sprint = m_inputManager->GetGamepad().GetAxisState(GamepadAxes::RIGHT_TRIGGER);
+		float crawl = m_inputManager->GetGamepad().GetAxisState(GamepadAxes::LEFT_TRIGGER);
 		if (sprint)
 		{
 			ms = sprintSpeed;
@@ -83,8 +83,8 @@ private:
 
 	inline void Look(XMMATRIX& transform, float lookSpeed, float dt)
 	{
-		float x = m_gamepad->GetAxisState(GamepadAxes::RIGHT_THUMB_X) * lookSpeed * dt;
-		float y = m_gamepad->GetAxisState(GamepadAxes::RIGHT_THUMB_Y) * lookSpeed * dt;
+		float x = m_inputManager->GetGamepad().GetAxisState(GamepadAxes::RIGHT_THUMB_X) * lookSpeed * dt;
+		float y = m_inputManager->GetGamepad().GetAxisState(GamepadAxes::RIGHT_THUMB_Y) * lookSpeed * dt;
 
 		XMVECTOR trans = transform.r[3];
 		XMMATRIX yRot = XMMatrixRotationY(x);
@@ -96,5 +96,5 @@ private:
 
 private:
 	TransformSystem* m_transformSystem;
-	Gamepad* m_gamepad;
+	InputManager* m_inputManager;
 };

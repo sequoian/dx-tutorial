@@ -75,6 +75,9 @@
     <ClCompile Include="Mouse.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="InputManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseWindow.h">
@@ -165,6 +168,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="FlyCamSystem.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="InputManager.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
