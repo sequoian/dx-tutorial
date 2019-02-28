@@ -1,4 +1,3 @@
-// tutorial5.hlsl
 Texture2D colorMap : register(t0);
 SamplerState linearSampler : register(s0);
 
@@ -48,17 +47,15 @@ PSInput vsmain(VSInput input)
 float4 psmain(PSInput input) : SV_Target0
 {
 	float4 albedo = input.color * colorMap.Sample(linearSampler, input.uv);
-	float3 n = normalize(input.normal);
-	float3 l = lightDirection;
-	float ndotl = saturate(dot(n, l));
+	float3 normal = normalize(input.normal);
+	float diffuseFactor = saturate(dot(normal, lightDirection));
 
-	// calculate specular highlight
-	float3 v = normalize(input.viewDir);
-	float3 r = 2 * ndotl * n - l;
-	float rdotv = saturate(dot(r, v));
-	float3 specular = specularColor.rgb * pow(rdotv, specularColor.a);
+	// calculate specular lighting
+	float3 viewDirection = normalize(input.viewDir);
+	float3 reflection = reflect(-lightDirection, normal);
+	float specFactor = saturate(dot(reflection, viewDirection));
+	float3 specular = specularColor.rgb * pow(specFactor, specularColor.a);
 
-	float3 color = albedo.rgb * (lightColor * ndotl + ambientColor) + specular;
+	float3 color = albedo.rgb * (lightColor * diffuseFactor + ambientColor) + specular;
 	return float4(color, 1.0f);
-
 }
