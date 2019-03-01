@@ -65,7 +65,7 @@ private:
 			ms = moveSpeed;
 		}
 
-		// calulate movement vector
+		// calculate movement vector
 		XMVECTOR movement = XMVectorSet(x, 0, z, 1);
 		
 		// move relative to local transform

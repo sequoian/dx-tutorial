@@ -8,11 +8,14 @@
 #include "Timer.h"
 #include "InputManager.h"
 #include "EntityManager.h"
+
 #include "TransformSystem.h"
 #include "RotatorSystem.h"
 #include "CameraSystem.h"
 #include "MeshSystem.h"
 #include "FlyCamSystem.h"
+
+#include "Texture.h"
 
 #include <DirectXMath.h>
 using namespace DirectX;
@@ -37,8 +40,6 @@ public:
 			m_sampler->Release();
 		if (m_srv != nullptr)
 			m_srv->Release();
-		if (m_tex != nullptr)
-			m_tex->Release();
 		if (m_dss != nullptr)
 			m_dss->Release();
 		if (m_dsv != nullptr)
@@ -65,11 +66,10 @@ public:
 		if (!m_model.LoadFromOBJ(m_graphics, "Assets/monkey.obj"))
 			return false;
 
-		m_tex = m_graphics.CreateTextureFromTGAFile(L"Assets/stone.tga");
-		if (m_tex == nullptr)
+		if (!m_tex.Load(m_graphics, L"Assets/stone.tga"))
 			return false;
 
-		m_srv = m_graphics.CreateShaderResource(m_tex);
+		m_srv = m_graphics.CreateShaderResource(m_tex.Get());
 		if (m_srv == nullptr)
 			return false;
 
@@ -126,18 +126,15 @@ public:
 			VertPosNormUVColor::GetVertexFormat()))
 			return false;
 
-		m_tex2 = m_graphics.CreateTextureFromTGAFile(L"Assets/seafloor.tga");
-		if (m_tex2 == nullptr)
-			return false;
+		m_tex2.Load(m_graphics, L"Assets/seafloor.tga");
 
-		m_srv2 = m_graphics.CreateShaderResource(m_tex2);
+		m_srv2 = m_graphics.CreateShaderResource(m_tex2.Get());
 		if (m_srv2 == nullptr)
 			return false;
 
 		m_material2.SetConstantBuffer(0, m_cb);
 		m_material2.AddShaderInput(m_srv2);
 		m_material2.AddShaderSampler(m_sampler);
-
 
 		m_rtState.SetRenderTarget(m_window.GetRenderTarget());
 		m_rtState.SetDepthTarget(m_dsv);
@@ -278,7 +275,7 @@ private:
 	Material m_material;
 	Model m_model;
 	Buffer m_cb;
-	ID3D11Resource* m_tex = nullptr;
+	Texture m_tex;
 	ID3D11ShaderResourceView* m_srv = nullptr;
 	ID3D11SamplerState* m_sampler = nullptr;
 
@@ -287,7 +284,7 @@ private:
 
 	// second material
 	Material m_material2;
-	ID3D11Resource* m_tex2 = nullptr;
+	Texture m_tex2;
 	ID3D11ShaderResourceView* m_srv2 = nullptr;
 
 
