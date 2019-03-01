@@ -115,6 +115,10 @@ public:
 		m_material.AddShaderInput(m_srv);
 		m_material.AddShaderSampler(m_sampler);
 
+		// create second model
+
+		if (!m_model2.LoadFromOBJ(m_graphics, "Assets/cube.obj"))
+			return false;
 
 		// create second material
 
@@ -174,7 +178,7 @@ public:
 		rotator->speed = -1;
 		mesh = m_meshSystem.GetComponentByHandle(m_meshSystem.CreateComponent(e));
 		mesh->transform = transformHandle;
-		mesh->model = &m_model;
+		mesh->model = &m_model2;
 		mesh->material = &m_material;
 
 		// entity 2
@@ -187,7 +191,7 @@ public:
 		rotator->speed = 1;
 		mesh = m_meshSystem.GetComponentByHandle(m_meshSystem.CreateComponent(e));
 		mesh->transform = transformHandle;
-		mesh->model = &m_model;
+		mesh->model = &m_model2;
 		mesh->material = &m_material2;
 
 		// entity 3
@@ -277,6 +281,9 @@ private:
 	ID3D11Resource* m_tex = nullptr;
 	ID3D11ShaderResourceView* m_srv = nullptr;
 	ID3D11SamplerState* m_sampler = nullptr;
+
+	// second model
+	Model m_model2;
 
 	// second material
 	Material m_material2;
