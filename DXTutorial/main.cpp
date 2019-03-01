@@ -115,6 +115,26 @@ public:
 		m_material.AddShaderInput(m_srv);
 		m_material.AddShaderSampler(m_sampler);
 
+
+		// create second material
+
+		if (!m_material2.Load(m_graphics, L"Shaders/tutorial6.hlsl",
+			VertPosNormUVColor::GetVertexFormat()))
+			return false;
+
+		m_tex2 = m_graphics.CreateTextureFromTGAFile(L"Assets/seafloor.tga");
+		if (m_tex2 == nullptr)
+			return false;
+
+		m_srv2 = m_graphics.CreateShaderResource(m_tex2);
+		if (m_srv2 == nullptr)
+			return false;
+
+		m_material2.SetConstantBuffer(0, m_cb);
+		m_material2.AddShaderInput(m_srv2);
+		m_material2.AddShaderSampler(m_sampler);
+
+
 		m_rtState.SetRenderTarget(m_window.GetRenderTarget());
 		m_rtState.SetDepthTarget(m_dsv);
 		m_rtState.SetClearColor(true, 0.0f, 0.0f, 0.0f, 1.0f);
@@ -168,7 +188,7 @@ public:
 		mesh = m_meshSystem.GetComponentByHandle(m_meshSystem.CreateComponent(e));
 		mesh->transform = transformHandle;
 		mesh->model = &m_model;
-		mesh->material = &m_material;
+		mesh->material = &m_material2;
 
 		// entity 3
 		e = m_entityManager.CreateEntity();
@@ -257,6 +277,13 @@ private:
 	ID3D11Resource* m_tex = nullptr;
 	ID3D11ShaderResourceView* m_srv = nullptr;
 	ID3D11SamplerState* m_sampler = nullptr;
+
+	// second material
+	Material m_material2;
+	ID3D11Resource* m_tex2 = nullptr;
+	ID3D11ShaderResourceView* m_srv2 = nullptr;
+
+
 	ID3D11Texture2D* m_depth = nullptr;
 	ID3D11DepthStencilView* m_dsv = nullptr;
 	ID3D11DepthStencilState* m_dss = nullptr;
