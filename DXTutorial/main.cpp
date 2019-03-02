@@ -128,11 +128,10 @@ public:
 		if (!m_model2.LoadFromOBJ(m_graphics, "Assets/cube.obj"))
 			return false;
 
-		// create second material
+		// create third model
+		if (!m_model3.LoadFromOBJ(m_graphics, "Assets/sphere.obj"));
 
-		if (!m_material2.Load(m_graphics, L"Shaders/tutorial6.hlsl",
-			VertPosNormUVColor::GetVertexFormat()))
-			return false;
+		// create second material
 
 		m_tex2.Load(m_graphics, L"Assets/seafloor.tga");
 
@@ -140,6 +139,7 @@ public:
 		if (m_srv2 == nullptr)
 			return false;
 
+		m_material2.SetShaders(&m_vshader, &m_pshader);
 		m_material2.SetConstantBuffer(0, m_cb);
 		m_material2.AddShaderInput(m_srv2);
 		m_material2.AddShaderSampler(m_sampler);
@@ -183,8 +183,8 @@ public:
 		rotator->speed = -1;
 		mesh = m_meshSystem.GetComponentByHandle(m_meshSystem.CreateComponent(e));
 		mesh->transform = transformHandle;
-		mesh->model = &m_model2;
-		mesh->material = &m_material;
+		mesh->model = &m_model3;
+		mesh->material = &m_material2;
 
 		// entity 2
 		e = m_entityManager.CreateEntity();
@@ -302,6 +302,8 @@ private:
 	Texture m_tex2;
 	ID3D11ShaderResourceView* m_srv2 = nullptr;
 
+	// third model
+	Model m_model3;
 
 	ID3D11Texture2D* m_depth = nullptr;
 	ID3D11DepthStencilView* m_dsv = nullptr;

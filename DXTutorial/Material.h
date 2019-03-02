@@ -40,6 +40,7 @@ public:
 	{
 		m_vs = vs->Get();
 		m_ps = ps->Get();
+		m_layout = vs->GetLayout();
 	}
 
 
