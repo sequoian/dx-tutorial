@@ -16,6 +16,8 @@
 #include "FlyCamSystem.h"
 
 #include "Texture.h"
+#include "VertexShader.h"
+#include "PixelShader.h"
 
 #include <DirectXMath.h>
 using namespace DirectX;
@@ -59,9 +61,14 @@ public:
 			nullptr))
 			return false;
 
-		if (!m_material.Load(m_graphics, L"Shaders/tutorial6.hlsl",
-			VertPosNormUVColor::GetVertexFormat()))
+		// Load shaders
+
+		if (!m_vshader.Load(m_graphics, L"Shaders/tutorial6.hlsl", VertPosNormUVColor::GetVertexFormat()))
 			return false;
+
+		if (!m_pshader.Load(m_graphics, L"Shaders/tutorial6.hlsl"))
+			return false;
+
 
 		if (!m_model.LoadFromOBJ(m_graphics, "Assets/monkey.obj"))
 			return false;
@@ -111,6 +118,7 @@ public:
 		if (m_sampler == nullptr)
 			return false;
 
+		m_material.SetShaders(&m_vshader, &m_pshader);
 		m_material.SetConstantBuffer(0, m_cb);
 		m_material.AddShaderInput(m_srv);
 		m_material.AddShaderSampler(m_sampler);
@@ -225,6 +233,10 @@ public:
 		SampleApplication::ShutDown();
 
 		m_inputManager.ShutDown();
+		m_tex.ShutDown();
+		m_tex2.ShutDown();
+		m_vshader.ShutDown();
+		m_pshader.ShutDown();
 	}
 
 	virtual void Update() override
@@ -278,6 +290,9 @@ private:
 	Texture m_tex;
 	ID3D11ShaderResourceView* m_srv = nullptr;
 	ID3D11SamplerState* m_sampler = nullptr;
+
+	VertexShader m_vshader;
+	PixelShader m_pshader;
 
 	// second model
 	Model m_model2;

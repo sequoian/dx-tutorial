@@ -191,6 +191,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="OBJLoader.h" />
+    <ClInclude Include="PixelShader.h" />
     <ClInclude Include="Random.h" />
     <ClInclude Include="RenderTargetState.h" />
     <ClInclude Include="RotatorSystem.h" />
@@ -202,6 +203,7 @@
     <ClInclude Include="Types.h" />
     <ClInclude Include="VertexBuffer.h" />
     <ClInclude Include="VertexFormat.h" />
+    <ClInclude Include="VertexShader.h" />
     <ClInclude Include="WriteLog.h" />
   </ItemGroup>
   <ItemGroup>

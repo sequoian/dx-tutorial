@@ -2,6 +2,8 @@
 
 #include "Graphics.h"
 #include "Buffer.h"
+#include "VertexShader.h"
+#include "PixelShader.h"
 
 class Material
 {
@@ -33,6 +35,12 @@ public:
 		m_cbs[slot] = &buffer;
 	}
 	void ClearConstantBuffer(unsigned int slot) { m_cbs[slot] = nullptr; }
+
+	void SetShaders(VertexShader* vs, PixelShader* ps)
+	{
+		m_vs = vs->Get();
+		m_ps = ps->Get();
+	}
 
 
 private:
