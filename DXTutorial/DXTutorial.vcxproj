@@ -161,6 +161,7 @@
     <ClCompile Include="OBJLoader.cpp" />
     <ClCompile Include="Random.cpp" />
     <ClCompile Include="RenderTargetState.cpp" />
+    <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="SampleApplication.cpp" />
     <ClCompile Include="SampleWindow.cpp" />
     <ClCompile Include="StringId.cpp" />
@@ -194,10 +195,14 @@
     <ClInclude Include="PixelShader.h" />
     <ClInclude Include="Random.h" />
     <ClInclude Include="RenderTargetState.h" />
+    <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="ResourcePool.h" />
     <ClInclude Include="RotatorSystem.h" />
     <ClInclude Include="SampleApplication.h" />
     <ClInclude Include="SampleWindow.h" />
     <ClInclude Include="StringId.h" />
+    <ClInclude Include="StringUtility.h" />
+    <ClInclude Include="Texture.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="TransformSystem.h" />
     <ClInclude Include="Types.h" />

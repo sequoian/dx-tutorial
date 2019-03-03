@@ -15,6 +15,7 @@
 #include "MeshSystem.h"
 #include "FlyCamSystem.h"
 
+#include "ResourceManager.h"
 #include "Texture.h"
 #include "VertexShader.h"
 #include "PixelShader.h"
@@ -68,7 +69,6 @@ public:
 
 		if (!m_pshader.Load(m_graphics, L"Shaders/tutorial6.hlsl"))
 			return false;
-
 
 		if (!m_model.LoadFromOBJ(m_graphics, "Assets/monkey.obj"))
 			return false;
@@ -129,7 +129,8 @@ public:
 			return false;
 
 		// create third model
-		if (!m_model3.LoadFromOBJ(m_graphics, "Assets/sphere.obj"));
+		if (!m_model3.LoadFromOBJ(m_graphics, "Assets/sphere.obj"))
+			return false;
 
 		// create second material
 
@@ -304,6 +305,8 @@ private:
 
 	// third model
 	Model m_model3;
+
+	ResourceManager m_resourceManager;
 
 	ID3D11Texture2D* m_depth = nullptr;
 	ID3D11DepthStencilView* m_dsv = nullptr;

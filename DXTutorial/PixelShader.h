@@ -46,6 +46,6 @@ public:
 	}
 
 private:
-	ID3D11PixelShader* m_shader;
+	ID3D11PixelShader * m_shader = nullptr;
 
 };
