@@ -164,7 +164,6 @@
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="SampleApplication.cpp" />
     <ClCompile Include="SampleWindow.cpp" />
-    <ClCompile Include="StringId.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />
     <ClCompile Include="VertexFormat.cpp" />

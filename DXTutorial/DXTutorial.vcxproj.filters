@@ -63,9 +63,6 @@
     <ClCompile Include="Timer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="StringId.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Gamepad.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -131,9 +128,6 @@
     <ClInclude Include="Timer.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="StringId.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="Gamepad.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -192,6 +186,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Texture.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="StringId.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
