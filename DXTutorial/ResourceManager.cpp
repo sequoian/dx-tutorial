@@ -20,10 +20,12 @@ bool ResourceManager::StartUp(Graphics& graphics)
 
 Texture* ResourceManager::LoadTexture(const char* path)
 {
-	Texture* tex = m_texPool.Create(path);
-	if (!tex)
+	Texture* tex = nullptr;
+	StringId hash = StringHash(path);
+	
+	if (!m_texPool.Create(hash, tex))
 	{
-		return nullptr;
+		return tex;
 	}
 
 	if (!tex->Load(*m_graphics, StringToWideString(path).c_str()))
@@ -37,11 +39,12 @@ Texture* ResourceManager::LoadTexture(const char* path)
 
 VertexShader* ResourceManager::LoadVertexShader(const char* path, const VertexFormat& format)
 {
+	VertexShader* vs = nullptr;
+	StringId hash = StringHash(path);
 
-	VertexShader* vs = m_vsPool.Create(path);
-	if (!vs)
+	if (!m_vsPool.Create(hash, vs))
 	{
-		return nullptr;
+		return vs;
 	}
 
 	if (!vs->Load(*m_graphics, StringToWideString(path).c_str(), format))
@@ -55,10 +58,12 @@ VertexShader* ResourceManager::LoadVertexShader(const char* path, const VertexFo
 
 PixelShader* ResourceManager::LoadPixelShader(const char* path)
 {
-	PixelShader* ps = m_psPool.Create(path);
-	if (!ps)
+	PixelShader* ps = nullptr;
+	StringId hash = StringHash(path);
+	
+	if (!m_psPool.Create(hash, ps))
 	{
-		return nullptr;
+		return ps;
 	}
 
 	if (!ps->Load(*m_graphics, StringToWideString(path).c_str()))
@@ -72,10 +77,12 @@ PixelShader* ResourceManager::LoadPixelShader(const char* path)
 
 Model* ResourceManager::LoadModel(const char* path)
 {
-	Model* model = m_modelPool.Create(path);
-	if (!model)
+	Model* model = nullptr;
+	StringId hash = StringHash(path);
+
+	if (!m_modelPool.Create(hash, model))
 	{
-		return nullptr;
+		return model;
 	}
 
 	if (!model->LoadFromOBJ(*m_graphics, path))
@@ -89,10 +96,12 @@ Model* ResourceManager::LoadModel(const char* path)
 
 Material* ResourceManager::CreateMaterial(const char* key, VertexShader* vs, PixelShader* ps, Texture* tex, ID3D11SamplerState* sampler, Buffer& cb)
 {
-	Material* mat = m_matPool.Create(key);
-	if (!mat)
+	Material* mat = nullptr;
+	StringId hash = StringHash(key);
+	
+	if (!m_matPool.Create(hash, mat))
 	{
-		return nullptr;
+		return mat;
 	}
 
 	mat->SetShaders(vs, ps);

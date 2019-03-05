@@ -1,7 +1,12 @@
+#pragma once
+
 #include "Types.h"
+
+typedef U32 StringId;
 
 namespace details_sid
 {
+
 	// Generate CRC lookup table
 	template <unsigned c, int k = 8>
 	struct f : f<((c & 1) ? 0xedb88320 : 0) ^ (c >> 1), k - 1> {};
@@ -33,13 +38,14 @@ namespace details_sid
 	constexpr size_t strlen_c(const char* str) {
 		return *str ? 1 + strlen_c(str + 1) : 0;
 	}
+
 }
 
-constexpr U32 SID(const char* str) {
+constexpr StringId StringHash(const char* str) {
 	return details_sid::crc32(str, details_sid::strlen_c(str));
 }
 
-constexpr U32 operator "" _sid(const char* str, size_t)
+constexpr StringId operator "" _sid(const char* str, size_t)
 {
-	return SID(str);
+	return StringHash(str);
 }

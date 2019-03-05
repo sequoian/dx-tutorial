@@ -2,6 +2,7 @@
 
 #include "Graphics.h"
 #include "ResourcePool.h"
+#include "StringId.h"
 
 #include "VertexShader.h"
 #include "VertexFormat.h"
@@ -24,27 +25,27 @@ public:
 	Model* LoadModel(const char* path);
 	Material* CreateMaterial(const char* key, VertexShader* vs, PixelShader* ps, Texture* tex, ID3D11SamplerState* sampler, Buffer& cb);
 
-	Texture* FindTexture(const char* key)
+	Texture* FindTexture(StringId key)
 	{
 		return m_texPool.Find(key);
 	}
 
-	VertexShader* FindVertexShader(const char* key)
+	VertexShader* FindVertexShader(StringId key)
 	{
 		return m_vsPool.Find(key);
 	}
 
-	PixelShader* FindPixelShader(const char* key)
+	PixelShader* FindPixelShader(StringId key)
 	{
 		return m_psPool.Find(key);
 	}
 
-	Model* FindModel(const char* key)
+	Model* FindModel(StringId key)
 	{
 		m_modelPool.Find(key);
 	}
 
-	Material* FindMaterial(const char* key)
+	Material* FindMaterial(StringId key)
 	{
 		m_matPool.Find(key);
 	}

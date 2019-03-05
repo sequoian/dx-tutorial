@@ -8,27 +8,29 @@ class ResourcePool
 {
 public:
 
-	inline T* Create(const char* key)
+	inline bool Create(StringId key, T* resource)
 	{
-		StringId hash = GenStringId(key);
-
-		auto result = m_resourceMap.emplace(hash, m_next);
-		if (!result.second)
+		auto result = m_resourceMap.emplace(key, m_next);
+		resource = &result.first->second;
+		if (result.second)
 		{
-			DEBUG_ERROR("Resource already created: %s", key);
-			return nullptr;
+			// resource was created
+			return false;
 		}
-
-		return &result.first->second;
+		else
+		{
+			// resource was already created and simply retrieved
+			return true;
+		}
 	}
 
 
-	inline T* Find(const char* key)
+	inline T* Find(StringId key)
 	{
-		StringId hash = GenStringId(key);
-		auto itr = m_resourceMap.find(hash);
+		auto itr = m_resourceMap.find(key);
 		if (itr == m_resourceMap.end())
 		{
+			DEBUG_WARN("Resource not found");
 			return nullptr;
 		}
 		else
@@ -38,7 +40,7 @@ public:
 	}
 
 
-	inline void Destroy(const char* key)
+	inline void Destroy(StringId key)
 	{
 		auto itr = m_resourceMap.find(key);
 		if (itr != m_resourceMap.end())
