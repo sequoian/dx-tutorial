@@ -25,29 +25,54 @@ public:
 	Model* LoadModel(const char* path);
 	Material* CreateMaterial(const char* key, VertexShader* vs, PixelShader* ps, Texture* tex, ID3D11SamplerState* sampler, Buffer& cb);
 
-	Texture* FindTexture(StringId key)
+	inline Texture* FindTexture(const StringId key)
 	{
 		return m_texPool.Find(key);
 	}
 
-	VertexShader* FindVertexShader(StringId key)
+	inline VertexShader* FindVertexShader(const StringId key)
 	{
 		return m_vsPool.Find(key);
 	}
 
-	PixelShader* FindPixelShader(StringId key)
+	inline PixelShader* FindPixelShader(const StringId key)
 	{
 		return m_psPool.Find(key);
 	}
 
-	Model* FindModel(StringId key)
+	inline Model* FindModel(const StringId key)
 	{
-		m_modelPool.Find(key);
+		return m_modelPool.Find(key);
 	}
 
-	Material* FindMaterial(StringId key)
+	inline Material* FindMaterial(const StringId key)
 	{
-		m_matPool.Find(key);
+		return m_matPool.Find(key);
+	}
+
+	inline void DestroyTexture(const StringId key)
+	{
+		m_texPool.Destroy(key);
+	}
+
+	inline void DestroyVertexShader(const StringId key)
+	{
+		m_vsPool.Destroy(key);
+	}
+
+	inline void DestroyPixelShader(const StringId key)
+	{
+		m_psPool.Destroy(key);
+	}
+
+	inline void DestroyModel(const StringId key)
+	{
+		m_modelPool.Destroy(key);
+	}
+
+	inline void DestroyMaterial(const StringId key)
+	{
+		m_matPool.Destroy(key);
 	}
 
 private:

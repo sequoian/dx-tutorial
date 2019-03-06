@@ -8,7 +8,7 @@ class ResourcePool
 {
 public:
 
-	inline bool Create(StringId key, T* resource)
+	inline bool Create(const StringId key, T* resource)
 	{
 		auto result = m_resourceMap.emplace(key, m_next);
 		resource = &result.first->second;
@@ -25,7 +25,7 @@ public:
 	}
 
 
-	inline T* Find(StringId key)
+	inline T* Find(const StringId key)
 	{
 		auto itr = m_resourceMap.find(key);
 		if (itr == m_resourceMap.end())
@@ -40,7 +40,7 @@ public:
 	}
 
 
-	inline void Destroy(StringId key)
+	inline void Destroy(const StringId key)
 	{
 		auto itr = m_resourceMap.find(key);
 		if (itr != m_resourceMap.end())

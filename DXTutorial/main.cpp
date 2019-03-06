@@ -8,6 +8,7 @@
 #include "Timer.h"
 #include "InputManager.h"
 #include "EntityManager.h"
+#include "StringId.h"
 
 #include "TransformSystem.h"
 #include "RotatorSystem.h"
