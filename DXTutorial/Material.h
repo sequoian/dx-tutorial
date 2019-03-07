@@ -4,6 +4,7 @@
 #include "Buffer.h"
 #include "VertexShader.h"
 #include "PixelShader.h"
+#include "Texture.h"
 
 class Material
 {
@@ -19,9 +20,9 @@ public:
 	void SetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY topology);
 
 	void ClearInputs() { m_numInputs = 0; }
-	void AddShaderInput(ID3D11ShaderResourceView* res)
+	void AddTexture(Texture& tex)
 	{
-		m_inputs[m_numInputs++] = res;
+		m_inputs[m_numInputs++] = tex.GetResourceView();
 	}
 
 	void ClearSamplers() { m_numSamplers = 0; }

@@ -90,26 +90,9 @@ bool ResourceManager::LoadModel(const char* path, U64& handle)
 }
 
 
-bool ResourceManager::CreateMaterial(const char* key, U64& handle, 
-	VertexShader* vs, PixelShader* ps, Texture* tex, ID3D11SamplerState* sampler, Buffer& cb)
+bool ResourceManager::CreateMaterial(const char* key, U64& handle)
 {
 	const StringId hash = StringHash(key);
-	if (!m_matPool.Create(hash, handle))
-	{
-		return true;
-	}
-
-	Material* mat = m_matPool.Get(handle);
-	ID3D11ShaderResourceView* srv = m_graphics->CreateShaderResource(tex->Get());
-	if (srv == nullptr)
-	{
-		return false;
-	}
-
-	mat->AddShaderInput(srv);
-	mat->SetShaders(vs, ps);
-	mat->SetConstantBuffer(0, cb);
-	mat->AddShaderSampler(sampler);
-
+	m_matPool.Create(hash, handle);
 	return true;
 }

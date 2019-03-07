@@ -23,7 +23,9 @@ public:
 	bool LoadVertexShader(const char* path, U64& handle, const VertexFormat& format);
 	bool LoadPixelShader(const char* path, U64& handle);
 	bool LoadModel(const char* path, U64& handle);
-	bool CreateMaterial(const char* key, U64& handle, VertexShader* vs, PixelShader* ps, Texture* tex, ID3D11SamplerState* sampler, Buffer& cb);
+
+	// creates an uninitialized material
+	bool CreateMaterial(const char* key, U64& handle);
 
 	// Find()
 

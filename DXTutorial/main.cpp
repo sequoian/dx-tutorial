@@ -40,8 +40,6 @@ class ModelSample : public SampleApplication
 public:
 	virtual ~ModelSample()
 	{
-		if (m_srv != nullptr)
-			m_srv->Release();
 		if (m_dss != nullptr)
 			m_dss->Release();
 		if (m_dsv != nullptr)
@@ -75,10 +73,6 @@ public:
 		if (!m_tex.Load(m_graphics, L"Assets/stone.tga"))
 			return false;
 
-		m_srv = m_graphics.CreateShaderResource(m_tex.Get());
-		if (m_srv == nullptr)
-			return false;
-
 		m_depth = m_graphics.CreateDepthBuffer(m_window.GetScreenWidth(),
 			m_window.GetScreenHeight(), DXGI_FORMAT_D24_UNORM_S8_UINT);
 		if (m_depth == nullptr)
@@ -100,7 +94,7 @@ public:
 
 		m_material.SetShaders(&m_vshader, &m_pshader);
 		m_material.SetConstantBuffer(0, m_cb);
-		m_material.AddShaderInput(m_srv);
+		m_material.AddTexture(m_tex);
 		m_material.AddShaderSampler(m_graphics.GetLinearWrapSampler());
 
 		// create second model
@@ -116,13 +110,9 @@ public:
 
 		m_tex2.Load(m_graphics, L"Assets/seafloor.tga");
 
-		m_srv2 = m_graphics.CreateShaderResource(m_tex2.Get());
-		if (m_srv2 == nullptr)
-			return false;
-
 		m_material2.SetShaders(&m_vshader, &m_pshader);
 		m_material2.SetConstantBuffer(0, m_cb);
-		m_material2.AddShaderInput(m_srv2);
+		m_material2.AddTexture(m_tex2);
 		m_material2.AddShaderSampler(m_graphics.GetLinearWrapSampler());
 
 		m_rtState.SetRenderTarget(m_window.GetRenderTarget());
@@ -269,7 +259,6 @@ private:
 	Model m_model;
 	Buffer m_cb;
 	Texture m_tex;
-	ID3D11ShaderResourceView* m_srv = nullptr;
 
 	VertexShader m_vshader;
 	PixelShader m_pshader;
@@ -280,7 +269,6 @@ private:
 	// second material
 	Material m_material2;
 	Texture m_tex2;
-	ID3D11ShaderResourceView* m_srv2 = nullptr;
 
 	// third model
 	Model m_model3;
