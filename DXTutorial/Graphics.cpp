@@ -5,6 +5,7 @@ Graphics::Graphics()
 {
 	m_device = NULL;
 	m_context = NULL;
+	m_linearWrapSampler = NULL;
 }
 
 
@@ -46,12 +47,40 @@ bool Graphics::StartUp()
 		m_context = context;
 	}
 
+	// create samplers
+	D3D11_SAMPLER_DESC samplerDesc;
+	samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	samplerDesc.AddressU =
+	samplerDesc.AddressV =
+	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.MinLOD = -FLT_MAX;
+	samplerDesc.MaxLOD = FLT_MAX;
+	samplerDesc.MipLODBias = 0.0f;
+	samplerDesc.MaxAnisotropy = 1;
+	samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+	samplerDesc.BorderColor[0] =
+	samplerDesc.BorderColor[1] =
+	samplerDesc.BorderColor[2] =
+	samplerDesc.BorderColor[3] = 1.0f;
+
+	m_linearWrapSampler = CreateSampler(samplerDesc);
+	if (m_linearWrapSampler == nullptr)
+	{
+		return false;
+	}
+
 	return true;
 }
 
 
 void Graphics::ShutDown()
 {
+	if (m_linearWrapSampler != NULL)
+	{
+		m_linearWrapSampler->Release();
+		m_linearWrapSampler = NULL;
+	}
+
 	if (m_device != NULL)
 	{
 		m_device->Release();
@@ -655,4 +684,10 @@ void Graphics::ClearDepthStencil(ID3D11DepthStencilView* dsv, bool clearDepth, f
 void Graphics::SetDepthStencilState(ID3D11DepthStencilState* dss, unsigned int stencilRef)
 {
 	m_context->OMSetDepthStencilState(dss, stencilRef);
+}
+
+
+ID3D11SamplerState* Graphics::GetLinearWrapSampler()
+{
+	return m_linearWrapSampler;
 }

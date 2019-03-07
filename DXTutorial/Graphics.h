@@ -12,6 +12,9 @@ private:
 	ID3D11Device* m_device;
 	ID3D11DeviceContext* m_context;
 
+	// samplers
+	ID3D11SamplerState* m_linearWrapSampler;
+
 public:
 	Graphics();
 	~Graphics();
@@ -56,7 +59,5 @@ public:
 	ID3D11DepthStencilState* CreateDepthStencilState( const D3D11_DEPTH_STENCIL_DESC& desc);
 	void ClearDepthStencil(ID3D11DepthStencilView* dsv, bool clearDepth, float depth, bool clearStencil, unsigned char stencil);
 	void SetDepthStencilState(ID3D11DepthStencilState* dss, unsigned int stencilRef = 0);
-
-
-
+	ID3D11SamplerState* GetLinearWrapSampler();
 };

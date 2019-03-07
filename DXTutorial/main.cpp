@@ -40,8 +40,6 @@ class ModelSample : public SampleApplication
 public:
 	virtual ~ModelSample()
 	{
-		if (m_sampler != nullptr)
-			m_sampler->Release();
 		if (m_srv != nullptr)
 			m_srv->Release();
 		if (m_dss != nullptr)
@@ -100,29 +98,10 @@ public:
 		if (m_dss == nullptr)
 			return false;
 
-		D3D11_SAMPLER_DESC sampler;
-		sampler.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-		sampler.AddressU =
-			sampler.AddressV =
-			sampler.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-		sampler.MinLOD = -FLT_MAX;
-		sampler.MaxLOD = FLT_MAX;
-		sampler.MipLODBias = 0.0f;
-		sampler.MaxAnisotropy = 1;
-		sampler.ComparisonFunc = D3D11_COMPARISON_NEVER;
-		sampler.BorderColor[0] =
-			sampler.BorderColor[1] =
-			sampler.BorderColor[2] =
-			sampler.BorderColor[3] = 1.0f;
-
-		m_sampler = m_graphics.CreateSampler(sampler);
-		if (m_sampler == nullptr)
-			return false;
-
 		m_material.SetShaders(&m_vshader, &m_pshader);
 		m_material.SetConstantBuffer(0, m_cb);
 		m_material.AddShaderInput(m_srv);
-		m_material.AddShaderSampler(m_sampler);
+		m_material.AddShaderSampler(m_graphics.GetLinearWrapSampler());
 
 		// create second model
 
@@ -144,7 +123,7 @@ public:
 		m_material2.SetShaders(&m_vshader, &m_pshader);
 		m_material2.SetConstantBuffer(0, m_cb);
 		m_material2.AddShaderInput(m_srv2);
-		m_material2.AddShaderSampler(m_sampler);
+		m_material2.AddShaderSampler(m_graphics.GetLinearWrapSampler());
 
 		m_rtState.SetRenderTarget(m_window.GetRenderTarget());
 		m_rtState.SetDepthTarget(m_dsv);
@@ -291,7 +270,6 @@ private:
 	Buffer m_cb;
 	Texture m_tex;
 	ID3D11ShaderResourceView* m_srv = nullptr;
-	ID3D11SamplerState* m_sampler = nullptr;
 
 	VertexShader m_vshader;
 	PixelShader m_pshader;
