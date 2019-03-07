@@ -19,11 +19,13 @@ public:
 	~ResourceManager();
 	bool StartUp(Graphics& graphics);
 
-	Texture* LoadTexture(const char* path);
-	VertexShader* LoadVertexShader(const char* path, const VertexFormat& format);
-	PixelShader* LoadPixelShader(const char* path);
-	Model* LoadModel(const char* path);
-	Material* CreateMaterial(const char* key, VertexShader* vs, PixelShader* ps, Texture* tex, ID3D11SamplerState* sampler, Buffer& cb);
+	bool LoadTexture(const char* path, U64& handle);
+	bool LoadVertexShader(const char* path, U64& handle, const VertexFormat& format);
+	bool LoadPixelShader(const char* path, U64& handle);
+	bool LoadModel(const char* path, U64& handle);
+	bool CreateMaterial(const char* key, U64& handle, VertexShader* vs, PixelShader* ps, Texture* tex, ID3D11SamplerState* sampler, Buffer& cb);
+
+	// Find()
 
 	inline Texture* FindTexture(const StringId key)
 	{
@@ -50,6 +52,35 @@ public:
 		return m_matPool.Find(key);
 	}
 
+	// Get()
+
+	inline Texture* GetTexture(U64 handle)
+	{
+		return m_texPool.Get(handle);
+	}
+
+	inline VertexShader* GetVertexShader(U64 handle)
+	{
+		return m_vsPool.Get(handle);
+	}
+
+	inline PixelShader* GetPixelShader(U64 handle)
+	{
+		return m_psPool.Get(handle);
+	}
+
+	inline Model* GetModel(U64 handle)
+	{
+		return m_modelPool.Get(handle);
+	}
+
+	inline Material* GetMaterial(U64 handle)
+	{
+		return m_matPool.Get(handle);
+	}
+
+	// Destroy()
+
 	inline void DestroyTexture(const StringId key)
 	{
 		m_texPool.Destroy(key);
@@ -73,6 +104,33 @@ public:
 	inline void DestroyMaterial(const StringId key)
 	{
 		m_matPool.Destroy(key);
+	}
+
+	// DestroyByHandle()
+
+	inline void DestroyTextureByHandle(U64 handle)
+	{
+		m_texPool.DestroyByHandle(handle);
+	}
+
+	inline void DestroyVertexShaderByHandle(U64 handle)
+	{
+		m_vsPool.DestroyByHandle(handle);
+	}
+
+	inline void DestroyPixelShaderByHandle(U64 handle)
+	{
+		m_psPool.DestroyByHandle(handle);
+	}
+
+	inline void DestroyModelByHandle(U64 handle)
+	{
+		m_modelPool.DestroyByHandle(handle);
+	}
+
+	inline void DestroyMaterialByHandle(U64 handle)
+	{
+		m_matPool.DestroyByHandle(handle);
 	}
 
 private:

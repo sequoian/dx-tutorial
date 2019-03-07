@@ -1,25 +1,38 @@
 #pragma once
 
 #include <unordered_map>
+#include "CompactPool.h"
 #include "StringId.h"
+#include "Types.h"
 
 template <class T>
 class ResourcePool
 {
 public:
 
-	inline bool Create(const StringId key, T* resource)
+	inline bool StartUp(const U32 poolSize)
 	{
-		auto result = m_resourceMap.emplace(key, m_next);
-		resource = &result.first->second;
-		if (result.second)
+		if (m_pool.StartUp(poolSize))
 		{
-			// resource was created
+			return true;
+		}
+	}
+
+	// returns true if the resource was created or false if the resource already exists
+	inline bool Create(const StringId key, U64& handle)
+	{
+		auto itr = m_resourceMap.find(key);
+		if (itr != m_resourceMap.end())
+		{
+			// resource was already created so return it
+			handle = itr->second;
 			return false;
 		}
 		else
 		{
-			// resource was already created and simply retrieved
+			// create resource
+			handle = m_pool.CreateObject();
+			m_resourceMap.emplace(key, handle);
 			return true;
 		}
 	}
@@ -30,13 +43,18 @@ public:
 		auto itr = m_resourceMap.find(key);
 		if (itr == m_resourceMap.end())
 		{
-			DEBUG_WARN("Resource not found");
 			return nullptr;
 		}
 		else
 		{
-			return &itr->second;
+			return Get(itr->second);
 		}
+	}
+
+
+	inline T* Get(U64 handle)
+	{
+		return m_pool.GetObject(handle);
 	}
 
 
@@ -45,12 +63,19 @@ public:
 		auto itr = m_resourceMap.find(key);
 		if (itr != m_resourceMap.end())
 		{
+			DestroyByHandle(itr->second);
 			m_resourceMap.erase(itr);
 		}
 	}
 
+	inline void DestroyByHandle(U64 handle)
+	{
+		m_pool.DestroyObject(handle);
+	}
+
 
 protected:
-	std::unordered_map<StringId, T> m_resourceMap;
+	CompactPool<T> m_pool;
+	std::unordered_map<StringId, U64> m_resourceMap;
 	T m_next;
 };
