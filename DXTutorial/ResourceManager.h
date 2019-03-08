@@ -25,7 +25,7 @@ public:
 	bool LoadModel(const char* path, U64& handle);
 
 	// creates an uninitialized material
-	bool CreateMaterial(const char* key, U64& handle);
+	bool CreateMaterial(const StringId key, U64& handle);
 
 	// Find()
 

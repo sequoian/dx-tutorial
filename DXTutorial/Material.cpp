@@ -3,23 +3,6 @@
 
 Material::~Material()
 {
-	if (m_vs != nullptr)
-	{
-		m_vs->Release();
-		m_vs = nullptr;
-	}
-
-	if (m_ps != nullptr)
-	{
-		m_ps->Release();
-		m_ps = nullptr;
-	}
-
-	if (m_layout != nullptr)
-	{
-		m_layout->Release();
-		m_layout = nullptr;
-	}
 }
 
 

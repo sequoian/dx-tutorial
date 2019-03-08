@@ -54,7 +54,7 @@ public:
 
 	inline T* Get(U64 handle)
 	{
-		return m_pool.GetObject(handle);
+		return m_pool.GetObjectByHandle(handle);
 	}
 
 

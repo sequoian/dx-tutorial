@@ -63,7 +63,7 @@ public:
 	}
 
 
-	inline T* GetObject(U64 handle)
+	inline T* GetObjectByHandle(U64 handle)
 	{
 		U64 remap = m_remapToPool[Idx(handle)];
 
@@ -77,7 +77,7 @@ public:
 		}
 	}
 
-	inline const T* GetObjectConst(U64 handle) const
+	inline const T* GetObjectByHandleConst(U64 handle) const
 	{
 		U64 remap = m_remapToPool[Idx(handle)];
 

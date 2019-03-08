@@ -60,13 +60,13 @@ public:
 
 	virtual inline T* GetComponentByHandle(U64 handle)
 	{
-		return m_pool.GetObject(handle);
+		return m_pool.GetObjectByHandle(handle);
 	}
 
 
 	virtual inline const T* GetComponentByHandleConst(U64 handle) const
 	{
-		return m_pool.GetObjectConst(handle);
+		return m_pool.GetObjectByHandleConst(handle);
 	}
 
 

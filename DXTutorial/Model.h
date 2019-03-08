@@ -23,4 +23,5 @@ private:
 	VertexBuffer m_vb;
 	IndexBuffer m_ib;
 	unsigned int m_numIndices = 0;
+	bool initialized = false;
 };

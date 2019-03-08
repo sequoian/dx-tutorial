@@ -14,6 +14,11 @@ ResourceManager::~ResourceManager()
 bool ResourceManager::StartUp(Graphics& graphics)
 {
 	m_graphics = &graphics;
+	m_texPool.StartUp(10);
+	m_vsPool.StartUp(10);
+	m_psPool.StartUp(10);
+	m_modelPool.StartUp(10);
+	m_matPool.StartUp(10);
 	return true;
 }
 
@@ -90,9 +95,8 @@ bool ResourceManager::LoadModel(const char* path, U64& handle)
 }
 
 
-bool ResourceManager::CreateMaterial(const char* key, U64& handle)
+bool ResourceManager::CreateMaterial(const StringId key, U64& handle)
 {
-	const StringId hash = StringHash(key);
-	m_matPool.Create(hash, handle);
+	m_matPool.Create(key, handle);
 	return true;
 }

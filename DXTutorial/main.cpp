@@ -55,23 +55,97 @@ public:
 		if (!SampleApplication::StartUp())
 			return false;
 
+		// Start systems
+		m_resourceManager.StartUp(m_graphics);
+
+		// create constant buffer
 		if (!m_cb.CreateConstantBuffer(m_graphics, sizeof(ModelConstants), true,
 			nullptr))
 			return false;
 
+		U64 handle;
+
 		// Load shaders
+		VertexShader* vsBase;
+		PixelShader* psBase;
 
-		if (!m_vshader.Load(m_graphics, L"Shaders/tutorial6.hlsl", VertPosNormUVColor::GetVertexFormat()))
+		if (!m_resourceManager.LoadVertexShader("Shaders/tutorial6.hlsl", handle, VertPosNormUVColor::GetVertexFormat()))
+		{
 			return false;
+		}
 
-		if (!m_pshader.Load(m_graphics, L"Shaders/tutorial6.hlsl"))
-			return false;
+		vsBase = m_resourceManager.GetVertexShader(handle);
 
-		if (!m_model.LoadFromOBJ(m_graphics, "Assets/monkey.obj"))
+		if (!m_resourceManager.LoadPixelShader("Shaders/tutorial6.hlsl", handle))
+		{
 			return false;
+		}
 
-		if (!m_tex.Load(m_graphics, L"Assets/stone.tga"))
+		psBase = m_resourceManager.GetPixelShader(handle);
+
+		// Load models
+		Model* modelMonkey;
+		Model* modelCube;
+		Model* modelSphere;
+
+		if (!m_resourceManager.LoadModel("Assets/monkey.obj", handle))
+		{
 			return false;
+		}
+
+		modelMonkey = m_resourceManager.GetModel(handle);
+
+		if (!m_resourceManager.LoadModel("Assets/cube.obj", handle))
+		{
+			return false;
+		}
+
+		modelCube = m_resourceManager.GetModel(handle);
+
+		if (!m_resourceManager.LoadModel("Assets/sphere.obj", handle))
+		{
+			return false;
+		}
+
+		modelSphere = m_resourceManager.GetModel(handle);
+
+		// Load textures
+		Texture* texStone;
+		Texture* texSeafloor;
+
+		if (!m_resourceManager.LoadTexture("Assets/stone.tga", handle))
+		{
+			return false;
+		}
+
+		texStone = m_resourceManager.GetTexture(handle);
+
+		if (!m_resourceManager.LoadTexture("Assets/seafloor.tga", handle))
+		{
+			return false;
+		}
+
+		texSeafloor = m_resourceManager.GetTexture(handle);
+
+		// Load materials
+		Material* matStone;
+		Material* matSand;
+
+		m_resourceManager.CreateMaterial("Stone"_sid, handle);
+		matStone = m_resourceManager.GetMaterial(handle);
+		matStone->SetShaders(vsBase, psBase);
+		matStone->SetConstantBuffer(0, m_cb);
+		matStone->AddTexture(*texStone);
+		matStone->AddShaderSampler(m_graphics.GetLinearWrapSampler());
+
+		m_resourceManager.CreateMaterial("Sand"_sid, handle);
+		matSand = m_resourceManager.GetMaterial(handle);
+		matSand->SetShaders(vsBase, psBase);
+		matSand->SetConstantBuffer(0, m_cb);
+		matSand->AddTexture(*texSeafloor);
+		matSand->AddShaderSampler(m_graphics.GetLinearWrapSampler());
+
+		// Create render targets
 
 		m_depth = m_graphics.CreateDepthBuffer(m_window.GetScreenWidth(),
 			m_window.GetScreenHeight(), DXGI_FORMAT_D24_UNORM_S8_UINT);
@@ -92,28 +166,6 @@ public:
 		if (m_dss == nullptr)
 			return false;
 
-		m_material.SetShaders(&m_vshader, &m_pshader);
-		m_material.SetConstantBuffer(0, m_cb);
-		m_material.AddTexture(m_tex);
-		m_material.AddShaderSampler(m_graphics.GetLinearWrapSampler());
-
-		// create second model
-
-		if (!m_model2.LoadFromOBJ(m_graphics, "Assets/cube.obj"))
-			return false;
-
-		// create third model
-		if (!m_model3.LoadFromOBJ(m_graphics, "Assets/sphere.obj"))
-			return false;
-
-		// create second material
-
-		m_tex2.Load(m_graphics, L"Assets/seafloor.tga");
-
-		m_material2.SetShaders(&m_vshader, &m_pshader);
-		m_material2.SetConstantBuffer(0, m_cb);
-		m_material2.AddTexture(m_tex2);
-		m_material2.AddShaderSampler(m_graphics.GetLinearWrapSampler());
 
 		m_rtState.SetRenderTarget(m_window.GetRenderTarget());
 		m_rtState.SetDepthTarget(m_dsv);
@@ -122,8 +174,9 @@ public:
 		m_rtState.SetSize(m_window.GetScreenWidth(), m_window.GetScreenHeight());
 
 		m_timer.Start();
-
 		m_inputManager.StartUp(m_window);
+
+		// Create entities
 
 		m_entityManager.StartUp(4);
 		m_transformSystem.StartUp(4);
@@ -154,8 +207,8 @@ public:
 		rotator->speed = -1;
 		mesh = m_meshSystem.GetComponentByHandle(m_meshSystem.CreateComponent(e));
 		mesh->transform = transformHandle;
-		mesh->model = &m_model3;
-		mesh->material = &m_material2;
+		mesh->model = modelSphere;
+		mesh->material = matStone;
 
 		// entity 2
 		e = m_entityManager.CreateEntity();
@@ -167,8 +220,8 @@ public:
 		rotator->speed = 1;
 		mesh = m_meshSystem.GetComponentByHandle(m_meshSystem.CreateComponent(e));
 		mesh->transform = transformHandle;
-		mesh->model = &m_model2;
-		mesh->material = &m_material2;
+		mesh->model = modelCube;
+		mesh->material = matStone;
 
 		// entity 3
 		e = m_entityManager.CreateEntity();
@@ -176,8 +229,8 @@ public:
 		m_transformSystem.GetComponentByHandle(transformHandle)->transform *= DirectX::XMMatrixTranslation(0, 0, 0);
 		mesh = m_meshSystem.GetComponentByHandle(m_meshSystem.CreateComponent(e));
 		mesh->transform = transformHandle;
-		mesh->model = &m_model;
-		mesh->material = &m_material;
+		mesh->model = modelMonkey;
+		mesh->material = matStone;
 
 		// camera
 		e = m_entityManager.CreateEntity();

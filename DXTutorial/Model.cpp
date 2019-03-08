@@ -1,4 +1,5 @@
 #include "Model.h"
+#include "Assert.h"
 
 
 Model::~Model()
@@ -9,6 +10,9 @@ Model::~Model()
 
 bool Model::LoadFromOBJ(Graphics& graphics, const char* filename)
 {
+	ASSERT(!initialized);
+	initialized = true;
+
 	vector<OBJLoader::Vertex> objVerts;
 	vector<unsigned int> objIndices;
 
