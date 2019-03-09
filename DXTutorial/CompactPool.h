@@ -23,42 +23,20 @@ public:
 
 	inline U64 CreateObject()
 	{
-		U64 handle;
-		U32 idx;
-		U32 gen;
-		U64 remapHandle;
+		U64 handle = AddHandleAndRemaps();
 
-		if (m_freedHandles.size() > m_minFree)
-		{
-			// reuse a handle
-			handle = m_freedHandles.front();
-			m_freedHandles.pop_front();
-
-			idx = Idx(handle);
-			gen = Gen(handle);
-
-			// generate remap value
-			remapHandle = Combine(m_numActive, gen);
-			m_remapToPool[idx] = remapHandle;
-		}
-		else
-		{
-			// create new handle and set generation to 0
-			idx = m_remapToPool.size();
-			gen = 0;
-			handle = Combine(idx, gen);
-
-			// generate remap value
-			remapHandle = Combine(m_numActive, gen);
-			m_remapToPool.push_back(remapHandle);
-		}
-
-		// add component to pool
 		m_pool.push_back(m_next);
-		m_remapToHandle.push_back(handle);
-		m_numActive++;
 
-		// return component handle
+		return handle;
+	}
+
+
+	inline U64 InsertObject(T object)
+	{
+		U64 handle = AddHandleAndRemaps();
+
+		m_pool.push_back(object);
+
 		return handle;
 	}
 
@@ -178,6 +156,45 @@ private:
 	inline U64 Combine(U32 idx, U32 gen) const
 	{
 		return ((U64)gen << m_bitShift) | idx;
+	}
+
+	inline U64 AddHandleAndRemaps()
+	{
+		U64 handle;
+		U32 idx;
+		U32 gen;
+		U64 remapHandle;
+
+		if (m_freedHandles.size() > m_minFree)
+		{
+			// reuse a handle
+			handle = m_freedHandles.front();
+			m_freedHandles.pop_front();
+
+			idx = Idx(handle);
+			gen = Gen(handle);
+
+			// remap to pool
+			remapHandle = Combine(m_numActive, gen);
+			m_remapToPool[idx] = remapHandle;
+		}
+		else
+		{
+			// create new handle and set generation to 0
+			idx = m_remapToPool.size();
+			gen = 0;
+			handle = Combine(idx, gen);
+
+			// remap to pool
+			remapHandle = Combine(m_numActive, gen);
+			m_remapToPool.push_back(remapHandle);
+		}
+
+		// remap to handle
+		m_remapToHandle.push_back(handle);
+		m_numActive++;
+
+		return handle;
 	}
 
 private:

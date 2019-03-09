@@ -74,14 +74,14 @@ public:
 			return false;
 		}
 
-		vsBase = m_resourceManager.GetVertexShader(handle);
+		vsBase = static_cast<VertexShader*>(m_resourceManager.GetResourceByHandle(handle));
 
 		if (!m_resourceManager.LoadPixelShader("Shaders/tutorial6.hlsl", handle))
 		{
 			return false;
 		}
 
-		psBase = m_resourceManager.GetPixelShader(handle);
+		psBase = static_cast<PixelShader*>(m_resourceManager.GetResourceByHandle(handle));
 
 		// Load models
 		Model* modelMonkey;
@@ -93,21 +93,21 @@ public:
 			return false;
 		}
 
-		modelMonkey = m_resourceManager.GetModel(handle);
+		modelMonkey = static_cast<Model*>(m_resourceManager.GetResourceByHandle(handle));
 
 		if (!m_resourceManager.LoadModel("Assets/cube.obj", handle))
 		{
 			return false;
 		}
 
-		modelCube = m_resourceManager.GetModel(handle);
+		modelCube = static_cast<Model*>(m_resourceManager.GetResourceByHandle(handle));
 
 		if (!m_resourceManager.LoadModel("Assets/sphere.obj", handle))
 		{
 			return false;
 		}
 
-		modelSphere = m_resourceManager.GetModel(handle);
+		modelSphere = static_cast<Model*>(m_resourceManager.GetResourceByHandle(handle));
 
 		// Load textures
 		Texture* texStone;
@@ -118,28 +118,28 @@ public:
 			return false;
 		}
 
-		texStone = m_resourceManager.GetTexture(handle);
+		texStone = static_cast<Texture*>(m_resourceManager.GetResourceByHandle(handle));
 
 		if (!m_resourceManager.LoadTexture("Assets/seafloor.tga", handle))
 		{
 			return false;
 		}
 
-		texSeafloor = m_resourceManager.GetTexture(handle);
+		texSeafloor = static_cast<Texture*>(m_resourceManager.GetResourceByHandle(handle));
 
 		// Load materials
 		Material* matStone;
 		Material* matSand;
 
 		m_resourceManager.CreateMaterial("Stone"_sid, handle);
-		matStone = m_resourceManager.GetMaterial(handle);
+		matStone = static_cast<Material*>(m_resourceManager.GetResourceByHandle(handle));
 		matStone->SetShaders(vsBase, psBase);
 		matStone->SetConstantBuffer(0, m_cb);
 		matStone->AddTexture(*texStone);
 		matStone->AddShaderSampler(m_graphics.GetLinearWrapSampler());
 
 		m_resourceManager.CreateMaterial("Sand"_sid, handle);
-		matSand = m_resourceManager.GetMaterial(handle);
+		matSand = static_cast<Material*>(m_resourceManager.GetResourceByHandle(handle));
 		matSand->SetShaders(vsBase, psBase);
 		matSand->SetConstantBuffer(0, m_cb);
 		matSand->AddTexture(*texSeafloor);
@@ -298,6 +298,7 @@ public:
 			MeshComponent* mesh = m_meshSystem[i];
 			consts.m_world = m_transformSystem.GetComponentByHandle(mesh->transform)->transform;
 			m_cb.MapAndSet(m_graphics, consts);
+
 			mesh->model->Select(m_graphics);
 			mesh->material->Select(m_graphics);
 			mesh->model->Draw(m_graphics);

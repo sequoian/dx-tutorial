@@ -5,12 +5,13 @@
 #include "IndexBuffer.h"
 #include "VertexFormat.h"
 #include "OBJLoader.h"
+#include "Resource.h"
 #include <vector>
 
 using namespace std;
 
 
-class Model
+class Model : public Resource
 {
 public:
 	~Model();

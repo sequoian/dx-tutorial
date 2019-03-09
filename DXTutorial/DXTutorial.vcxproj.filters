@@ -191,5 +191,8 @@
     <ClInclude Include="StringId.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

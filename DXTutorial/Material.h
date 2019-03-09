@@ -5,8 +5,9 @@
 #include "VertexShader.h"
 #include "PixelShader.h"
 #include "Texture.h"
+#include "Resource.h"
 
-class Material
+class Material : public Resource
 {
 public:
 	static const unsigned int MaxInputs = 32;

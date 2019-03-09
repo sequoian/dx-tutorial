@@ -75,17 +75,11 @@ public:
 		auto itr = m_entityMap.find(e.id);
 		if (itr != m_entityMap.end())
 		{
-			DestroyComponentByHandle(itr->second);
+			m_pool.DestroyObject(itr->second);
 
 			// remove entity from map
 			m_entityMap.erase(itr);
 		}
-	}
-
-
-	virtual inline void DestroyComponentByHandle(U64 handle)
-	{
-		m_pool.DestroyObject(handle);
 	}
 
 

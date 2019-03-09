@@ -1,8 +1,9 @@
 #pragma once
 
 #include "Graphics.h"
+#include "Resource.h"
 
-class Texture
+class Texture : public Resource
 {
 public:
 	~Texture()
@@ -10,7 +11,7 @@ public:
 		ShutDown();
 	}
 
-	void ShutDown()
+	virtual void ShutDown() override
 	{
 		if (m_srv != nullptr)
 		{
