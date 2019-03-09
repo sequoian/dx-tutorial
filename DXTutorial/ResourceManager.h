@@ -13,13 +13,13 @@ public:
 	~ResourceManager();
 	bool StartUp(Graphics& graphics);
 
-	bool LoadTexture(const char* path, U64& handle);
-	bool LoadVertexShader(const char* path, U64& handle, const VertexFormat& format);
-	bool LoadPixelShader(const char* path, U64& handle);
-	bool LoadModel(const char* path, U64& handle);
+	bool LoadTexture(const char* path, U64& handle, const StringId key);
+	bool LoadVertexShader(const char* path, U64& handle, const VertexFormat& format, const StringId key);
+	bool LoadPixelShader(const char* path, U64& handle, const StringId key);
+	bool LoadModel(const char* path, U64& handle, const StringId key);
 
 	// creates an uninitialized material
-	bool CreateMaterial(const StringId key, U64& handle);
+	bool CreateMaterial(U64& handle, const StringId key);
 
 
 	inline Resource* FindResourceByStringId(const StringId key)

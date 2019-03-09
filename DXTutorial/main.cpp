@@ -69,14 +69,14 @@ public:
 		VertexShader* vsBase;
 		PixelShader* psBase;
 
-		if (!m_resourceManager.LoadVertexShader("Shaders/tutorial6.hlsl", handle, VertPosNormUVColor::GetVertexFormat()))
+		if (!m_resourceManager.LoadVertexShader("Shaders/tutorial6.hlsl", handle, VertPosNormUVColor::GetVertexFormat(), "vsbase"_sid))
 		{
 			return false;
 		}
 
 		vsBase = static_cast<VertexShader*>(m_resourceManager.GetResourceByHandle(handle));
 
-		if (!m_resourceManager.LoadPixelShader("Shaders/tutorial6.hlsl", handle))
+		if (!m_resourceManager.LoadPixelShader("Shaders/tutorial6.hlsl", handle, "psbase"_sid))
 		{
 			return false;
 		}
@@ -88,21 +88,21 @@ public:
 		Model* modelCube;
 		Model* modelSphere;
 
-		if (!m_resourceManager.LoadModel("Assets/monkey.obj", handle))
+		if (!m_resourceManager.LoadModel("Assets/monkey.obj", handle, "Assets/monkey.obj"_sid))
 		{
 			return false;
 		}
 
 		modelMonkey = static_cast<Model*>(m_resourceManager.GetResourceByHandle(handle));
 
-		if (!m_resourceManager.LoadModel("Assets/cube.obj", handle))
+		if (!m_resourceManager.LoadModel("Assets/cube.obj", handle, "Assets/cube.obj"_sid))
 		{
 			return false;
 		}
 
 		modelCube = static_cast<Model*>(m_resourceManager.GetResourceByHandle(handle));
 
-		if (!m_resourceManager.LoadModel("Assets/sphere.obj", handle))
+		if (!m_resourceManager.LoadModel("Assets/sphere.obj", handle, "Assets/sphere.obj"_sid))
 		{
 			return false;
 		}
@@ -113,14 +113,14 @@ public:
 		Texture* texStone;
 		Texture* texSeafloor;
 
-		if (!m_resourceManager.LoadTexture("Assets/stone.tga", handle))
+		if (!m_resourceManager.LoadTexture("Assets/stone.tga", handle, "Assets/stone.tga"_sid))
 		{
 			return false;
 		}
 
 		texStone = static_cast<Texture*>(m_resourceManager.GetResourceByHandle(handle));
 
-		if (!m_resourceManager.LoadTexture("Assets/seafloor.tga", handle))
+		if (!m_resourceManager.LoadTexture("Assets/seafloor.tga", handle, "Assets/seafloor.tga"_sid))
 		{
 			return false;
 		}
@@ -131,14 +131,14 @@ public:
 		Material* matStone;
 		Material* matSand;
 
-		m_resourceManager.CreateMaterial("Stone"_sid, handle);
+		m_resourceManager.CreateMaterial(handle, "Stone"_sid);
 		matStone = static_cast<Material*>(m_resourceManager.GetResourceByHandle(handle));
 		matStone->SetShaders(vsBase, psBase);
 		matStone->SetConstantBuffer(0, m_cb);
 		matStone->AddTexture(*texStone);
 		matStone->AddShaderSampler(m_graphics.GetLinearWrapSampler());
 
-		m_resourceManager.CreateMaterial("Sand"_sid, handle);
+		m_resourceManager.CreateMaterial(handle, "Sand"_sid);
 		matSand = static_cast<Material*>(m_resourceManager.GetResourceByHandle(handle));
 		matSand->SetShaders(vsBase, psBase);
 		matSand->SetConstantBuffer(0, m_cb);

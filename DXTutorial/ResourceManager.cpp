@@ -24,7 +24,7 @@ bool ResourceManager::StartUp(Graphics& graphics)
 }
 
 
-bool ResourceManager::LoadTexture(const char* path, U64& handle)
+bool ResourceManager::LoadTexture(const char* path, U64& handle, const StringId key)
 {
 	Texture* tex = new Texture;
 	if (!tex->Load(*m_graphics, StringToWideString(path).c_str()))
@@ -32,14 +32,13 @@ bool ResourceManager::LoadTexture(const char* path, U64& handle)
 		return false;
 	}
 
-	const StringId hash = StringHash(path);
-	handle = m_pool.Insert(hash, tex);
+	handle = m_pool.Insert(key, tex);
 
 	return true;
 }
 
 
-bool ResourceManager::LoadVertexShader(const char* path, U64& handle, const VertexFormat& format)
+bool ResourceManager::LoadVertexShader(const char* path, U64& handle, const VertexFormat& format, const StringId key)
 {
 	VertexShader* vs = new VertexShader;
 	if (!vs->Load(*m_graphics, StringToWideString(path).c_str(), format))
@@ -47,14 +46,13 @@ bool ResourceManager::LoadVertexShader(const char* path, U64& handle, const Vert
 		return false;
 	}
 
-	const StringId hash = StringHash(path);
-	handle = m_pool.Insert(hash, vs);
+	handle = m_pool.Insert(key, vs);
 
 	return true;
 }
 
 
-bool ResourceManager::LoadPixelShader(const char* path, U64& handle)
+bool ResourceManager::LoadPixelShader(const char* path, U64& handle, const StringId key)
 {
 	PixelShader* ps = new PixelShader;
 	if (!ps->Load(*m_graphics, StringToWideString(path).c_str()))
@@ -62,14 +60,13 @@ bool ResourceManager::LoadPixelShader(const char* path, U64& handle)
 		return false;
 	}
 
-	const StringId hash = StringHash(path);
-	handle = m_pool.Insert(hash, ps);
+	handle = m_pool.Insert(key, ps);
 
 	return true;
 }
 
 
-bool ResourceManager::LoadModel(const char* path, U64& handle)
+bool ResourceManager::LoadModel(const char* path, U64& handle, const StringId key)
 {
 	Model* model = new Model;
 	if (!model->LoadFromOBJ(*m_graphics, path))
@@ -77,14 +74,13 @@ bool ResourceManager::LoadModel(const char* path, U64& handle)
 		return false;
 	}
 
-	const StringId hash = StringHash(path);
-	handle = m_pool.Insert(hash, model);
+	handle = m_pool.Insert(key, model);
 
 	return true;
 }
 
 
-bool ResourceManager::CreateMaterial(const StringId key, U64& handle)
+bool ResourceManager::CreateMaterial(U64& handle, const StringId key)
 {
 	Material* mat = new Material;
 	handle = m_pool.Insert(key, mat);
