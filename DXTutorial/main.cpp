@@ -257,17 +257,12 @@ public:
 		SampleApplication::ShutDown();
 
 		m_inputManager.ShutDown();
-		m_tex.ShutDown();
-		m_tex2.ShutDown();
-		m_vshader.ShutDown();
-		m_pshader.ShutDown();
 	}
 
 	virtual void Update() override
 	{
 		m_timer.Update();
 		float dt = m_timer.GetDeltaTime();
-		m_time += 1.0f / 60.0f;
 		
 		m_inputManager.UpdateAll();
 
@@ -308,34 +303,21 @@ public:
 	}
 
 private:
+	// rendering
 	RenderTargetState m_rtState;
-	Material m_material;
-	Model m_model;
-	Buffer m_cb;
-	Texture m_tex;
-
-	VertexShader m_vshader;
-	PixelShader m_pshader;
-
-	// second model
-	Model m_model2;
-
-	// second material
-	Material m_material2;
-	Texture m_tex2;
-
-	// third model
-	Model m_model3;
-
-	ResourceManager m_resourceManager;
-
 	ID3D11Texture2D* m_depth = nullptr;
 	ID3D11DepthStencilView* m_dsv = nullptr;
 	ID3D11DepthStencilState* m_dss = nullptr;
-	float m_time = 0.0f;
+
+	Buffer m_cb;
+	
+	// systems
 	Timer m_timer;
+	ResourceManager m_resourceManager;
 	InputManager m_inputManager;
 	EntityManager m_entityManager;
+
+	// component systems
 	TransformSystem m_transformSystem;
 	RotatorSystem m_rotatorSystem;
 	CameraSystem m_cameraSystem;
