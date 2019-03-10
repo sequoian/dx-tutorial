@@ -72,7 +72,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)DirectXTex;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)BulletPhysics;$(SolutionDir)DirectXTex;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
@@ -191,6 +191,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="OBJLoader.h" />
+    <ClInclude Include="Physics.h" />
     <ClInclude Include="PixelShader.h" />
     <ClInclude Include="Random.h" />
     <ClInclude Include="RenderTargetState.h" />
@@ -212,6 +213,9 @@
     <ClInclude Include="WriteLog.h" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BulletPhysics\BulletProject.vcxproj">
+      <Project>{7b214629-c1bf-4dc7-8130-c40f18337a9e}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\DirectXTex\DirectXTex_Desktop_2017_Win10.vcxproj">
       <Project>{371b9fa9-4c90-4ac6-a123-aced756d6c77}</Project>
     </ProjectReference>

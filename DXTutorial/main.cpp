@@ -21,6 +21,8 @@
 #include "VertexShader.h"
 #include "PixelShader.h"
 
+#include "Physics.h"
+
 #include <DirectXMath.h>
 using namespace DirectX;
 
@@ -248,6 +250,9 @@ public:
 		flycam->moveSpeed = 8;
 		flycam->sprintSpeed = 18;
 		flycam->crawlSpeed = 2;
+
+		// test
+		Physics::Test();
 
 		return true;
 	}
