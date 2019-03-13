@@ -159,6 +159,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="OBJLoader.cpp" />
+    <ClCompile Include="Physics.cpp" />
     <ClCompile Include="Random.cpp" />
     <ClCompile Include="RenderTargetState.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
