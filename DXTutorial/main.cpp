@@ -232,7 +232,7 @@ public:
 		rotator->speed = 1;
 		mesh = m_meshSystem.GetComponentByHandle(m_meshSystem.CreateComponent(e));
 		mesh->transform = transformHandle;
-		mesh->model = modelCube;
+		mesh->model = modelMonkey;
 		mesh->material = matStone;
 
 		// entity 3
@@ -241,7 +241,7 @@ public:
 		m_transformSystem.GetComponentByHandle(transformHandle)->transform *= DirectX::XMMatrixTranslation(0, 0, 0);
 		mesh = m_meshSystem.GetComponentByHandle(m_meshSystem.CreateComponent(e));
 		mesh->transform = transformHandle;
-		mesh->model = modelMonkey;
+		mesh->model = modelCube;
 		mesh->material = matStone;
 		colliderHandle = m_colliderSystem.CreateComponent(e);
 		collider = m_colliderSystem.GetComponentByHandle(colliderHandle);
@@ -251,11 +251,41 @@ public:
 		rigidBody->transform = transformHandle;
 		rigidBody->body = m_physics.CreateRigidBody(btVector3(0, 0, 0), 1, collider->shape); // position hard coded
 
+		// floor
+		e = m_entityManager.CreateEntity();
+		transformHandle = m_transformSystem.CreateComponent(e);
+		m_transformSystem.GetComponentByHandle(transformHandle)->transform *= DirectX::XMMatrixTranslation(1, -10, 0);
+		mesh = m_meshSystem.GetComponentByHandle(m_meshSystem.CreateComponent(e));
+		mesh->transform = transformHandle;
+		mesh->model = modelCube;
+		mesh->material = matSand;
+		colliderHandle = m_colliderSystem.CreateComponent(e);
+		m_colliderSystem.GetComponentByHandle(colliderHandle)->shape = m_physics.CreateCollisionBox(1, 1, 1);
+		rbHandle = m_rigidBodySystem.CreateComponent(e);
+		rigidBody = m_rigidBodySystem.GetComponentByHandle(rbHandle);
+		rigidBody->transform = transformHandle;
+		rigidBody->body = m_physics.CreateRigidBody(btVector3(1, -10, 0), 0, collider->shape); // position hard coded
+
+
+		// floor 2
+		e = m_entityManager.CreateEntity();
+		transformHandle = m_transformSystem.CreateComponent(e);
+		m_transformSystem.GetComponentByHandle(transformHandle)->transform *= DirectX::XMMatrixTranslation(-1.5, -5, 0);
+		mesh = m_meshSystem.GetComponentByHandle(m_meshSystem.CreateComponent(e));
+		mesh->transform = transformHandle;
+		mesh->model = modelCube;
+		mesh->material = matSand;
+		colliderHandle = m_colliderSystem.CreateComponent(e);
+		m_colliderSystem.GetComponentByHandle(colliderHandle)->shape = m_physics.CreateCollisionBox(1, 1, 1);
+		rbHandle = m_rigidBodySystem.CreateComponent(e);
+		rigidBody = m_rigidBodySystem.GetComponentByHandle(rbHandle);
+		rigidBody->transform = transformHandle;
+		rigidBody->body = m_physics.CreateRigidBody(btVector3(-1.5, -5, 0), 0, collider->shape); // position hard coded
 
 		// camera
 		e = m_entityManager.CreateEntity();
 		transformHandle = m_transformSystem.CreateComponent(e);
-		m_transformSystem.GetComponentByHandle(transformHandle)->transform *= DirectX::XMMatrixTranslation(0.0f, 0.0f, -5.0f);
+		m_transformSystem.GetComponentByHandle(transformHandle)->transform *= DirectX::XMMatrixTranslation(0.0f, -5.0f, -15.0f);
 		cameraHandle = m_cameraSystem.CreateComponent(e);
 		camera = m_cameraSystem.GetComponentByHandle(cameraHandle);
 		camera->transform = transformHandle;

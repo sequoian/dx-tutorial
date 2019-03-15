@@ -106,7 +106,7 @@ void Physics::SetGravity(float gravity)
 
 btCollisionShape* Physics::CreateCollisionBox(float x, float y, float z)
 {
-	btCollisionShape* shape = new btBoxShape(btVector3(btScalar(x/2), btScalar(y/2), btScalar(z/2)));
+	btCollisionShape* shape = new btBoxShape(btVector3(btScalar(x), btScalar(y), btScalar(z)));
 	m_collisionShapes.push_back(shape);
 
 	return shape;

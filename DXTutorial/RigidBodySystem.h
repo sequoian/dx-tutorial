@@ -34,10 +34,7 @@ public:
 
 			TransformComponent* transform = m_transformSystem->GetComponentByHandle(rb->transform);
 
-			transform->transform = XMMATRIX(m);
-
-			DEBUG_PRINT("rigid body");
-			
+			transform->transform = XMMATRIX(m);	
 		}
 	}
 
