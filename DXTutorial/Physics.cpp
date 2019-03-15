@@ -32,17 +32,24 @@ bool Physics::StartUp()
 
 void Physics::ShutDown()
 {
-	// remove the rigidbodies from the dynamics world and delete them
-	for (int i = m_dynamicsWorld->getNumCollisionObjects() - 1; i >= 0; i--)
+	// delete dynamics world
+	if (m_dynamicsWorld)
 	{
-		btCollisionObject* obj = m_dynamicsWorld->getCollisionObjectArray()[i];
-		btRigidBody* body = btRigidBody::upcast(obj);
-		if (body && body->getMotionState())
+		// remove the rigidbodies from the dynamics world and delete them
+		for (int i = m_dynamicsWorld->getNumCollisionObjects() - 1; i >= 0; i--)
 		{
-			delete body->getMotionState();
+			btCollisionObject* obj = m_dynamicsWorld->getCollisionObjectArray()[i];
+			btRigidBody* body = btRigidBody::upcast(obj);
+			if (body && body->getMotionState())
+			{
+				delete body->getMotionState();
+			}
+			m_dynamicsWorld->removeCollisionObject(obj);
+			delete obj;
 		}
-		m_dynamicsWorld->removeCollisionObject(obj);
-		delete obj;
+
+		delete m_dynamicsWorld;
+		m_dynamicsWorld = nullptr;
 	}
 
 	// delete collision shapes
@@ -51,25 +58,36 @@ void Physics::ShutDown()
 		btCollisionShape* shape = m_collisionShapes[j];
 		m_collisionShapes[j] = 0;
 		delete shape;
+		m_collisionShapes.clear();
+	}
+	
+	// delete solver
+	if (m_solver)
+	{
+		delete m_solver;
+		m_solver = nullptr;
 	}
 
-	// delete dynamics world
-	delete m_dynamicsWorld;
-
-	// delete solver
-	delete m_solver;
-
 	// delete broadphase
-	delete m_overlappingPairCache;
+	if (m_overlappingPairCache)
+	{
+		delete m_overlappingPairCache;
+		m_overlappingPairCache = nullptr;
+	}
 
 	// delete dispatcher
-	delete m_dispatcher;
+	if (m_dispatcher)
+	{
+		delete m_dispatcher;
+		m_dispatcher = nullptr;
+	}
 
 	// delete collision configuration
-	delete m_collisionConfiguration;
-
-	// next line is optional: it will be cleared by the destructor when the array goes out of scope
-	m_collisionShapes.clear();
+	if (m_collisionConfiguration)
+	{
+		delete m_collisionConfiguration;
+		m_collisionConfiguration = nullptr;
+	}	
 }
 
 

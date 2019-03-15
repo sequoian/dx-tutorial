@@ -175,6 +175,7 @@
     <ClInclude Include="BaseWindow.h" />
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="CameraSystem.h" />
+    <ClInclude Include="ColliderSystem.h" />
     <ClInclude Include="CompactPool.h" />
     <ClInclude Include="ComponentSystem.h" />
     <ClInclude Include="Entity.h" />
@@ -199,6 +200,7 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="ResourcePool.h" />
+    <ClInclude Include="RigidBodySystem.h" />
     <ClInclude Include="RotatorSystem.h" />
     <ClInclude Include="SampleApplication.h" />
     <ClInclude Include="SampleWindow.h" />

@@ -15,6 +15,8 @@
 #include "CameraSystem.h"
 #include "MeshSystem.h"
 #include "FlyCamSystem.h"
+#include "ColliderSystem.h"
+#include "RigidBodySystem.h"
 
 #include "ResourceManager.h"
 #include "Texture.h"
@@ -59,6 +61,7 @@ public:
 
 		// Start systems
 		m_resourceManager.StartUp(m_graphics);
+		m_physics.StartUp();
 
 		// create constant buffer
 		if (!m_cb.CreateConstantBuffer(m_graphics, sizeof(ModelConstants), true,
@@ -189,6 +192,9 @@ public:
 		m_meshSystem.StartUp(3);
 		m_flycamSystem.StartUp(3);
 		m_flycamSystem.AddSystemRefs(&m_inputManager, &m_transformSystem);
+		m_colliderSystem.StartUp(3);
+		m_rigidBodySystem.StartUp(3);
+		m_rigidBodySystem.AddSystemRefs(&m_transformSystem);
 
 		Entity e;
 		U64 transformHandle;
@@ -198,6 +204,10 @@ public:
 		CameraComponent* camera;
 		MeshComponent* mesh;
 		FlyCamComponent* flycam;
+		U64 colliderHandle;
+		ColliderComponent* collider;
+		U64 rbHandle;
+		RigidBodyComponent* rigidBody;
 
 		// entity 1
 		e = m_entityManager.CreateEntity();
@@ -233,6 +243,14 @@ public:
 		mesh->transform = transformHandle;
 		mesh->model = modelMonkey;
 		mesh->material = matStone;
+		colliderHandle = m_colliderSystem.CreateComponent(e);
+		collider = m_colliderSystem.GetComponentByHandle(colliderHandle);
+		collider->shape = m_physics.CreateCollisionBox(1, 1, 1);
+		rbHandle = m_rigidBodySystem.CreateComponent(e);
+		rigidBody = m_rigidBodySystem.GetComponentByHandle(rbHandle);
+		rigidBody->transform = transformHandle;
+		rigidBody->body = m_physics.CreateRigidBody(btVector3(0, 0, 0), 1, collider->shape); // position hard coded
+
 
 		// camera
 		e = m_entityManager.CreateEntity();
@@ -259,6 +277,7 @@ public:
 		SampleApplication::ShutDown();
 
 		m_inputManager.ShutDown();
+		m_physics.ShutDown();
 	}
 
 	virtual void Update() override
@@ -273,6 +292,10 @@ public:
 		m_transformSystem.Execute(dt);
 		m_cameraSystem.Execute(dt);
 		m_flycamSystem.Execute(dt);
+
+		m_physics.RunSimulation(dt);
+
+		m_rigidBodySystem.Execute(dt);
 	}
 
 	virtual void Render() override
@@ -318,6 +341,7 @@ private:
 	ResourceManager m_resourceManager;
 	InputManager m_inputManager;
 	EntityManager m_entityManager;
+	Physics m_physics;
 
 	// component systems
 	TransformSystem m_transformSystem;
@@ -325,6 +349,8 @@ private:
 	CameraSystem m_cameraSystem;
 	MeshSystem m_meshSystem;
 	FlyCamSystem m_flycamSystem;
+	ColliderSystem m_colliderSystem;
+	RigidBodySystem m_rigidBodySystem;
 };
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow)
