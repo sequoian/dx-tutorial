@@ -198,6 +198,7 @@ public:
 
 		Entity e;
 		U64 transformHandle;
+		TransformComponent* transform;
 		U64 rotatorHandle;
 		RotatorComponent* rotator;
 		U64 cameraHandle;
@@ -212,7 +213,9 @@ public:
 		// entity 1
 		e = m_entityManager.CreateEntity();
 		transformHandle = m_transformSystem.CreateComponent(e);
-		m_transformSystem.GetComponentByHandle(transformHandle)->transform *= DirectX::XMMatrixTranslation(-3, 0, 0);
+		transform = m_transformSystem.GetComponentByHandle(transformHandle);
+		transform->position = XMVectorSet(-3, 0, 0, 1);
+		transform->scale = XMVectorSet(2, 2, 2, 1);
 		rotatorHandle = m_rotatorSystem.CreateComponent(e);
 		rotator = m_rotatorSystem.GetComponentByHandle(rotatorHandle);
 		rotator->transform = transformHandle;
@@ -222,10 +225,11 @@ public:
 		mesh->model = modelSphere;
 		mesh->material = matStone;
 
+
 		// entity 2
 		e = m_entityManager.CreateEntity();
 		transformHandle = m_transformSystem.CreateComponent(e);
-		m_transformSystem.GetComponentByHandle(transformHandle)->transform *= DirectX::XMMatrixTranslation(3, 0, 0);
+		m_transformSystem.GetComponentByHandle(transformHandle)->position = XMVectorSet(3, 0, 0, 1);
 		rotatorHandle = m_rotatorSystem.CreateComponent(e);
 		rotator = m_rotatorSystem.GetComponentByHandle(rotatorHandle);
 		rotator->transform = transformHandle;
@@ -238,7 +242,7 @@ public:
 		// entity 3
 		e = m_entityManager.CreateEntity();
 		transformHandle = m_transformSystem.CreateComponent(e);
-		m_transformSystem.GetComponentByHandle(transformHandle)->transform *= DirectX::XMMatrixTranslation(0, 0, 0);
+		m_transformSystem.GetComponentByHandle(transformHandle)->position = XMVectorSet(0, 0, 0, 1);
 		mesh = m_meshSystem.GetComponentByHandle(m_meshSystem.CreateComponent(e));
 		mesh->transform = transformHandle;
 		mesh->model = modelCube;
@@ -254,13 +258,17 @@ public:
 		// floor
 		e = m_entityManager.CreateEntity();
 		transformHandle = m_transformSystem.CreateComponent(e);
-		m_transformSystem.GetComponentByHandle(transformHandle)->transform *= DirectX::XMMatrixTranslation(1, -10, 0);
+		transform = m_transformSystem.GetComponentByHandle(transformHandle);
+		transform->position = XMVectorSet(1, -10, 0, 1);
+		transform->scale = XMVectorSet(5, 1, 5, 1);
 		mesh = m_meshSystem.GetComponentByHandle(m_meshSystem.CreateComponent(e));
 		mesh->transform = transformHandle;
 		mesh->model = modelCube;
 		mesh->material = matSand;
 		colliderHandle = m_colliderSystem.CreateComponent(e);
-		m_colliderSystem.GetComponentByHandle(colliderHandle)->shape = m_physics.CreateCollisionBox(1, 1, 1);
+		collider = m_colliderSystem.GetComponentByHandle(colliderHandle);
+		collider->shape = m_physics.CreateCollisionBox(1, 1, 1);
+		collider->shape->setLocalScaling(btVector3(5, 1, 5));
 		rbHandle = m_rigidBodySystem.CreateComponent(e);
 		rigidBody = m_rigidBodySystem.GetComponentByHandle(rbHandle);
 		rigidBody->transform = transformHandle;
@@ -270,13 +278,14 @@ public:
 		// floor 2
 		e = m_entityManager.CreateEntity();
 		transformHandle = m_transformSystem.CreateComponent(e);
-		m_transformSystem.GetComponentByHandle(transformHandle)->transform *= DirectX::XMMatrixTranslation(-1.5, -5, 0);
+		m_transformSystem.GetComponentByHandle(transformHandle)->position = XMVectorSet(-1.5, -5, 0, 1);
 		mesh = m_meshSystem.GetComponentByHandle(m_meshSystem.CreateComponent(e));
 		mesh->transform = transformHandle;
 		mesh->model = modelCube;
 		mesh->material = matSand;
 		colliderHandle = m_colliderSystem.CreateComponent(e);
-		m_colliderSystem.GetComponentByHandle(colliderHandle)->shape = m_physics.CreateCollisionBox(1, 1, 1);
+		collider = m_colliderSystem.GetComponentByHandle(colliderHandle);
+		collider->shape = m_physics.CreateCollisionBox(1, 1, 1);
 		rbHandle = m_rigidBodySystem.CreateComponent(e);
 		rigidBody = m_rigidBodySystem.GetComponentByHandle(rbHandle);
 		rigidBody->transform = transformHandle;
@@ -285,7 +294,7 @@ public:
 		// camera
 		e = m_entityManager.CreateEntity();
 		transformHandle = m_transformSystem.CreateComponent(e);
-		m_transformSystem.GetComponentByHandle(transformHandle)->transform *= DirectX::XMMatrixTranslation(0.0f, -5.0f, -15.0f);
+		m_transformSystem.GetComponentByHandle(transformHandle)->position = XMVectorSet(0, -5, -15, 1);
 		cameraHandle = m_cameraSystem.CreateComponent(e);
 		camera = m_cameraSystem.GetComponentByHandle(cameraHandle);
 		camera->transform = transformHandle;
@@ -324,8 +333,9 @@ public:
 		m_flycamSystem.Execute(dt);
 
 		m_physics.RunSimulation(dt);
-
 		m_rigidBodySystem.Execute(dt);
+
+		m_transformSystem.Execute(dt);
 	}
 
 	virtual void Render() override
@@ -336,7 +346,7 @@ public:
 		consts.m_lightDirection = XMVector3Normalize(XMVectorSet(1.0f, 1.0f, -1.0f, 0.0f));
 		consts.m_lightColor = XMVectorSet(0.8f, 0.8f, 0.5f, 1.0f);
 		consts.m_ambientColor = XMVectorSet(0.1f, 0.1f, 0.2f, 1.0f);
-		consts.m_cameraPos = m_transformSystem.GetComponentByHandle(m_cameraSystem[0]->transform)->transform.r[3];
+		consts.m_cameraPos = m_transformSystem.GetComponentByHandle(m_cameraSystem[0]->transform)->world.r[3];
 		consts.m_specularColor = XMVectorSet(0.5f, 0.5f, 0.5f, 5.0f);
 
 		m_graphics.SetDepthStencilState(m_dss);
@@ -346,7 +356,7 @@ public:
 		for (int i = 0; i < m_meshSystem.Size(); ++i)
 		{
 			MeshComponent* mesh = m_meshSystem[i];
-			consts.m_world = m_transformSystem.GetComponentByHandle(mesh->transform)->transform;
+			consts.m_world = m_transformSystem.GetComponentByHandle(mesh->transform)->world;
 			m_cb.MapAndSet(m_graphics, consts);
 
 			mesh->model->Select(m_graphics);

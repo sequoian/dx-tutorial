@@ -23,14 +23,15 @@ public:
 
 	inline void Execute(float deltaTime) override
 	{
+		// hard coded axis
+		XMVECTOR axis = XMVectorSet(0, 1, 0, 1);
+
 		for (U32 i = 0; i < m_pool.Size(); i++)
 		{
 			RotatorComponent* comp = m_pool[i];
 			TransformComponent* transform = m_transformSystem->GetComponentByHandle(comp->transform);
 			comp->angle += comp->speed * deltaTime;
-			XMVECTOR trans = transform->transform.r[3];
-			transform->transform = DirectX::XMMatrixRotationY(comp->angle);
-			transform->transform.r[3] = trans;
+			transform->rotation = XMQuaternionRotationAxis(axis, comp->angle);
 		}
 	}
 

@@ -35,7 +35,7 @@ public:
 		{
 			CameraComponent* camera = m_pool[i];
 			const TransformComponent* transform = m_transformSystem->GetComponentByHandleConst(camera->transform);
-			XMMATRIX view = XMMatrixInverse(nullptr, transform->transform);
+			XMMATRIX view = XMMatrixInverse(nullptr, transform->world);
 			XMMATRIX proj = XMMatrixPerspectiveFovLH(camera->fov, screenWidth / float(screenHeight), camera->nearZ, camera->farZ);
 			camera->viewProjMatrix = XMMatrixMultiply(view, proj);
 		}

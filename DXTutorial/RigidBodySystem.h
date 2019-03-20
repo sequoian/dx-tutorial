@@ -34,7 +34,9 @@ public:
 
 			TransformComponent* transform = m_transformSystem->GetComponentByHandle(rb->transform);
 
-			transform->transform = XMMATRIX(m);	
+			XMMATRIX mat = XMMATRIX(m);	
+			transform->position = mat.r[3];
+			transform->rotation = XMQuaternionRotationMatrix(mat);
 		}
 	}
 

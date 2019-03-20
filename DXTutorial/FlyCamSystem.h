@@ -32,9 +32,9 @@ public:
 			FlyCamComponent* flycam = m_pool[i];
 			TransformComponent* transform = m_transformSystem->GetComponentByHandle(flycam->transform);
 
-			Look(transform->transform, flycam->lookSpeed, deltaTime);
+			Look(transform->world, flycam->lookSpeed, deltaTime);
 
-			Move(transform->transform, flycam->moveSpeed, flycam->sprintSpeed, flycam->crawlSpeed, deltaTime);
+			Move(transform->world, flycam->moveSpeed, flycam->sprintSpeed, flycam->crawlSpeed, deltaTime);
 		}
 	}
 

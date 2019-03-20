@@ -8,7 +8,10 @@ using namespace DirectX;
 
 struct TransformComponent
 {
-	XMMATRIX transform = DirectX::XMMatrixIdentity();
+	XMVECTOR position = XMVectorSet(0, 0, 0, 1);
+	XMVECTOR rotation = XMQuaternionIdentity();
+	XMVECTOR scale = XMVectorSet(1, 1, 1, 1);
+	XMMATRIX world;
 };
 
 
@@ -17,6 +20,15 @@ class TransformSystem : public ComponentSystem<TransformComponent>
 public:
 	inline void Execute(float deltaTime) override
 	{
+		for (U32 i = 0; i < m_pool.Size(); i++)
+		{
+			TransformComponent* comp = m_pool[i];
+			XMMATRIX scale = XMMatrixScalingFromVector(comp->scale);
+			XMMATRIX rotation = XMMatrixRotationQuaternion(comp->rotation);
+			XMMATRIX position = XMMatrixTranslationFromVector(comp->position);
+
+			comp->world = scale * rotation * position;
+		}
 	}
 
 	inline U32 Size()
