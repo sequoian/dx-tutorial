@@ -260,7 +260,7 @@ public:
 		transformHandle = m_transformSystem.CreateComponent(e);
 		transform = m_transformSystem.GetComponentByHandle(transformHandle);
 		transform->position = XMVectorSet(1, -10, 0, 1);
-		transform->scale = XMVectorSet(5, 1, 5, 1);
+		transform->scale = XMVectorSet(4, 1, 5, 1);
 		mesh = m_meshSystem.GetComponentByHandle(m_meshSystem.CreateComponent(e));
 		mesh->transform = transformHandle;
 		mesh->model = modelCube;
@@ -268,14 +268,14 @@ public:
 		colliderHandle = m_colliderSystem.CreateComponent(e);
 		collider = m_colliderSystem.GetComponentByHandle(colliderHandle);
 		collider->shape = m_physics.CreateCollisionBox(1, 1, 1);
-		collider->shape->setLocalScaling(btVector3(5, 1, 5));
+		collider->shape->setLocalScaling(btVector3(4, 1, 5));
 		rbHandle = m_rigidBodySystem.CreateComponent(e);
 		rigidBody = m_rigidBodySystem.GetComponentByHandle(rbHandle);
 		rigidBody->transform = transformHandle;
 		rigidBody->body = m_physics.CreateRigidBody(btVector3(1, -10, 0), 0, collider->shape); // position hard coded
 
 
-		// floor 2
+		// block
 		e = m_entityManager.CreateEntity();
 		transformHandle = m_transformSystem.CreateComponent(e);
 		m_transformSystem.GetComponentByHandle(transformHandle)->position = XMVectorSet(-1.5, -5, 0, 1);

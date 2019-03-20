@@ -32,14 +32,14 @@ public:
 			FlyCamComponent* flycam = m_pool[i];
 			TransformComponent* transform = m_transformSystem->GetComponentByHandle(flycam->transform);
 
-			Look(transform->world, flycam->lookSpeed, deltaTime);
+			Look(transform, flycam->lookSpeed, deltaTime);
 
-			Move(transform->world, flycam->moveSpeed, flycam->sprintSpeed, flycam->crawlSpeed, deltaTime);
+			Move(transform, flycam->moveSpeed, flycam->sprintSpeed, flycam->crawlSpeed, deltaTime);
 		}
 	}
 
 private:
-	inline void Move(XMMATRIX& transform, float moveSpeed, float sprintSpeed, float crawlSpeed, float dt)
+	inline void Move(TransformComponent* transform, float moveSpeed, float sprintSpeed, float crawlSpeed, float dt)
 	{
 		// calculate move direction
 		float x = m_inputManager->GetGamepad().GetAxisState(GamepadAxes::LEFT_THUMB_X);
@@ -66,32 +66,29 @@ private:
 		}
 
 		// calculate movement vector
-		XMVECTOR movement = XMVectorSet(x, 0, z, 1);
+		XMVECTOR movement = XMVectorSet(x, y, z, 1);
 		
 		// move relative to local transform
-		movement = XMVector3Rotate(movement, XMQuaternionRotationMatrix(transform));
+		movement = XMVector3Rotate(movement, transform->rotation);
 
 		// scale movement
 		movement *= ms * dt;
 
-		// set transform
-		transform *= XMMatrixTranslationFromVector(movement);
-
-		// add additional y movement
-		transform *= XMMatrixTranslationFromVector(XMVectorSet(0, y * ms * dt, 0, 1));
+		// set position
+		transform->position += movement;
 	}
 
-	inline void Look(XMMATRIX& transform, float lookSpeed, float dt)
+	inline void Look(TransformComponent* transform, float lookSpeed, float dt)
 	{
 		float x = m_inputManager->GetGamepad().GetAxisState(GamepadAxes::RIGHT_THUMB_X) * lookSpeed * dt;
 		float y = m_inputManager->GetGamepad().GetAxisState(GamepadAxes::RIGHT_THUMB_Y) * lookSpeed * dt;
 
-		XMVECTOR trans = transform.r[3];
-		XMMATRIX yRot = XMMatrixRotationY(x);
-		XMMATRIX xRot = XMMatrixRotationX(-y);
+		XMVECTOR xAxis = XMVectorSet(1, 0, 0, 1);
+		XMVECTOR yAxis = XMVectorSet(0, 1, 0, 1);
+		XMVECTOR yRot = XMQuaternionRotationAxis(yAxis, x);
+		XMVECTOR xRot = XMQuaternionRotationAxis(xAxis, -y);
 
-		transform = xRot * transform * yRot;
-		transform.r[3] = trans;
+		transform->rotation = XMQuaternionMultiply(XMQuaternionMultiply(xRot, transform->rotation), yRot);
 	}
 
 private:
