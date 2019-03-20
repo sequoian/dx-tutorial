@@ -75,6 +75,11 @@ bool Gamepad::Update()
 
 bool Gamepad::GetButtonState(GamepadButtons button) const
 {
+	if (m_impl->m_controllerId == -1)
+	{
+		return false;
+	}
+
 	static const unsigned int s_buttons[] = {
 		XINPUT_GAMEPAD_DPAD_UP,
 		XINPUT_GAMEPAD_DPAD_DOWN,
@@ -102,6 +107,11 @@ bool Gamepad::GetButtonState(GamepadButtons button) const
 float Gamepad::GetAxisState(GamepadAxes axis) const
 {
 	float axisState = 0;
+
+	if (m_impl->m_controllerId == -1)
+	{
+		return axisState;
+	}
 
 	switch (axis)
 	{
@@ -134,6 +144,7 @@ float Gamepad::GetAxisState(GamepadAxes axis) const
 
 XMVECTOR Gamepad::GetRightThumbstickVector()
 {
+	// TODO return zero vector if not connected
 	float normX = fmaxf(-1, (float)m_impl->m_state.Gamepad.sThumbRX / 32767);
 	float normY = fmaxf(-1, (float)m_impl->m_state.Gamepad.sThumbRY / 32767);
 	XMVECTOR vector = XMVectorSet(normX, normY, 0, 0);
@@ -144,6 +155,7 @@ XMVECTOR Gamepad::GetRightThumbstickVector()
 
 XMVECTOR Gamepad::GetLeftThumbstickVector()
 {
+	// TODO return zero vector if not connected
 	float normX = fmaxf(-1, (float)m_impl->m_state.Gamepad.sThumbLX / 32767);
 	float normY = fmaxf(-1, (float)m_impl->m_state.Gamepad.sThumbLY / 32767);
 	XMVECTOR vector = XMVectorSet(normX, normY, 0, 0);
