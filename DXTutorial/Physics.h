@@ -2,6 +2,8 @@
 
 #include "btBulletDynamicsCommon.h"
 #include "WriteLog.h"
+#include <DirectXMath.h>
+using namespace DirectX;
 
 class Physics
 {
@@ -12,7 +14,13 @@ public:
 	void RunSimulation(float deltaTime);
 	void SetGravity(float gravity);
 	btCollisionShape* CreateCollisionBox(float x, float y, float z);
-	btRigidBody* CreateRigidBody(btVector3 position, float mass, btCollisionShape* shape);
+	btCollisionShape* CreateCollisionSphere(float radius);
+	btRigidBody* CreateRigidBody(XMVECTOR position, XMVECTOR rotation, float mass, btCollisionShape* shape);
+
+	inline btQuaternion QuatFromDX(XMVECTOR quat);
+	inline XMVECTOR QuatToDX(btQuaternion quat);
+	inline btVector3 VecFromDX(XMVECTOR vec);
+	inline XMVECTOR VecToDX(btVector3 vec);
 
 private:
 	btDefaultCollisionConfiguration* m_collisionConfiguration;

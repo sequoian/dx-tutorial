@@ -187,6 +187,7 @@
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="Keyboard.h" />
     <ClInclude Include="Material.h" />
+    <ClInclude Include="MathUtility.h" />
     <ClInclude Include="MeshSystem.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Mouse.h">

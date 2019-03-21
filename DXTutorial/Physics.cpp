@@ -112,12 +112,21 @@ btCollisionShape* Physics::CreateCollisionBox(float x, float y, float z)
 	return shape;
 }
 
+btCollisionShape* Physics::CreateCollisionSphere(float radius)
+{
+	btCollisionShape* shape = new btSphereShape(radius);
+	m_collisionShapes.push_back(shape);
 
-btRigidBody* Physics::CreateRigidBody(btVector3 position, float mass, btCollisionShape* shape)
+	return shape;
+}
+
+
+btRigidBody* Physics::CreateRigidBody(XMVECTOR position, XMVECTOR rotation, float mass, btCollisionShape* shape)
 {
 	btTransform transform;
 	transform.setIdentity();
-	transform.setOrigin(position);
+	transform.setOrigin(VecFromDX(position));
+	transform.setRotation(QuatFromDX(rotation));
 
 	// rigidbody is dynamic if and only if mass is non zero, otherwise static
 	bool isDynamic = (mass != 0.f);
@@ -137,4 +146,41 @@ btRigidBody* Physics::CreateRigidBody(btVector3 position, float mass, btCollisio
 	m_dynamicsWorld->addRigidBody(body);
 
 	return body;
+}
+
+
+btQuaternion Physics::QuatFromDX(XMVECTOR quat)
+{
+	btQuaternion val;
+	val.setX(quat.m128_f32[0]);
+	val.setY(quat.m128_f32[1]);
+	val.setZ(quat.m128_f32[2]);
+	val.setW(quat.m128_f32[3]);
+
+	return val;
+}
+
+
+XMVECTOR Physics::QuatToDX(btQuaternion quat)
+{
+	XMVECTOR val;
+	return val;
+}
+
+
+btVector3 Physics::VecFromDX(XMVECTOR vec)
+{
+	btVector3 val;
+	val.setX(vec.m128_f32[0]);
+	val.setY(vec.m128_f32[1]);
+	val.setZ(vec.m128_f32[2]);
+	val.setW(vec.m128_f32[3]);
+	return val;
+}
+
+
+XMVECTOR Physics::VecToDX(btVector3 vec)
+{
+	XMVECTOR val;
+	return val;
 }
