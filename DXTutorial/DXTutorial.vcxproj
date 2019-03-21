@@ -196,6 +196,7 @@
     <ClInclude Include="OBJLoader.h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="PixelShader.h" />
+    <ClInclude Include="PrimitiveFactory.h" />
     <ClInclude Include="Random.h" />
     <ClInclude Include="RenderTargetState.h" />
     <ClInclude Include="Resource.h" />

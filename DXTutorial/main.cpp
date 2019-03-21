@@ -10,6 +10,7 @@
 #include "EntityManager.h"
 #include "StringId.h"
 #include "MathUtility.h"
+#include "PrimitiveFactory.h"
 
 #include "TransformSystem.h"
 #include "RotatorSystem.h"
@@ -211,23 +212,21 @@ public:
 		U64 rbHandle;
 		RigidBodyComponent* rigidBody;
 
-		// Falling Sphere
-		e = m_entityManager.CreateEntity();
-		transformHandle = m_transformSystem.CreateComponent(e);
-		transform = m_transformSystem.GetComponentByHandle(transformHandle);
-		transform->position = XMVectorSet(-3, 0, 0, 1);
-		transform->scale = XMVectorSet(2, 2, 2, 1);
-		colliderHandle = m_colliderSystem.CreateComponent(e);
-		collider = m_colliderSystem.GetComponentByHandle(colliderHandle);
-		collider->shape = m_physics.CreateCollisionSphere(2);
-		rbHandle = m_rigidBodySystem.CreateComponent(e);
-		rigidBody = m_rigidBodySystem.GetComponentByHandle(rbHandle);
-		rigidBody->body = m_physics.CreateRigidBody(transform->position, transform->rotation, 1, collider->shape);
-		rigidBody->transform = transformHandle;
-		mesh = m_meshSystem.GetComponentByHandle(m_meshSystem.CreateComponent(e));
-		mesh->transform = transformHandle;
-		mesh->model = modelSphere;
-		mesh->material = matStone;
+		PrimitiveFactory factory;
+		factory.SetUp(&m_entityManager, &m_transformSystem, &m_meshSystem, &m_colliderSystem, &m_rigidBodySystem, &m_resourceManager, &m_physics);
+
+		factory.CreatePrimitive(PRIM_CUBE, 1, matStone, vec3(0));
+		factory.CreatePrimitive(PRIM_CUBE, 1, matStone, vec3(2.2, 0, 0));
+		factory.CreatePrimitive(PRIM_CUBE, 1, matStone, vec3(-2.2, 0, 0));
+		factory.CreatePrimitive(PRIM_CUBE, 1, matStone, vec3(0, 2.2, 0));
+		factory.CreatePrimitive(PRIM_CUBE, 1, matStone, vec3(2.2, 2.2, 0));
+		factory.CreatePrimitive(PRIM_CUBE, 1, matStone, vec3(-2.2, 2.2, 0));
+
+		// floor
+		factory.CreatePrimitive(PRIM_CUBE, 0, matSand, vec3(0, -15, 0), vec3(0), vec3(10, 1, 10));
+		factory.CreatePrimitive(PRIM_SPHERE, 0, matSand, vec3(.5, -15, 0), vec3(0), vec3(2.5));
+		//factory.CreatePrimitive(PRIM_CUBE, 0, matSand, vec3(1, -15, 0), vec3(0, 0, -10.0_rad), vec3(10, 1, 5));
+		//factory.CreatePrimitive(PRIM_CUBE, 0, matStone, vec3(-1.5, -5, 0));
 
 		// Spinning Monkey
 		e = m_entityManager.CreateEntity();
@@ -241,61 +240,6 @@ public:
 		mesh->transform = transformHandle;
 		mesh->model = modelMonkey;
 		mesh->material = matStone;
-
-		// Falling Cube
-		e = m_entityManager.CreateEntity();
-		transformHandle = m_transformSystem.CreateComponent(e);
-		transform = m_transformSystem.GetComponentByHandle(transformHandle);
-		transform->position = XMVectorSet(0, 0, 0, 1);
-		mesh = m_meshSystem.GetComponentByHandle(m_meshSystem.CreateComponent(e));
-		mesh->transform = transformHandle;
-		mesh->model = modelCube;
-		mesh->material = matStone;
-		colliderHandle = m_colliderSystem.CreateComponent(e);
-		collider = m_colliderSystem.GetComponentByHandle(colliderHandle);
-		collider->shape = m_physics.CreateCollisionBox(1, 1, 1);
-		rbHandle = m_rigidBodySystem.CreateComponent(e);
-		rigidBody = m_rigidBodySystem.GetComponentByHandle(rbHandle);
-		rigidBody->transform = transformHandle;
-		rigidBody->body = m_physics.CreateRigidBody(transform->position, transform->rotation, 1, collider->shape);
-
-		// floor
-		e = m_entityManager.CreateEntity();
-		transformHandle = m_transformSystem.CreateComponent(e);
-		transform = m_transformSystem.GetComponentByHandle(transformHandle);
-		transform->position = XMVectorSet(1, -15, 0, 1);
-		transform->scale = XMVectorSet(10, 1, 5, 1);
-		transform->rotation = XMQuaternionRotationRollPitchYaw(0, 0, -10.0_rad);
-		mesh = m_meshSystem.GetComponentByHandle(m_meshSystem.CreateComponent(e));
-		mesh->transform = transformHandle;
-		mesh->model = modelCube;
-		mesh->material = matSand;
-		colliderHandle = m_colliderSystem.CreateComponent(e);
-		collider = m_colliderSystem.GetComponentByHandle(colliderHandle);
-		collider->shape = m_physics.CreateCollisionBox(1, 1, 1);
-		collider->shape->setLocalScaling(m_physics.VecFromDX(transform->scale));
-		rbHandle = m_rigidBodySystem.CreateComponent(e);
-		rigidBody = m_rigidBodySystem.GetComponentByHandle(rbHandle);
-		rigidBody->transform = transformHandle;
-		rigidBody->body = m_physics.CreateRigidBody(transform->position, transform->rotation, 0, collider->shape);
-
-
-		// block
-		e = m_entityManager.CreateEntity();
-		transformHandle = m_transformSystem.CreateComponent(e);
-		transform = m_transformSystem.GetComponentByHandle(transformHandle);
-		transform->position = XMVectorSet(-1.5, -5, 0, 1);
-		mesh = m_meshSystem.GetComponentByHandle(m_meshSystem.CreateComponent(e));
-		mesh->transform = transformHandle;
-		mesh->model = modelCube;
-		mesh->material = matSand;
-		colliderHandle = m_colliderSystem.CreateComponent(e);
-		collider = m_colliderSystem.GetComponentByHandle(colliderHandle);
-		collider->shape = m_physics.CreateCollisionBox(1, 1, 1);
-		rbHandle = m_rigidBodySystem.CreateComponent(e);
-		rigidBody = m_rigidBodySystem.GetComponentByHandle(rbHandle);
-		rigidBody->transform = transformHandle;
-		rigidBody->body = m_physics.CreateRigidBody(transform->position, transform->rotation, 0, collider->shape);
 
 		// camera
 		e = m_entityManager.CreateEntity();

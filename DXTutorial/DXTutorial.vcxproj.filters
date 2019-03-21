@@ -209,5 +209,8 @@
     <ClInclude Include="MathUtility.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="PrimitiveFactory.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
