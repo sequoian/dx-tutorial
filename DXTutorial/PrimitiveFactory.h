@@ -54,7 +54,7 @@ public:
 		return true;
 	}
 
-	bool CreatePrimitive(PrimitiveShapes shape, float mass, Material* mat, vec3 pos, vec3 rot = vec3(0, 0, 0), vec3 scale = vec3(1, 1, 1))
+	bool CreatePrimitive(PrimitiveShapes shape, float mass, Material* mat, vec3 pos, vec3 rot = vec3(0), vec3 scale = vec3(1), vec3 vel = vec3(0))
 	{
 		XMVECTOR dxPos = XMVectorSet(pos.x, pos.y, pos.z, 1);
 		XMVECTOR dxRot = XMQuaternionRotationRollPitchYaw(rot.x, rot.y, rot.z);
@@ -109,6 +109,7 @@ public:
 		rigidBody = m_rigidBodySystem->GetComponentByHandle(rbHandle);
 		rigidBody->body = m_physics->CreateRigidBody(transform->position, transform->rotation, mass, collider->shape);
 		rigidBody->transform = transformHandle;
+		rigidBody->body->setLinearVelocity(btVector3(vel.x, vel.y, vel.z));
 
 		// create mesh
 		mesh = m_meshSystem->GetComponentByHandle(m_meshSystem->CreateComponent(e));

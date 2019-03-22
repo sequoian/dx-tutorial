@@ -212,5 +212,8 @@
     <ClInclude Include="PrimitiveFactory.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="RBBulletSystem.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -11,6 +11,7 @@
 #include "StringId.h"
 #include "MathUtility.h"
 #include "PrimitiveFactory.h"
+#include "RBBulletSystem.h"
 
 #include "TransformSystem.h"
 #include "RotatorSystem.h"
@@ -197,6 +198,8 @@ public:
 		m_colliderSystem.StartUp(3);
 		m_rigidBodySystem.StartUp(3);
 		m_rigidBodySystem.AddSystemRefs(&m_transformSystem);
+		m_primFactory.SetUp(&m_entityManager, &m_transformSystem, &m_meshSystem, &m_colliderSystem, &m_rigidBodySystem, &m_resourceManager, &m_physics);
+		m_rbBulletSystem.AddSystemRefs(&m_transformSystem, &m_primFactory, &m_inputManager);
 
 		Entity e;
 		U64 transformHandle;
@@ -211,42 +214,22 @@ public:
 		ColliderComponent* collider;
 		U64 rbHandle;
 		RigidBodyComponent* rigidBody;
+		U64 bulletHandle;
+		RBBulletComponent* rbBullet;
 
-		PrimitiveFactory factory;
-		factory.SetUp(&m_entityManager, &m_transformSystem, &m_meshSystem, &m_colliderSystem, &m_rigidBodySystem, &m_resourceManager, &m_physics);
-
-		factory.CreatePrimitive(PRIM_CUBE, 1, matStone, vec3(0));
-		factory.CreatePrimitive(PRIM_CUBE, 1, matStone, vec3(2.2, 0, 0));
-		factory.CreatePrimitive(PRIM_CUBE, 1, matStone, vec3(-2.2, 0, 0));
-		factory.CreatePrimitive(PRIM_CUBE, 1, matStone, vec3(0, 2.2, 0));
-		factory.CreatePrimitive(PRIM_CUBE, 1, matStone, vec3(2.2, 2.2, 0));
-		factory.CreatePrimitive(PRIM_CUBE, 1, matStone, vec3(-2.2, 2.2, 0));
-
-		// floor
-		factory.CreatePrimitive(PRIM_CUBE, 0, matSand, vec3(0, -15, 0), vec3(0), vec3(10, 1, 10));
-		factory.CreatePrimitive(PRIM_SPHERE, 0, matSand, vec3(.5, -15, 0), vec3(0), vec3(2.5));
-		//factory.CreatePrimitive(PRIM_CUBE, 0, matSand, vec3(1, -15, 0), vec3(0, 0, -10.0_rad), vec3(10, 1, 5));
-		//factory.CreatePrimitive(PRIM_CUBE, 0, matStone, vec3(-1.5, -5, 0));
-
-		// Spinning Monkey
-		e = m_entityManager.CreateEntity();
-		transformHandle = m_transformSystem.CreateComponent(e);
-		m_transformSystem.GetComponentByHandle(transformHandle)->position = XMVectorSet(3, 0, 0, 1);
-		rotatorHandle = m_rotatorSystem.CreateComponent(e);
-		rotator = m_rotatorSystem.GetComponentByHandle(rotatorHandle);
-		rotator->transform = transformHandle;
-		rotator->speed = 1;
-		mesh = m_meshSystem.GetComponentByHandle(m_meshSystem.CreateComponent(e));
-		mesh->transform = transformHandle;
-		mesh->model = modelMonkey;
-		mesh->material = matStone;
+		// bowl
+		m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, vec3(0, -15, 0), vec3(0), vec3(10, 1, 10));
+		m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, vec3(0, -9, 10), vec3(90.0_rad, 0, 0), vec3(10, 1, 5));
+		m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, vec3(0, -9, -10), vec3(90.0_rad, 0, 0), vec3(10, 1, 5));
+		m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, vec3(10, -9, 0), vec3(0, 0, 90.0_rad), vec3(5, 1, 10));
+		m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, vec3(-10, -9, 0), vec3(0, 0, 90.0_rad), vec3(5, 1, 10));
 
 		// camera
 		e = m_entityManager.CreateEntity();
 		transformHandle = m_transformSystem.CreateComponent(e);
 		transform = m_transformSystem.GetComponentByHandle(transformHandle);
-		transform->position = XMVectorSet(0, 0, -20, 1);
-		transform->rotation = XMQuaternionRotationRollPitchYaw(23.5_rad, 0, 0);
+		transform->position = XMVectorSet(0, 10, -25, 1);
+		transform->rotation = XMQuaternionRotationRollPitchYaw(35.0_rad, 0, 0);
 		cameraHandle = m_cameraSystem.CreateComponent(e);
 		camera = m_cameraSystem.GetComponentByHandle(cameraHandle);
 		camera->transform = transformHandle;
@@ -259,6 +242,11 @@ public:
 		flycam->moveSpeed = 8;
 		flycam->sprintSpeed = 18;
 		flycam->crawlSpeed = 2;
+		bulletHandle = m_rbBulletSystem.CreateComponent(e);
+		rbBullet = m_rbBulletSystem.GetComponentByHandle(bulletHandle);
+		rbBullet->material = matStone;
+		rbBullet->transform = transformHandle;
+		rbBullet->cooldown = 0.25;
 
 		return true;
 	}
@@ -283,6 +271,7 @@ public:
 		m_transformSystem.Execute(dt);
 		m_cameraSystem.Execute(dt);
 		m_flycamSystem.Execute(dt);
+		m_rbBulletSystem.Execute(dt);
 
 		m_physics.RunSimulation(dt);
 		m_rigidBodySystem.Execute(dt);
@@ -334,6 +323,7 @@ private:
 	InputManager m_inputManager;
 	EntityManager m_entityManager;
 	Physics m_physics;
+	PrimitiveFactory m_primFactory;
 
 	// component systems
 	TransformSystem m_transformSystem;
@@ -343,6 +333,7 @@ private:
 	FlyCamSystem m_flycamSystem;
 	ColliderSystem m_colliderSystem;
 	RigidBodySystem m_rigidBodySystem;
+	RBBulletSystem m_rbBulletSystem;
 };
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow)
