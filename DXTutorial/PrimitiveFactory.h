@@ -15,6 +15,8 @@ enum PrimitiveShapes
 {
 	PRIM_CUBE,
 	PRIM_SPHERE,
+	PRIM_CYLINDER,
+	PRIM_CONE
 };
 
 struct vec3
@@ -82,6 +84,14 @@ public:
 		case PRIM_SPHERE:
 			model = static_cast<Model*>(m_resourceManager->FindResourceByStringId("Assets/sphere.obj"_sid));
 			colShape = m_physics->CreateCollisionSphere(1);
+			break;
+		case PRIM_CYLINDER:
+			model = static_cast<Model*>(m_resourceManager->FindResourceByStringId("Assets/cylinder.obj"_sid));
+			colShape = m_physics->CreateCollisionCylinder(1, 1, 1);
+			break;
+		case PRIM_CONE:
+			model = static_cast<Model*>(m_resourceManager->FindResourceByStringId("Assets/cone.obj"_sid));
+			colShape = m_physics->CreateCollisionCone(1, 2);
 			break;
 		default:
 			break;

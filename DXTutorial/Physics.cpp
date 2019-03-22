@@ -121,6 +121,24 @@ btCollisionShape* Physics::CreateCollisionSphere(float radius)
 }
 
 
+btCollisionShape* Physics::CreateCollisionCylinder(float x, float y, float z)
+{
+	btCollisionShape* shape = new btCylinderShape(btVector3(x, y, z));
+	m_collisionShapes.push_back(shape);
+
+	return shape;
+}
+
+
+btCollisionShape* Physics::CreateCollisionCone(float radius, float height)
+{
+	btCollisionShape* shape = new btConeShape(radius, height);
+	m_collisionShapes.push_back(shape);
+
+	return shape;
+}
+
+
 btRigidBody* Physics::CreateRigidBody(XMVECTOR position, XMVECTOR rotation, float mass, btCollisionShape* shape)
 {
 	btTransform transform;

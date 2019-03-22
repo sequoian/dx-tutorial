@@ -95,6 +95,8 @@ public:
 		Model* modelMonkey;
 		Model* modelCube;
 		Model* modelSphere;
+		Model* modelCylinder;
+		Model* modelCone;
 
 		if (!m_resourceManager.LoadModel("Assets/monkey.obj", handle, "Assets/monkey.obj"_sid))
 		{
@@ -116,6 +118,27 @@ public:
 		}
 
 		modelSphere = static_cast<Model*>(m_resourceManager.GetResourceByHandle(handle));
+
+		if (!m_resourceManager.LoadModel("Assets/sphere.obj", handle, "Assets/sphere.obj"_sid))
+		{
+			return false;
+		}
+
+		modelSphere = static_cast<Model*>(m_resourceManager.GetResourceByHandle(handle));
+
+		if (!m_resourceManager.LoadModel("Assets/cylinder.obj", handle, "Assets/cylinder.obj"_sid))
+		{
+			return false;
+		}
+
+		modelCylinder = static_cast<Model*>(m_resourceManager.GetResourceByHandle(handle));
+
+		if (!m_resourceManager.LoadModel("Assets/cone.obj", handle, "Assets/cone.obj"_sid))
+		{
+			return false;
+		}
+
+		modelCone = static_cast<Model*>(m_resourceManager.GetResourceByHandle(handle));
 
 		// Load textures
 		Texture* texStone;

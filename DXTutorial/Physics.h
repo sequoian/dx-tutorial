@@ -15,6 +15,8 @@ public:
 	void SetGravity(float gravity);
 	btCollisionShape* CreateCollisionBox(float x, float y, float z);
 	btCollisionShape* CreateCollisionSphere(float radius);
+	btCollisionShape* CreateCollisionCylinder(float x, float y, float z);
+	btCollisionShape* CreateCollisionCone(float radius, float height);
 	btRigidBody* CreateRigidBody(XMVECTOR position, XMVECTOR rotation, float mass, btCollisionShape* shape);
 
 	inline btQuaternion QuatFromDX(XMVECTOR quat);

@@ -4,6 +4,8 @@
 #include "PrimitiveFactory.h"
 #include "Types.h"
 
+// debug info
+static int numBullets = 0;
 
 struct RBBulletComponent
 {
@@ -45,7 +47,11 @@ public:
 				return;
 			}
 
+
 			elapsed = 0;
+
+			numBullets++;
+			DEBUG_PRINT("# of Bullets: %d", numBullets);
 
 			float zOffset = 5;
 			float yOffset = -0.5;
