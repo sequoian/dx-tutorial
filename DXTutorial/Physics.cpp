@@ -1,4 +1,5 @@
 #include "Physics.h"
+#include "Assert.h"
 
 
 Physics::~Physics()
@@ -142,7 +143,7 @@ btCollisionShape* Physics::CreateCollisionCone(float radius, float height)
 }
 
 
-btRigidBody* Physics::CreateRigidBody(XMVECTOR position, XMVECTOR rotation, float mass, btCollisionShape* shape)
+btRigidBody* Physics::CreateRigidBody(XMVECTOR position, XMVECTOR rotation, float mass, btCollisionShape* shape, bool isKinematic)
 {
 	btTransform transform;
 	transform.setIdentity();
@@ -162,6 +163,14 @@ btRigidBody* Physics::CreateRigidBody(XMVECTOR position, XMVECTOR rotation, floa
 	btDefaultMotionState* motionState = new btDefaultMotionState(transform);
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, motionState, shape, localInertia);
 	btRigidBody* body = new btRigidBody(rbInfo);
+
+	// alter kinematic body properties
+	if (isKinematic)
+	{
+		ASSERT_VERBOSE(mass == 0.f, "Kinematic rigid bodies must have a mass of 0");
+		body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
+		body->setActivationState(DISABLE_DEACTIVATION);
+	}
 
 	// add the body to the dynamics world
 	m_dynamicsWorld->addRigidBody(body);
@@ -224,7 +233,7 @@ void SimulationCallback(btDynamicsWorld* world, btScalar timeStep)
 
 		if (numContacts > 0)
 		{
-			DEBUG_PRINT("Contact between %d and %d", obA->getUserIndex(), obB->getUserIndex());
+			//DEBUG_PRINT("Contact between %d and %d", obA->getUserIndex(), obB->getUserIndex());
 		}
 
 		for (int j = 0; j < numContacts; j++)

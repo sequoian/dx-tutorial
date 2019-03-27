@@ -11,7 +11,6 @@
 #include "StringId.h"
 #include "MathUtility.h"
 #include "PrimitiveFactory.h"
-#include "RBBulletSystem.h"
 
 #include "TransformSystem.h"
 #include "RotatorSystem.h"
@@ -20,6 +19,8 @@
 #include "FlyCamSystem.h"
 #include "ColliderSystem.h"
 #include "RigidBodySystem.h"
+#include "RBBulletSystem.h"
+#include "KinematicRigidBodySystem.h"
 
 #include "ResourceManager.h"
 #include "Texture.h"
@@ -223,6 +224,8 @@ public:
 		m_rigidBodySystem.AddSystemRefs(&m_transformSystem);
 		m_primFactory.SetUp(&m_entityManager, &m_transformSystem, &m_meshSystem, &m_colliderSystem, &m_rigidBodySystem, &m_resourceManager, &m_physics);
 		m_rbBulletSystem.AddSystemRefs(&m_transformSystem, &m_primFactory, &m_inputManager);
+		m_kinematicRBSystem.StartUp(1);
+		m_kinematicRBSystem.AddSystemRefs(&m_transformSystem);
 
 		Entity e;
 		U64 transformHandle;
@@ -239,6 +242,7 @@ public:
 		RigidBodyComponent* rigidBody;
 		U64 bulletHandle;
 		RBBulletComponent* rbBullet;
+		KinematicRigidBodyComponent* kinematicRB;
 
 		// bowl
 		m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, vec3(0, -15, 0), vec3(0), vec3(10, 1, 10));
@@ -270,6 +274,12 @@ public:
 		rbBullet->material = matStone;
 		rbBullet->transform = transformHandle;
 		rbBullet->cooldown = 0.25;
+		colliderHandle = m_colliderSystem.CreateComponent(e);
+		collider = m_colliderSystem.GetComponentByHandle(colliderHandle);
+		collider->shape = m_physics.CreateCollisionSphere(1);
+		kinematicRB = m_kinematicRBSystem.GetComponentByHandle(m_kinematicRBSystem.CreateComponent(e));
+		kinematicRB->transform = transformHandle;
+		kinematicRB->body = m_physics.CreateRigidBody(transform->position, transform->rotation, 0, collider->shape, true);
 
 		return true;
 	}
@@ -300,6 +310,7 @@ public:
 		m_rigidBodySystem.Execute(dt);
 
 		m_transformSystem.Execute(dt);
+		m_kinematicRBSystem.Execute(dt);
 	}
 
 	virtual void Render() override
@@ -357,6 +368,7 @@ private:
 	ColliderSystem m_colliderSystem;
 	RigidBodySystem m_rigidBodySystem;
 	RBBulletSystem m_rbBulletSystem;
+	KinematicRigidBodySystem m_kinematicRBSystem;
 };
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow)

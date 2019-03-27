@@ -17,12 +17,12 @@ public:
 	btCollisionShape* CreateCollisionSphere(float radius);
 	btCollisionShape* CreateCollisionCylinder(float x, float y, float z);
 	btCollisionShape* CreateCollisionCone(float radius, float height);
-	btRigidBody* CreateRigidBody(XMVECTOR position, XMVECTOR rotation, float mass, btCollisionShape* shape);
+	btRigidBody* CreateRigidBody(XMVECTOR position, XMVECTOR rotation, float mass, btCollisionShape* shape, bool isKinematic = false);
 
-	inline btQuaternion QuatFromDX(XMVECTOR quat);
-	inline XMVECTOR QuatToDX(btQuaternion quat);
-	inline btVector3 VecFromDX(XMVECTOR vec);
-	inline XMVECTOR VecToDX(btVector3 vec);
+	static inline btQuaternion QuatFromDX(XMVECTOR quat);
+	static inline XMVECTOR QuatToDX(btQuaternion quat);
+	static inline btVector3 VecFromDX(XMVECTOR vec);
+	static inline XMVECTOR VecToDX(btVector3 vec);
 
 private:
 	btDefaultCollisionConfiguration* m_collisionConfiguration;

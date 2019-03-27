@@ -186,6 +186,7 @@
     <ClInclude Include="IndexBuffer.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="Keyboard.h" />
+    <ClInclude Include="KinematicRigidBodySystem.h" />
     <ClInclude Include="Material.h" />
     <ClInclude Include="MathUtility.h" />
     <ClInclude Include="MeshSystem.h" />

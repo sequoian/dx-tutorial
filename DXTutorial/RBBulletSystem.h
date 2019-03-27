@@ -59,7 +59,7 @@ public:
 
 			XMVECTOR velocity = forward * force;
 
-			m_factory->CreatePrimitive(PRIM_CUBE, 1, comp->material, XMVecToVec3(position), vec3(0), vec3(1), XMVecToVec3(velocity));
+			m_factory->CreatePrimitive(PRIM_SPHERE, 1, comp->material, XMVecToVec3(position), vec3(0), vec3(1), XMVecToVec3(velocity));
 		}
 	}
 

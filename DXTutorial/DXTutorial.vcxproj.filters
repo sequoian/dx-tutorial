@@ -215,5 +215,8 @@
     <ClInclude Include="RBBulletSystem.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="KinematicRigidBodySystem.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
