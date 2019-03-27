@@ -33,3 +33,5 @@ private:
 	btAlignedObjectArray<btCollisionShape*> m_collisionShapes;
 	float m_gravity;
 };
+
+void SimulationCallback(btDynamicsWorld* world, btScalar timeStep);

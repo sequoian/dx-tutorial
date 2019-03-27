@@ -26,6 +26,9 @@ bool Physics::StartUp()
 	// default gravity value
 	SetGravity(10);
 
+	// set tick callback
+	m_dynamicsWorld->setInternalTickCallback(SimulationCallback);
+
 	return true;
 }
 
@@ -163,6 +166,11 @@ btRigidBody* Physics::CreateRigidBody(XMVECTOR position, XMVECTOR rotation, floa
 	// add the body to the dynamics world
 	m_dynamicsWorld->addRigidBody(body);
 
+	// TODO: better id for rigid body
+	static int id = 0;
+	body->setUserIndex(id);
+	id++;
+
 	return body;
 }
 
@@ -201,4 +209,33 @@ XMVECTOR Physics::VecToDX(btVector3 vec)
 {
 	XMVECTOR val;
 	return val;
+}
+
+void SimulationCallback(btDynamicsWorld* world, btScalar timeStep)
+{
+	int numManifolds = world->getDispatcher()->getNumManifolds();
+	for (int i = 0; i < numManifolds; i++)
+	{
+		btPersistentManifold* contactManifold = world->getDispatcher()->getManifoldByIndexInternal(i);
+		const btCollisionObject* obA = contactManifold->getBody0();
+		const btCollisionObject* obB = contactManifold->getBody1();
+
+		int numContacts = contactManifold->getNumContacts();
+
+		if (numContacts > 0)
+		{
+			DEBUG_PRINT("Contact between %d and %d", obA->getUserIndex(), obB->getUserIndex());
+		}
+
+		for (int j = 0; j < numContacts; j++)
+		{
+			btManifoldPoint& pt = contactManifold->getContactPoint(j);
+			if (pt.getDistance() < 0.f)
+			{
+				const btVector3& ptA = pt.getPositionWorldOnA();
+				const btVector3& ptB = pt.getPositionWorldOnB();
+				const btVector3& normalOnB = pt.m_normalWorldOnB;
+			}
+		}
+	}
 }

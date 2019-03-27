@@ -4,8 +4,6 @@
 #include "PrimitiveFactory.h"
 #include "Types.h"
 
-// debug info
-static int numBullets = 0;
 
 struct RBBulletComponent
 {
@@ -47,15 +45,11 @@ public:
 				return;
 			}
 
-
 			elapsed = 0;
-
-			numBullets++;
-			DEBUG_PRINT("# of Bullets: %d", numBullets);
 
 			float zOffset = 5;
 			float yOffset = -0.5;
-			float force = 20;
+			float force = 10;
 
 			XMVECTOR forward = XMVectorSet(0, 0, 1, 1);
 			forward = XMVector3Rotate(forward, transform->rotation);
@@ -65,7 +59,7 @@ public:
 
 			XMVECTOR velocity = forward * force;
 
-			m_factory->CreatePrimitive(PRIM_SPHERE, 1, comp->material, XMVecToVec3(position), vec3(0), vec3(1), XMVecToVec3(velocity));
+			m_factory->CreatePrimitive(PRIM_CUBE, 1, comp->material, XMVecToVec3(position), vec3(0), vec3(1), XMVecToVec3(velocity));
 		}
 	}
 
