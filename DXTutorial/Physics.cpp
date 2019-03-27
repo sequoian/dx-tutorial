@@ -143,7 +143,7 @@ btCollisionShape* Physics::CreateCollisionCone(float radius, float height)
 }
 
 
-btRigidBody* Physics::CreateRigidBody(XMVECTOR position, XMVECTOR rotation, float mass, btCollisionShape* shape, bool isKinematic)
+btRigidBody* Physics::CreateRigidBody(XMVECTOR position, XMVECTOR rotation, float mass, btCollisionShape* shape, bool isKinematic, bool isTrigger)
 {
 	btTransform transform;
 	transform.setIdentity();
@@ -170,6 +170,12 @@ btRigidBody* Physics::CreateRigidBody(XMVECTOR position, XMVECTOR rotation, floa
 		ASSERT_VERBOSE(mass == 0.f, "Kinematic rigid bodies must have a mass of 0");
 		body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
 		body->setActivationState(DISABLE_DEACTIVATION);
+	}
+
+	// alter trigger body properties
+	if (isTrigger)
+	{
+		body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_NO_CONTACT_RESPONSE);
 	}
 
 	// add the body to the dynamics world

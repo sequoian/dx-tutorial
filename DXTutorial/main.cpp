@@ -251,6 +251,24 @@ public:
 		m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, vec3(10, -9, 0), vec3(0, 0, 90.0_rad), vec3(5, 1, 10));
 		m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, vec3(-10, -9, 0), vec3(0, 0, 90.0_rad), vec3(5, 1, 10));
 
+		// trigger
+		e = m_entityManager.CreateEntity();
+		transformHandle = m_transformSystem.CreateComponent(e);
+		transform = m_transformSystem.GetComponentByHandle(transformHandle);
+		transform->position = XMVectorSet(-25, 10, 0, 1);
+		transform->scale = XMVectorSet(8, 8, 8, 1);
+		mesh = m_meshSystem.GetComponentByHandle(m_meshSystem.CreateComponent(e));
+		mesh->transform = transformHandle;
+		mesh->model = modelCube;
+		mesh->material = matStone;
+		colliderHandle = m_colliderSystem.CreateComponent(e);
+		collider = m_colliderSystem.GetComponentByHandle(colliderHandle);
+		collider->shape = m_physics.CreateCollisionBox(1, 1, 1);
+		collider->shape->setLocalScaling(Physics::VecFromDX(transform->scale));
+		rigidBody = m_rigidBodySystem.GetComponentByHandle(m_rigidBodySystem.CreateComponent(e));
+		rigidBody->transform = transformHandle;
+		rigidBody->body = m_physics.CreateRigidBody(transform->position, transform->rotation, 0, collider->shape, false, true);
+
 		// camera
 		e = m_entityManager.CreateEntity();
 		transformHandle = m_transformSystem.CreateComponent(e);

@@ -17,7 +17,7 @@ public:
 	btCollisionShape* CreateCollisionSphere(float radius);
 	btCollisionShape* CreateCollisionCylinder(float x, float y, float z);
 	btCollisionShape* CreateCollisionCone(float radius, float height);
-	btRigidBody* CreateRigidBody(XMVECTOR position, XMVECTOR rotation, float mass, btCollisionShape* shape, bool isKinematic = false);
+	btRigidBody* CreateRigidBody(XMVECTOR position, XMVECTOR rotation, float mass, btCollisionShape* shape, bool isKinematic = false, bool isTrigger = false);
 
 	static inline btQuaternion QuatFromDX(XMVECTOR quat);
 	static inline XMVECTOR QuatToDX(btQuaternion quat);
