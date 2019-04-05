@@ -11,6 +11,7 @@
 #include "StringId.h"
 #include "MathUtility.h"
 #include "PrimitiveFactory.h"
+#include "EventBus.h"
 
 #include "TransformSystem.h"
 #include "RotatorSystem.h"
@@ -376,6 +377,7 @@ private:
 	EntityManager m_entityManager;
 	Physics m_physics;
 	PrimitiveFactory m_primFactory;
+	EventBus m_eventBus;
 
 	// component systems
 	TransformSystem m_transformSystem;

@@ -218,5 +218,14 @@
     <ClInclude Include="KinematicRigidBodySystem.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="Events.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EventFunctionHandler.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EventBus.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
