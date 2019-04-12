@@ -1,6 +1,7 @@
 #pragma once
 
 #include "btBulletDynamicsCommon.h"
+#include <BulletCollision/CollisionDispatch/btGhostObject.h>
 #include "WriteLog.h"
 #include "Entity.h"
 #include <DirectXMath.h>
@@ -19,6 +20,13 @@ public:
 	btCollisionShape* CreateCollisionCylinder(float x, float y, float z);
 	btCollisionShape* CreateCollisionCone(float radius, float height);
 	btRigidBody* CreateRigidBody(Entity e, XMVECTOR position, XMVECTOR rotation, float mass, btCollisionShape* shape, bool isKinematic = false, bool isTrigger = false);
+	btPairCachingGhostObject* CreateGhostObject(Entity e, XMVECTOR position, XMVECTOR rotation, btCollisionShape* shape);
+
+	// test
+	inline btDiscreteDynamicsWorld* GetWorld()
+	{
+		return m_dynamicsWorld;
+	}
 
 	static inline btQuaternion QuatFromDX(XMVECTOR quat);
 	static inline XMVECTOR QuatToDX(btQuaternion quat);

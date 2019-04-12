@@ -22,6 +22,7 @@
 #include "RigidBodySystem.h"
 #include "RBBulletSystem.h"
 #include "KinematicRigidBodySystem.h"
+#include "GhostObjectSystem.h"
 
 #include "ResourceManager.h"
 #include "Texture.h"
@@ -227,6 +228,8 @@ public:
 		m_rbBulletSystem.AddSystemRefs(&m_transformSystem, &m_primFactory, &m_inputManager);
 		m_kinematicRBSystem.StartUp(1);
 		m_kinematicRBSystem.AddSystemRefs(&m_transformSystem);
+		m_ghostObjectSystem.StartUp(1);
+		m_ghostObjectSystem.AddSystemRefs(&m_transformSystem, &m_physics);
 
 		Entity e;
 		U64 transformHandle;
@@ -244,6 +247,7 @@ public:
 		U64 bulletHandle;
 		RBBulletComponent* rbBullet;
 		KinematicRigidBodyComponent* kinematicRB;
+		GhostObjectComponent* ghostObject;
 
 		// bowl
 		m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, vec3(0, -15, 0), vec3(0), vec3(10, 1, 10));
@@ -296,9 +300,12 @@ public:
 		colliderHandle = m_colliderSystem.CreateComponent(e);
 		collider = m_colliderSystem.GetComponentByHandle(colliderHandle);
 		collider->shape = m_physics.CreateCollisionSphere(1);
-		kinematicRB = m_kinematicRBSystem.GetComponentByHandle(m_kinematicRBSystem.CreateComponent(e));
-		kinematicRB->transform = transformHandle;
-		kinematicRB->body = m_physics.CreateRigidBody(e, transform->position, transform->rotation, 0, collider->shape, true);
+		//kinematicRB = m_kinematicRBSystem.GetComponentByHandle(m_kinematicRBSystem.CreateComponent(e));
+		//kinematicRB->transform = transformHandle;
+		//kinematicRB->body = m_physics.CreateRigidBody(e, transform->position, transform->rotation, 0, collider->shape, true);
+		ghostObject = m_ghostObjectSystem.GetComponentByHandle(m_ghostObjectSystem.CreateComponent(e));
+		ghostObject->transform = transformHandle;
+		ghostObject->ghostObject = m_physics.CreateGhostObject(e, transform->position, transform->rotation, collider->shape);
 
 		return true;
 	}
@@ -330,6 +337,7 @@ public:
 
 		m_transformSystem.Execute(dt);
 		m_kinematicRBSystem.Execute(dt);
+		m_ghostObjectSystem.Execute(dt);
 	}
 
 	virtual void Render() override
@@ -389,6 +397,7 @@ private:
 	RigidBodySystem m_rigidBodySystem;
 	RBBulletSystem m_rbBulletSystem;
 	KinematicRigidBodySystem m_kinematicRBSystem;
+	GhostObjectSystem m_ghostObjectSystem;
 };
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow)

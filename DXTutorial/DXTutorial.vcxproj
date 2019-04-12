@@ -185,6 +185,7 @@
     <ClInclude Include="FlyCamSystem.h" />
     <ClInclude Include="EventFunctionHandler.h" />
     <ClInclude Include="Gamepad.h" />
+    <ClInclude Include="GhostObjectSystem.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="IndexBuffer.h" />
     <ClInclude Include="InputManager.h" />

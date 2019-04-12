@@ -31,6 +31,9 @@ bool Physics::StartUp()
 	// set tick callback
 	m_dynamicsWorld->setInternalTickCallback(SimulationCallback);
 
+	// allows ghost objects to be used
+	m_dynamicsWorld->getPairCache()->setInternalGhostPairCallback(new btGhostPairCallback());
+
 	return true;
 }
 
@@ -187,6 +190,26 @@ btRigidBody* Physics::CreateRigidBody(Entity e, XMVECTOR position, XMVECTOR rota
 	body->setUserIndex2(e.generation());
 
 	return body;
+}
+
+btPairCachingGhostObject* Physics::CreateGhostObject(Entity e, XMVECTOR position, XMVECTOR rotation, btCollisionShape* shape)
+{
+	btPairCachingGhostObject* ghost = new btPairCachingGhostObject();
+
+	btTransform transform;
+	transform.setIdentity();
+	transform.setOrigin(VecFromDX(position));
+	transform.setRotation(QuatFromDX(rotation));
+
+	ghost->setCollisionShape(shape);
+	
+	// set entity reference
+	ghost->setUserIndex(e.index());
+	ghost->setUserIndex2(e.generation());
+
+	m_dynamicsWorld->addCollisionObject(ghost);
+
+	return ghost;
 }
 
 
