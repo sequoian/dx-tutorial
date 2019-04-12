@@ -117,7 +117,7 @@ public:
 		// create rigid body
 		rbHandle = m_rigidBodySystem->CreateComponent(e);
 		rigidBody = m_rigidBodySystem->GetComponentByHandle(rbHandle);
-		rigidBody->body = m_physics->CreateRigidBody(transform->position, transform->rotation, mass, collider->shape);
+		rigidBody->body = m_physics->CreateRigidBody(e, transform->position, transform->rotation, mass, collider->shape);
 		rigidBody->transform = transformHandle;
 		rigidBody->body->setLinearVelocity(btVector3(vel.x, vel.y, vel.z));
 

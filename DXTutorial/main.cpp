@@ -268,7 +268,7 @@ public:
 		collider->shape->setLocalScaling(Physics::VecFromDX(transform->scale));
 		rigidBody = m_rigidBodySystem.GetComponentByHandle(m_rigidBodySystem.CreateComponent(e));
 		rigidBody->transform = transformHandle;
-		rigidBody->body = m_physics.CreateRigidBody(transform->position, transform->rotation, 0, collider->shape, false, true);
+		rigidBody->body = m_physics.CreateRigidBody(e, transform->position, transform->rotation, 0, collider->shape, false, true);
 
 		// camera
 		e = m_entityManager.CreateEntity();
@@ -298,7 +298,7 @@ public:
 		collider->shape = m_physics.CreateCollisionSphere(1);
 		kinematicRB = m_kinematicRBSystem.GetComponentByHandle(m_kinematicRBSystem.CreateComponent(e));
 		kinematicRB->transform = transformHandle;
-		kinematicRB->body = m_physics.CreateRigidBody(transform->position, transform->rotation, 0, collider->shape, true);
+		kinematicRB->body = m_physics.CreateRigidBody(e, transform->position, transform->rotation, 0, collider->shape, true);
 
 		return true;
 	}

@@ -1,5 +1,6 @@
 #include "Physics.h"
 #include "Assert.h"
+#include "RigidBodySystem.h"
 
 
 Physics::~Physics()
@@ -143,7 +144,7 @@ btCollisionShape* Physics::CreateCollisionCone(float radius, float height)
 }
 
 
-btRigidBody* Physics::CreateRigidBody(XMVECTOR position, XMVECTOR rotation, float mass, btCollisionShape* shape, bool isKinematic, bool isTrigger)
+btRigidBody* Physics::CreateRigidBody(Entity e, XMVECTOR position, XMVECTOR rotation, float mass, btCollisionShape* shape, bool isKinematic, bool isTrigger)
 {
 	btTransform transform;
 	transform.setIdentity();
@@ -181,10 +182,9 @@ btRigidBody* Physics::CreateRigidBody(XMVECTOR position, XMVECTOR rotation, floa
 	// add the body to the dynamics world
 	m_dynamicsWorld->addRigidBody(body);
 
-	// TODO: better id for rigid body
-	static int id = 0;
-	body->setUserIndex(id);
-	id++;
+	// set entity reference
+	body->setUserIndex(e.index());
+	body->setUserIndex2(e.generation());
 
 	return body;
 }
@@ -237,9 +237,11 @@ void SimulationCallback(btDynamicsWorld* world, btScalar timeStep)
 
 		int numContacts = contactManifold->getNumContacts();
 
+		Entity eA, eB;
 		if (numContacts > 0)
 		{
-			//DEBUG_PRINT("Contact between %d and %d", obA->getUserIndex(), obB->getUserIndex());
+			eA.id = (U64)obA->getUserIndex2() << 32 | obA->getUserIndex();
+			eB.id = (U64)obB->getUserIndex2() << 32 | obB->getUserIndex();
 		}
 
 		for (int j = 0; j < numContacts; j++)
