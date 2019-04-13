@@ -207,7 +207,7 @@ btPairCachingGhostObject* Physics::CreateGhostObject(Entity e, XMVECTOR position
 	ghost->setUserIndex(e.index());
 	ghost->setUserIndex2(e.generation());
 
-	m_dynamicsWorld->addCollisionObject(ghost);
+	m_dynamicsWorld->addCollisionObject(ghost, btBroadphaseProxy::DefaultFilter, btBroadphaseProxy::AllFilter);
 
 	return ghost;
 }
@@ -227,7 +227,7 @@ btQuaternion Physics::QuatFromDX(XMVECTOR quat)
 
 XMVECTOR Physics::QuatToDX(btQuaternion quat)
 {
-	XMVECTOR val;
+	XMVECTOR val = XMVectorSet(quat.getX(), quat.getY(), quat.getZ(), quat.getW());
 	return val;
 }
 
@@ -245,7 +245,7 @@ btVector3 Physics::VecFromDX(XMVECTOR vec)
 
 XMVECTOR Physics::VecToDX(btVector3 vec)
 {
-	XMVECTOR val;
+	XMVECTOR val = XMVectorSet(vec.getX(), vec.getY(), vec.getZ(), 1);
 	return val;
 }
 

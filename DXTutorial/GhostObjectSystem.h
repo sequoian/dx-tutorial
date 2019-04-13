@@ -26,22 +26,22 @@ public:
 	{
 		for (U32 i = 0; i < m_pool.Size(); i++)
 		{
+			
+
 			GhostObjectComponent* ghost = m_pool[i];
 			TransformComponent* transform = m_transformSystem->GetComponentByHandle(ghost->transform);
+
+			HandleCollisions(ghost->ghostObject, transform);
 
 			btQuaternion rotation = Physics::QuatFromDX(transform->rotation);
 			btVector3 position = Physics::VecFromDX(transform->position);
 			btTransform t(rotation, position);
 			ghost->ghostObject->setWorldTransform(t);
-
-			//DEBUG_PRINT("%f, %f, %f", t.getOrigin().getX(), t.getOrigin().getY(), t.getOrigin().getZ());
-
-			GetCollisions(ghost->ghostObject);
 		}
 	}
 
 private:
-	void GetCollisions(btPairCachingGhostObject* ghostObject)
+	void HandleCollisions(btPairCachingGhostObject* ghostObject, TransformComponent* transform)
 	{
 		btManifoldArray manifoldArray;
 		btBroadphasePairArray& pairArray =
@@ -64,10 +64,6 @@ private:
 			if (collisionPair->m_algorithm)
 				collisionPair->m_algorithm->getAllContactManifolds(manifoldArray);
 
-			if (manifoldArray.size() > 0)
-			{
-				DEBUG_PRINT("collided!");
-			}
 
 			for (int j = 0; j < manifoldArray.size(); j++)
 			{
@@ -88,6 +84,10 @@ private:
 						const btVector3& normalOnB = pt.m_normalWorldOnB;
 
 						// handle collisions here
+						btVector3 diff = ptA - ptB;
+
+						//transform->position -= Physics::VecToDX(normalOnB);
+						transform->position = XMVectorAdd(transform->position, Physics::VecToDX(diff));
 					}
 				}
 			}

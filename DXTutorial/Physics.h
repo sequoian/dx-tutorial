@@ -31,7 +31,7 @@ public:
 	static inline btQuaternion QuatFromDX(XMVECTOR quat);
 	static inline XMVECTOR QuatToDX(btQuaternion quat);
 	static inline btVector3 VecFromDX(XMVECTOR vec);
-	static inline XMVECTOR VecToDX(btVector3 vec);
+	static XMVECTOR VecToDX(btVector3 vec);
 
 private:
 	btDefaultCollisionConfiguration* m_collisionConfiguration;
