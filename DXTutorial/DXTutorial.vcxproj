@@ -175,6 +175,7 @@
     <ClInclude Include="BaseWindow.h" />
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="CameraSystem.h" />
+    <ClInclude Include="CharacterControllerSystem.h" />
     <ClInclude Include="ColliderSystem.h" />
     <ClInclude Include="CompactPool.h" />
     <ClInclude Include="ComponentSystem.h" />

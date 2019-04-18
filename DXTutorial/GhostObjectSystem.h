@@ -26,17 +26,26 @@ public:
 	{
 		for (U32 i = 0; i < m_pool.Size(); i++)
 		{
-			
-
 			GhostObjectComponent* ghost = m_pool[i];
 			TransformComponent* transform = m_transformSystem->GetComponentByHandle(ghost->transform);
-
-			HandleCollisions(ghost->ghostObject, transform);
 
 			btQuaternion rotation = Physics::QuatFromDX(transform->rotation);
 			btVector3 position = Physics::VecFromDX(transform->position);
 			btTransform t(rotation, position);
 			ghost->ghostObject->setWorldTransform(t);
+		}
+	}
+
+	
+	void HandleCollisionsTemp(float deltaTime)
+	{
+		for (U32 i = 0; i < m_pool.Size(); i++)
+		{
+			GhostObjectComponent* ghost = m_pool[i];
+			TransformComponent* transform = m_transformSystem->GetComponentByHandle(ghost->transform);
+
+			HandleCollisions(ghost->ghostObject, transform);
+
 		}
 	}
 
@@ -84,10 +93,9 @@ private:
 						const btVector3& normalOnB = pt.m_normalWorldOnB;
 
 						// handle collisions here
-						btVector3 diff = ptA - ptB;
-
-						//transform->position -= Physics::VecToDX(normalOnB);
-						transform->position = XMVectorAdd(transform->position, Physics::VecToDX(diff));
+						XMVECTOR diff = Physics::VecToDX(ptA - ptB);
+						XMVECTOR norm = Physics::VecToDX(normalOnB);
+						transform->position += XMVectorMultiply(norm, XMVector3Dot(diff, norm));
 					}
 				}
 			}

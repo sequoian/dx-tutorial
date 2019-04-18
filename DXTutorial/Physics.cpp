@@ -207,9 +207,20 @@ btPairCachingGhostObject* Physics::CreateGhostObject(Entity e, XMVECTOR position
 	ghost->setUserIndex(e.index());
 	ghost->setUserIndex2(e.generation());
 
-	m_dynamicsWorld->addCollisionObject(ghost, btBroadphaseProxy::DefaultFilter, btBroadphaseProxy::AllFilter);
+	m_dynamicsWorld->addCollisionObject(ghost, btBroadphaseProxy::DefaultFilter, btBroadphaseProxy::StaticFilter);
 
 	return ghost;
+}
+
+
+btKinematicCharacterController* Physics::CreateCharacterController(Entity e, XMVECTOR position, XMVECTOR rotation, btConvexShape* shape)
+{
+	btPairCachingGhostObject* ghost = CreateGhostObject(e, position, rotation, shape);
+	btKinematicCharacterController* cc = new btKinematicCharacterController(ghost, shape, 1);
+
+	m_dynamicsWorld->addAction(cc);
+
+	return cc;
 }
 
 

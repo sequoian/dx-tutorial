@@ -2,6 +2,7 @@
 
 #include "btBulletDynamicsCommon.h"
 #include <BulletCollision/CollisionDispatch/btGhostObject.h>
+#include <BulletDynamics/Character/btKinematicCharacterController.h>
 #include "WriteLog.h"
 #include "Entity.h"
 #include <DirectXMath.h>
@@ -21,6 +22,8 @@ public:
 	btCollisionShape* CreateCollisionCone(float radius, float height);
 	btRigidBody* CreateRigidBody(Entity e, XMVECTOR position, XMVECTOR rotation, float mass, btCollisionShape* shape, bool isKinematic = false, bool isTrigger = false);
 	btPairCachingGhostObject* CreateGhostObject(Entity e, XMVECTOR position, XMVECTOR rotation, btCollisionShape* shape);
+	btKinematicCharacterController* CreateCharacterController(Entity e, XMVECTOR position, XMVECTOR rotation, btConvexShape* shape);
+	
 
 	// test
 	inline btDiscreteDynamicsWorld* GetWorld()

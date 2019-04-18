@@ -230,5 +230,8 @@
     <ClInclude Include="GhostObjectSystem.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="CharacterControllerSystem.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

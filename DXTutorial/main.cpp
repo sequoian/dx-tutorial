@@ -23,6 +23,7 @@
 #include "RBBulletSystem.h"
 #include "KinematicRigidBodySystem.h"
 #include "GhostObjectSystem.h"
+#include "CharacterControllerSystem.h"
 
 #include "ResourceManager.h"
 #include "Texture.h"
@@ -230,6 +231,8 @@ public:
 		m_kinematicRBSystem.AddSystemRefs(&m_transformSystem);
 		m_ghostObjectSystem.StartUp(1);
 		m_ghostObjectSystem.AddSystemRefs(&m_transformSystem, &m_physics);
+		m_characterSystem.StartUp(1);
+		m_characterSystem.AddSystemRefs(&m_transformSystem);
 
 		Entity e;
 		U64 transformHandle;
@@ -248,6 +251,7 @@ public:
 		RBBulletComponent* rbBullet;
 		KinematicRigidBodyComponent* kinematicRB;
 		GhostObjectComponent* ghostObject;
+		CharacterControllerComponent* character;
 
 		// bowl
 		m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, vec3(0, -15, 0), vec3(0), vec3(10, 1, 10));
@@ -306,6 +310,9 @@ public:
 		ghostObject = m_ghostObjectSystem.GetComponentByHandle(m_ghostObjectSystem.CreateComponent(e));
 		ghostObject->transform = transformHandle;
 		ghostObject->ghostObject = m_physics.CreateGhostObject(e, transform->position, transform->rotation, collider->shape);
+		//character = m_characterSystem.GetComponentByHandle(m_characterSystem.CreateComponent(e));
+		//character->transform = transformHandle;
+		//character->character = m_physics.CreateCharacterController(e, transform->position, transform->rotation, static_cast<btConvexShape*>(collider->shape));
 
 		return true;
 	}
@@ -332,12 +339,16 @@ public:
 		m_flycamSystem.Execute(dt);
 		m_rbBulletSystem.Execute(dt);
 
+		m_ghostObjectSystem.Execute(dt);
+		m_kinematicRBSystem.Execute(dt);
+		m_characterSystem.Execute(dt);
+
 		m_physics.RunSimulation(dt);
+
 		m_rigidBodySystem.Execute(dt);
+		m_ghostObjectSystem.HandleCollisionsTemp(dt);
 
 		m_transformSystem.Execute(dt);
-		m_kinematicRBSystem.Execute(dt);
-		m_ghostObjectSystem.Execute(dt);
 	}
 
 	virtual void Render() override
@@ -398,6 +409,7 @@ private:
 	RBBulletSystem m_rbBulletSystem;
 	KinematicRigidBodySystem m_kinematicRBSystem;
 	GhostObjectSystem m_ghostObjectSystem;
+	CharacterControllerSystem m_characterSystem;
 };
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow)
