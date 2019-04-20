@@ -278,6 +278,28 @@ public:
 		rigidBody->transform = transformHandle;
 		rigidBody->body = m_physics.CreateRigidBody(e, transform->position, transform->rotation, 0, collider->shape, false, true);
 
+		// spinner
+		e = m_entityManager.CreateEntity();
+		transformHandle = m_transformSystem.CreateComponent(e);
+		transform = m_transformSystem.GetComponentByHandle(transformHandle);
+		transform->position = XMVectorSet(25, 10, 0, 1);
+		transform->scale = XMVectorSet(1, 8, 8, 1);
+		mesh = m_meshSystem.GetComponentByHandle(m_meshSystem.CreateComponent(e));
+		mesh->transform = transformHandle;
+		mesh->model = modelCube;
+		mesh->material = matStone;
+		rotator = m_rotatorSystem.GetComponentByHandle(m_rotatorSystem.CreateComponent(e));
+		rotator->angle = 1;
+		rotator->speed = 2;
+		rotator->transform = transformHandle;
+		colliderHandle = m_colliderSystem.CreateComponent(e);
+		collider = m_colliderSystem.GetComponentByHandle(colliderHandle);
+		collider->shape = m_physics.CreateCollisionBox(1, 1, 1);
+		collider->shape->setLocalScaling(Physics::VecFromDX(transform->scale));
+		kinematicRB = m_kinematicRBSystem.GetComponentByHandle(m_kinematicRBSystem.CreateComponent(e));
+		kinematicRB->transform = transformHandle;
+		kinematicRB->body = m_physics.CreateRigidBody(e, transform->position, transform->rotation, 0, collider->shape, true);
+
 		// camera
 		e = m_entityManager.CreateEntity();
 		transformHandle = m_transformSystem.CreateComponent(e);

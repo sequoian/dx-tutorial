@@ -207,7 +207,7 @@ btPairCachingGhostObject* Physics::CreateGhostObject(Entity e, XMVECTOR position
 	ghost->setUserIndex(e.index());
 	ghost->setUserIndex2(e.generation());
 
-	m_dynamicsWorld->addCollisionObject(ghost, btBroadphaseProxy::DefaultFilter, btBroadphaseProxy::StaticFilter);
+	m_dynamicsWorld->addCollisionObject(ghost, btBroadphaseProxy::DefaultFilter, btBroadphaseProxy::AllFilter);
 
 	return ghost;
 }

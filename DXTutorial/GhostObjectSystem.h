@@ -80,6 +80,8 @@ private:
 
 				bool isFirstBody = manifold->getBody0() == ghostObject;
 
+				//DEBUG_PRINT("First body: %s", isFirstBody ? "true" : "false");
+
 				btScalar direction = isFirstBody ? btScalar(-1.0) : btScalar(1.0);
 
 				for (int p = 0; p < manifold->getNumContacts(); ++p)
@@ -93,7 +95,7 @@ private:
 						const btVector3& normalOnB = pt.m_normalWorldOnB;
 
 						// handle collisions here
-						XMVECTOR diff = Physics::VecToDX(ptA - ptB);
+						XMVECTOR diff = Physics::VecToDX(ptA - ptB) * direction;
 						XMVECTOR norm = Physics::VecToDX(normalOnB);
 						transform->position += XMVectorMultiply(norm, XMVector3Dot(diff, norm));
 					}
