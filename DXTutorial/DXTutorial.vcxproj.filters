@@ -81,6 +81,9 @@
     <ClCompile Include="Physics.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="RigidBody.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseWindow.h">
@@ -231,6 +234,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="CharacterControllerSystem.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RigidBody.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

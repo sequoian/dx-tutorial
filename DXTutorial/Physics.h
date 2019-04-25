@@ -5,6 +5,7 @@
 #include <BulletDynamics/Character/btKinematicCharacterController.h>
 #include "WriteLog.h"
 #include "Entity.h"
+#include "RigidBody.h"
 #include <DirectXMath.h>
 using namespace DirectX;
 
@@ -35,6 +36,8 @@ public:
 	static inline XMVECTOR QuatToDX(btQuaternion quat);
 	static inline btVector3 VecFromDX(XMVECTOR vec);
 	static XMVECTOR VecToDX(btVector3 vec);
+	static btTransform MatFromDX(XMMATRIX mat);
+	static XMMATRIX MatToDX(btTransform mat);
 
 private:
 	btDefaultCollisionConfiguration* m_collisionConfiguration;

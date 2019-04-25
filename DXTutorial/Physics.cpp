@@ -260,6 +260,25 @@ XMVECTOR Physics::VecToDX(btVector3 vec)
 	return val;
 }
 
+
+btTransform Physics::MatFromDX(XMMATRIX mat)
+{
+	btVector3 pos = Physics::VecFromDX(mat.r[3]);
+	btQuaternion rot = Physics::QuatFromDX(XMQuaternionRotationMatrix(mat));
+	btTransform t(rot, pos);
+
+	return t;
+}
+
+
+XMMATRIX Physics::MatToDX(btTransform mat)
+{
+	float m[16];
+	mat.getOpenGLMatrix(m);
+	return XMMATRIX(m);
+}
+
+
 void SimulationCallback(btDynamicsWorld* world, btScalar timeStep)
 {
 	int numManifolds = world->getDispatcher()->getNumManifolds();
