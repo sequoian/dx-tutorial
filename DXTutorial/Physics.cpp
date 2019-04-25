@@ -224,6 +224,12 @@ btKinematicCharacterController* Physics::CreateCharacterController(Entity e, XMV
 }
 
 
+RigidBody CreateDynamicRigidBody(Entity e, XMVECTOR position, XMVECTOR rotation, float mass, btCollisionShape* shape, U32 collisionGroups, U32 collisionMasks)
+{
+
+}
+
+
 btQuaternion Physics::QuatFromDX(XMVECTOR quat)
 {
 	btQuaternion val;

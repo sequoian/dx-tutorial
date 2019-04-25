@@ -24,6 +24,8 @@ public:
 	btRigidBody* CreateRigidBody(Entity e, XMVECTOR position, XMVECTOR rotation, float mass, btCollisionShape* shape, bool isKinematic = false, bool isTrigger = false);
 	btPairCachingGhostObject* CreateGhostObject(Entity e, XMVECTOR position, XMVECTOR rotation, btCollisionShape* shape);
 	btKinematicCharacterController* CreateCharacterController(Entity e, XMVECTOR position, XMVECTOR rotation, btConvexShape* shape);
+
+	RigidBody CreateDynamicRigidBody(Entity e, XMVECTOR position, XMVECTOR rotation, float mass, btCollisionShape* shape, U32 collisionGroups, U32 collisionMasks);
 	
 
 	// test
@@ -32,9 +34,9 @@ public:
 		return m_dynamicsWorld;
 	}
 
-	static inline btQuaternion QuatFromDX(XMVECTOR quat);
-	static inline XMVECTOR QuatToDX(btQuaternion quat);
-	static inline btVector3 VecFromDX(XMVECTOR vec);
+	static btQuaternion QuatFromDX(XMVECTOR quat);
+	static XMVECTOR QuatToDX(btQuaternion quat);
+	static btVector3 VecFromDX(XMVECTOR vec);
 	static XMVECTOR VecToDX(btVector3 vec);
 	static btTransform MatFromDX(XMMATRIX mat);
 	static XMMATRIX MatToDX(btTransform mat);

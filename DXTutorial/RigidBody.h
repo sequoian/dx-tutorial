@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Types.h"
 #include "Entity.h"
 #include "Physics.h"
@@ -18,9 +20,6 @@ public:
 	XMVECTOR GetLinearVelocity();
 	void SetAngularVelocity(XMVECTOR velocity);
 	XMVECTOR GetAngularVelocity();
-	void SetFilterGroup(U32 group);
-	void SetFilterMask(U32 mask);
-	U32 GetMass();
 	void SetEntity(Entity e);
 	Entity GetEntity();
 	bool IsDynamic();
