@@ -2,15 +2,16 @@
 #include "Assert.h"
 #include "RigidBodySystem.h"
 
-
 Physics::~Physics()
 {
 	ShutDown();
 }
 
 
-bool Physics::StartUp()
+bool Physics::StartUp(EventBus* eventBus)
 {
+	m_eventBus = eventBus;
+
 	// collision configuration contains default setup for memory, collision setup. Advanced users can create their own configuration.
 	m_collisionConfiguration = new btDefaultCollisionConfiguration();
 
@@ -29,7 +30,7 @@ bool Physics::StartUp()
 	SetGravity(10);
 
 	// set tick callback
-	m_dynamicsWorld->setInternalTickCallback(SimulationCallback);
+	//m_dynamicsWorld->setInternalTickCallback(SimulationCallback);
 
 	// allows ghost objects to be used
 	m_dynamicsWorld->getPairCache()->setInternalGhostPairCallback(new btGhostPairCallback());
@@ -102,6 +103,7 @@ void Physics::ShutDown()
 void Physics::RunSimulation(float deltaTime)
 {
 	m_dynamicsWorld->stepSimulation(deltaTime);
+	SimulationCallback(m_dynamicsWorld, deltaTime);
 }
 
 
@@ -223,12 +225,84 @@ btKinematicCharacterController* Physics::CreateCharacterController(Entity e, XMV
 	return cc;
 }
 
-
-RigidBody CreateDynamicRigidBody(Entity e, XMVECTOR position, XMVECTOR rotation, float mass, btCollisionShape* shape, U32 collisionGroups, U32 collisionMasks)
+/*
+RigidBody Physics::CreateDynamicRigidBody(Entity e, XMVECTOR position, XMVECTOR rotation, float mass, btCollisionShape* shape, U32 collisionGroups, U32 collisionMasks)
 {
+	ASSERT_VERBOSE(mass > 0.f, "Dynamic rigid bodies must have a mass greater than 0");
+	if (mass < 0.f)
+	{
+		mass = 1.f;
+	}
 
+	btTransform transform;
+	transform.setIdentity();
+	transform.setOrigin(VecFromDX(position));
+	transform.setRotation(QuatFromDX(rotation));
+
+	btVector3 localInertia(0, 0, 0);
+	shape->calculateLocalInertia(mass, localInertia);
+
+	btDefaultMotionState* motionState = new btDefaultMotionState(transform);
+	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, motionState, shape, localInertia);
+	btRigidBody* body = new btRigidBody(rbInfo);
+
+	m_dynamicsWorld->addRigidBody(body, collisionGroups, collisionMasks);
+
+	RigidBody rigidBody;
+	rigidBody.body = body;
+	rigidBody.SetEntity(e);
+
+	return rigidBody;
 }
 
+
+RigidBody Physics::CreateStaticRigidBody(Entity e, XMVECTOR position, XMVECTOR rotation, btCollisionShape* shape, U32 collisionGroups, U32 collisionMasks)
+{
+	btTransform transform;
+	transform.setIdentity();
+	transform.setOrigin(VecFromDX(position));
+	transform.setRotation(QuatFromDX(rotation));
+	btVector3 localInertia(0, 0, 0);
+
+	btDefaultMotionState* motionState = new btDefaultMotionState(transform);
+	btRigidBody::btRigidBodyConstructionInfo rbInfo(0, motionState, shape, localInertia);
+	btRigidBody* body = new btRigidBody(rbInfo);
+
+	m_dynamicsWorld->addRigidBody(body);
+
+	RigidBody rigidBody;
+	rigidBody.body = body;
+	rigidBody.SetEntity(e);
+
+	return rigidBody;
+}
+
+*/
+
+btRigidBody* Physics::CreateKinematicRigidBody(Entity e, XMVECTOR position, XMVECTOR rotation, btCollisionShape* shape, U32 collisionGroups, U32 collisionMasks)
+{
+	btTransform transform;
+	transform.setIdentity();
+	transform.setOrigin(VecFromDX(position));
+	transform.setRotation(QuatFromDX(rotation));
+	btVector3 localInertia(0, 0, 0);
+
+	btDefaultMotionState* motionState = new btDefaultMotionState(transform);
+	btRigidBody::btRigidBodyConstructionInfo rbInfo(0, motionState, shape, localInertia);
+	btRigidBody* body = new btRigidBody(rbInfo);
+
+	// kinematic flags
+	body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
+	body->setActivationState(DISABLE_DEACTIVATION);
+
+	m_dynamicsWorld->addRigidBody(body, collisionGroups, collisionMasks);
+
+	// set entity reference
+	body->setUserIndex(e.index());
+	body->setUserIndex2(e.generation());
+
+	return body;
+}
 
 btQuaternion Physics::QuatFromDX(XMVECTOR quat)
 {
@@ -285,7 +359,7 @@ XMMATRIX Physics::MatToDX(btTransform mat)
 }
 
 
-void SimulationCallback(btDynamicsWorld* world, btScalar timeStep)
+void Physics::SimulationCallback(btDynamicsWorld* world, btScalar timeStep)
 {
 	int numManifolds = world->getDispatcher()->getNumManifolds();
 	for (int i = 0; i < numManifolds; i++)
@@ -311,6 +385,8 @@ void SimulationCallback(btDynamicsWorld* world, btScalar timeStep)
 				const btVector3& ptA = pt.getPositionWorldOnA();
 				const btVector3& ptB = pt.getPositionWorldOnB();
 				const btVector3& normalOnB = pt.m_normalWorldOnB;
+
+				m_eventBus->Publish(&CollisionEvent(eA, eB));
 			}
 		}
 	}

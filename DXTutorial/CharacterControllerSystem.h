@@ -4,36 +4,41 @@
 #include "TransformSystem.h"
 #include "Physics.h"
 #include "Types.h"
+#include "RigidBody.h"
+#include "EventBus.h"
 
 
 struct CharacterControllerComponent
 {
 	U64 transform = 0;
-	btKinematicCharacterController* character = nullptr;
+	RigidBody rigidBody;
 };
 
 
 class CharacterControllerSystem : public ComponentSystem<CharacterControllerComponent>
 {
 public:
-	void AddSystemRefs(TransformSystem* transformSystem)
+	void AddSystemRefs(TransformSystem* transformSystem, EventBus& eventBus)
 	{
 		m_transformSystem = transformSystem;
+		eventBus.Subscribe(this, &CharacterControllerSystem::OnCollisionEvent);
 	}
 
 	inline void Execute(float deltaTime) override
 	{
 		for (U32 i = 0; i < m_pool.Size(); i++)
 		{
-			CharacterControllerComponent* cc = m_pool[i];
-			TransformComponent* transform = m_transformSystem->GetComponentByHandle(cc->transform);
 
-			btQuaternion rotation = Physics::QuatFromDX(transform->rotation);
-			btVector3 position = Physics::VecFromDX(transform->position);
-			btTransform t(rotation, position);
-
-			cc->character->getGhostObject()->setWorldTransform(t);
 		}
+	}
+
+private:
+	void OnCollisionEvent(CollisionEvent* collision)
+	{
+		Entity a = collision->entityA;
+		Entity b = collision->entityB;
+		if (FindComponent(a) || FindComponent(b))
+			DEBUG_PRINT("character collided!");
 	}
 
 private:

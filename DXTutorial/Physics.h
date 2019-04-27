@@ -6,6 +6,7 @@
 #include "WriteLog.h"
 #include "Entity.h"
 #include "RigidBody.h"
+#include "EventBus.h"
 #include <DirectXMath.h>
 using namespace DirectX;
 
@@ -13,7 +14,7 @@ class Physics
 {
 public:
 	~Physics();
-	bool StartUp();
+	bool StartUp(EventBus* eventBus);
 	void ShutDown();
 	void RunSimulation(float deltaTime);
 	void SetGravity(float gravity);
@@ -25,7 +26,9 @@ public:
 	btPairCachingGhostObject* CreateGhostObject(Entity e, XMVECTOR position, XMVECTOR rotation, btCollisionShape* shape);
 	btKinematicCharacterController* CreateCharacterController(Entity e, XMVECTOR position, XMVECTOR rotation, btConvexShape* shape);
 
-	RigidBody CreateDynamicRigidBody(Entity e, XMVECTOR position, XMVECTOR rotation, float mass, btCollisionShape* shape, U32 collisionGroups, U32 collisionMasks);
+	//RigidBody CreateDynamicRigidBody(Entity e, XMVECTOR position, XMVECTOR rotation, float mass, btCollisionShape* shape, U32 collisionGroups, U32 collisionMasks);
+	//RigidBody CreateStaticRigidBody(Entity e, XMVECTOR position, XMVECTOR rotation, btCollisionShape* shape, U32 collisionGroups, U32 collisionMasks);
+	btRigidBody* CreateKinematicRigidBody(Entity e, XMVECTOR position, XMVECTOR rotation, btCollisionShape* shape, U32 collisionGroups, U32 collisionMasks);
 	
 
 	// test
@@ -42,6 +45,9 @@ public:
 	static XMMATRIX MatToDX(btTransform mat);
 
 private:
+	void SimulationCallback(btDynamicsWorld* world, btScalar timeStep);
+
+private:
 	btDefaultCollisionConfiguration* m_collisionConfiguration;
 	btCollisionDispatcher* m_dispatcher;
 	btBroadphaseInterface* m_overlappingPairCache;
@@ -49,6 +55,7 @@ private:
 	btDiscreteDynamicsWorld* m_dynamicsWorld;
 	btAlignedObjectArray<btCollisionShape*> m_collisionShapes;
 	float m_gravity;
+	EventBus* m_eventBus;
+	
 };
 
-void SimulationCallback(btDynamicsWorld* world, btScalar timeStep);

@@ -68,7 +68,7 @@ public:
 
 		// Start systems
 		m_resourceManager.StartUp(m_graphics);
-		m_physics.StartUp();
+		m_physics.StartUp(&m_eventBus);
 
 		// create constant buffer
 		if (!m_cb.CreateConstantBuffer(m_graphics, sizeof(ModelConstants), true,
@@ -232,7 +232,7 @@ public:
 		m_ghostObjectSystem.StartUp(1);
 		m_ghostObjectSystem.AddSystemRefs(&m_transformSystem, &m_physics);
 		m_characterSystem.StartUp(1);
-		m_characterSystem.AddSystemRefs(&m_transformSystem);
+		m_characterSystem.AddSystemRefs(&m_transformSystem, m_eventBus);
 
 		Entity e;
 		U64 transformHandle;
@@ -326,12 +326,13 @@ public:
 		colliderHandle = m_colliderSystem.CreateComponent(e);
 		collider = m_colliderSystem.GetComponentByHandle(colliderHandle);
 		collider->shape = m_physics.CreateCollisionSphere(1);
-		//kinematicRB = m_kinematicRBSystem.GetComponentByHandle(m_kinematicRBSystem.CreateComponent(e));
-		//kinematicRB->transform = transformHandle;
-		//kinematicRB->body = m_physics.CreateRigidBody(e, transform->position, transform->rotation, 0, collider->shape, true);
-		ghostObject = m_ghostObjectSystem.GetComponentByHandle(m_ghostObjectSystem.CreateComponent(e));
-		ghostObject->transform = transformHandle;
-		ghostObject->ghostObject = m_physics.CreateGhostObject(e, transform->position, transform->rotation, collider->shape);
+		kinematicRB = m_kinematicRBSystem.GetComponentByHandle(m_kinematicRBSystem.CreateComponent(e));
+		kinematicRB->transform = transformHandle;
+		kinematicRB->body = m_physics.CreateKinematicRigidBody(e, transform->position, transform->rotation, collider->shape, btBroadphaseProxy::DefaultFilter, btBroadphaseProxy::AllFilter);
+		character = m_characterSystem.GetComponentByHandle(m_characterSystem.CreateComponent(e));
+		//ghostObject = m_ghostObjectSystem.GetComponentByHandle(m_ghostObjectSystem.CreateComponent(e));
+		//ghostObject->transform = transformHandle;
+		//ghostObject->ghostObject = m_physics.CreateGhostObject(e, transform->position, transform->rotation, collider->shape);
 		//character = m_characterSystem.GetComponentByHandle(m_characterSystem.CreateComponent(e));
 		//character->transform = transformHandle;
 		//character->character = m_physics.CreateCharacterController(e, transform->position, transform->rotation, static_cast<btConvexShape*>(collider->shape));
