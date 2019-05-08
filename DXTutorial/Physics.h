@@ -22,20 +22,16 @@ public:
 	btCollisionShape* CreateCollisionSphere(float radius);
 	btCollisionShape* CreateCollisionCylinder(float x, float y, float z);
 	btCollisionShape* CreateCollisionCone(float radius, float height);
-	btRigidBody* CreateRigidBody(Entity e, XMVECTOR position, XMVECTOR rotation, float mass, btCollisionShape* shape, bool isKinematic = false, bool isTrigger = false);
-	btPairCachingGhostObject* CreateGhostObject(Entity e, XMVECTOR position, XMVECTOR rotation, btCollisionShape* shape);
-	btKinematicCharacterController* CreateCharacterController(Entity e, XMVECTOR position, XMVECTOR rotation, btConvexShape* shape);
 
-	//RigidBody CreateDynamicRigidBody(Entity e, XMVECTOR position, XMVECTOR rotation, float mass, btCollisionShape* shape, U32 collisionGroups, U32 collisionMasks);
-	//RigidBody CreateStaticRigidBody(Entity e, XMVECTOR position, XMVECTOR rotation, btCollisionShape* shape, U32 collisionGroups, U32 collisionMasks);
-	btRigidBody* CreateKinematicRigidBody(Entity e, XMVECTOR position, XMVECTOR rotation, btCollisionShape* shape, U32 collisionGroups, U32 collisionMasks);
-	
+	RigidBody CreateDynamicRigidBody(Entity e, btCollisionShape* shape, float mass);
+	RigidBody CreateStaticRigidBody(Entity e, btCollisionShape* shape);
+	RigidBody CreateKinematicRigidBody(Entity e, btCollisionShape* shape);
 
-	// test
-	inline btDiscreteDynamicsWorld* GetWorld()
-	{
-		return m_dynamicsWorld;
-	}
+
+	//btRigidBody* CreateRigidBody(Entity e, XMVECTOR position, XMVECTOR rotation, float mass, btCollisionShape* shape, bool isKinematic = /false, /bool isTrigger = false);
+	//btPairCachingGhostObject* CreateGhostObject(Entity e, XMVECTOR position, XMVECTOR rotation, btCollisionShape* shape);
+	//btKinematicCharacterController* CreateCharacterController(Entity e, XMVECTOR position, XMVECTOR rotation, btConvexShape* shape);
+	//btRigidBody* CreateKinematicRigidBody(Entity e, XMVECTOR position, XMVECTOR rotation, btCollisionShape* shape, U32 collisionGroups, U32 collisionMasks);
 
 	static btQuaternion QuatFromDX(XMVECTOR quat);
 	static XMVECTOR QuatToDX(btQuaternion quat);

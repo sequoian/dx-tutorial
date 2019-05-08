@@ -1,22 +1,34 @@
 #include "RigidBody.h"
+#include "Physics.h"
+
+
+RigidBody::RigidBody(btRigidBody* body)
+{
+	m_body = body;
+}
+
+RigidBody::~RigidBody()
+{
+}
+
 
 void RigidBody::SetTransform(XMMATRIX transform)
 {
-	body->getMotionState()->setWorldTransform(Physics::MatFromDX(transform));
+	m_body->getMotionState()->setWorldTransform(Physics::MatFromDX(transform));
 }
 
 
 void RigidBody::SetTransform(XMVECTOR position, XMVECTOR rotation)
 {
 	btTransform t(Physics::QuatFromDX(rotation), Physics::VecFromDX(position));
-	body->getMotionState()->setWorldTransform(t);
+	m_body->getMotionState()->setWorldTransform(t);
 }
 
 
 XMMATRIX RigidBody::GetTransform()
 {
 	btTransform t;
-	body->getMotionState()->getWorldTransform(t);
+	m_body->getMotionState()->getWorldTransform(t);
 
 	return Physics::MatToDX(t);
 }
@@ -25,16 +37,16 @@ XMMATRIX RigidBody::GetTransform()
 void RigidBody::SetPosition(XMVECTOR position)
 {
 	btTransform t;
-	body->getMotionState()->getWorldTransform(t);
+	m_body->getMotionState()->getWorldTransform(t);
 	t.setOrigin(Physics::VecFromDX(position));
-	body->getMotionState()->setWorldTransform(t);
+	m_body->getMotionState()->setWorldTransform(t);
 }
 
 
 XMVECTOR RigidBody::GetPosition()
 {
 	btTransform t;
-	body->getMotionState()->getWorldTransform(t);
+	m_body->getMotionState()->getWorldTransform(t);
 
 	return Physics::VecToDX(t.getOrigin());
 }
@@ -43,16 +55,16 @@ XMVECTOR RigidBody::GetPosition()
 void RigidBody::SetRotation(XMVECTOR rotation)
 {
 	btTransform t;
-	body->getMotionState()->getWorldTransform(t);
+	m_body->getMotionState()->getWorldTransform(t);
 	t.setRotation(Physics::QuatFromDX(rotation));
-	body->getMotionState()->setWorldTransform(t);
+	m_body->getMotionState()->setWorldTransform(t);
 }
 
 
 XMVECTOR RigidBody::GetRotation()
 {
 	btTransform t;
-	body->getMotionState()->getWorldTransform(t);
+	m_body->getMotionState()->getWorldTransform(t);
 
 	return Physics::QuatToDX(t.getRotation());
 }
@@ -60,56 +72,56 @@ XMVECTOR RigidBody::GetRotation()
 
 void RigidBody::SetLinearVelocity(XMVECTOR velocity)
 {
-	body->setLinearVelocity(Physics::VecFromDX(velocity));
+	m_body->setLinearVelocity(Physics::VecFromDX(velocity));
 }
 
 
 XMVECTOR RigidBody::GetLinearVelocity()
 {
-	return Physics::VecToDX(body->getLinearVelocity());
+	return Physics::VecToDX(m_body->getLinearVelocity());
 }
 
 
 void RigidBody::SetAngularVelocity(XMVECTOR velocity)
 {
-	body->setAngularVelocity(Physics::VecFromDX(velocity));
+	m_body->setAngularVelocity(Physics::VecFromDX(velocity));
 }
 
 
 XMVECTOR RigidBody::GetAngularVelocity()
 {
-	return Physics::VecToDX(body->getAngularVelocity());
+	return Physics::VecToDX(m_body->getAngularVelocity());
 }
 
 
 void RigidBody::SetEntity(Entity e)
 {
-	body->setUserIndex(e.index());
-	body->setUserIndex2(e.generation());
+	m_body->setUserIndex(e.index());
+	m_body->setUserIndex2(e.generation());
 }
 
 
 Entity RigidBody::GetEntity()
 {
 	Entity e;
-	e.id = (U64)body->getUserIndex2() << 32 | body->getUserIndex();
+	e.id = (U64)m_body->getUserIndex2() << 32 | m_body->getUserIndex();
 	return e;
 }
 
 
 bool RigidBody::IsDynamic()
 {
-	return !body->isStaticOrKinematicObject();
+	return !m_body->isStaticOrKinematicObject();
 }
 
 
 bool RigidBody::IsStatic()
 {
-	return body->isStaticObject();
+	return m_body->isStaticObject();
 }
 
 
 bool RigidBody::IsKinematic()
 {
-	return body->isKinematicObject();
+	return m_body->isKinematicObject();
 }

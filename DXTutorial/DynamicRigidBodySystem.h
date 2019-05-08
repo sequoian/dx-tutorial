@@ -6,14 +6,14 @@
 #include "Types.h"
 
 
-struct RigidBodyComponent
+struct DynamicRigidBodyComponent
 {
 	U64 transform = 0;
-	btRigidBody* body = nullptr;
+	RigidBody body = nullptr;
 };
 
 
-class RigidBodySystem : public ComponentSystem<RigidBodyComponent>
+class DynamicRigidBodySystem : public ComponentSystem<DynamicRigidBodyComponent>
 {
 public:
 	void AddSystemRefs(TransformSystem* transformSystem)
@@ -25,18 +25,10 @@ public:
 	{
 		for (U32 i = 0; i < m_pool.Size(); i++)
 		{
-			RigidBodyComponent* rb = m_pool[i];
-			
-			float m[16];
-			btTransform t;
-			rb->body->getMotionState()->getWorldTransform(t);
-			t.getOpenGLMatrix(m);
-
+			DynamicRigidBodyComponent* rb = m_pool[i];
 			TransformComponent* transform = m_transformSystem->GetComponentByHandle(rb->transform);
-
-			XMMATRIX mat = XMMATRIX(m);	
-			transform->position = mat.r[3];
-			transform->rotation = XMQuaternionRotationMatrix(mat);
+			transform->position = rb->body.GetPosition();
+			transform->rotation = rb->body.GetRotation();
 		}
 	}
 

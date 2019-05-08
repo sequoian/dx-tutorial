@@ -11,7 +11,6 @@
 struct CharacterControllerComponent
 {
 	U64 transform = 0;
-	RigidBody rigidBody;
 };
 
 
@@ -26,10 +25,6 @@ public:
 
 	inline void Execute(float deltaTime) override
 	{
-		for (U32 i = 0; i < m_pool.Size(); i++)
-		{
-
-		}
 	}
 
 private:

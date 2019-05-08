@@ -4,8 +4,9 @@
 #include "TransformSystem.h"
 #include "MeshSystem.h"
 #include "ColliderSystem.h"
-#include "RigidBodySystem.h"
+#include "DynamicRigidBodySystem.h"
 #include "ResourceManager.h"
+#include "RigidBody.h"
 
 #include "Material.h"
 #include <DirectXMath.h>
@@ -43,7 +44,7 @@ struct vec3
 class PrimitiveFactory
 {
 public:
-	bool SetUp(EntityManager* em, TransformSystem* ts, MeshSystem* ms, ColliderSystem* cs, RigidBodySystem* rs, ResourceManager* rm, Physics* p)
+	bool SetUp(EntityManager* em, TransformSystem* ts, MeshSystem* ms, ColliderSystem* cs, DynamicRigidBodySystem* rs, ResourceManager* rm, Physics* p)
 	{
 		m_entityManager = em;
 		m_transformSystem = ts;
@@ -70,7 +71,7 @@ public:
 		U64 colliderHandle;
 		ColliderComponent* collider;
 		U64 rbHandle;
-		RigidBodyComponent* rigidBody;
+		DynamicRigidBodyComponent* rigidBody;
 
 		Model* model;
 		btCollisionShape* colShape;
@@ -117,9 +118,20 @@ public:
 		// create rigid body
 		rbHandle = m_rigidBodySystem->CreateComponent(e);
 		rigidBody = m_rigidBodySystem->GetComponentByHandle(rbHandle);
-		rigidBody->body = m_physics->CreateRigidBody(e, transform->position, transform->rotation, mass, collider->shape);
+		if (mass > 0)
+		{
+			rigidBody->body = m_physics->CreateDynamicRigidBody(e, collider->shape, mass);
+		}
+		else
+		{
+			rigidBody->body = m_physics->CreateStaticRigidBody(e, collider->shape);
+		}
+		
 		rigidBody->transform = transformHandle;
-		rigidBody->body->setLinearVelocity(btVector3(vel.x, vel.y, vel.z));
+
+		rigidBody->body.SetPosition(XMVectorSet(pos.x, pos.y, pos.z, 1));
+		rigidBody->body.SetRotation(XMQuaternionRotationRollPitchYaw(rot.x, rot.y, rot.z));
+		rigidBody->body.SetLinearVelocity(XMVectorSet(vel.x, vel.y, vel.z, 1));
 
 		// create mesh
 		mesh = m_meshSystem->GetComponentByHandle(m_meshSystem->CreateComponent(e));
@@ -135,7 +147,7 @@ private:
 	TransformSystem* m_transformSystem; 
 	MeshSystem* m_meshSystem; 
 	ColliderSystem* m_colliderSystem; 
-	RigidBodySystem* m_rigidBodySystem;
+	DynamicRigidBodySystem* m_rigidBodySystem;
 	ResourceManager* m_resourceManager;
 	Physics* m_physics;
 

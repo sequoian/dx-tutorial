@@ -203,9 +203,6 @@
     <ClInclude Include="Physics.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="RigidBodySystem.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="ColliderSystem.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -237,6 +234,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="RigidBody.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DynamicRigidBodySystem.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,6 +1,5 @@
 #include "Physics.h"
 #include "Assert.h"
-#include "RigidBodySystem.h"
 
 Physics::~Physics()
 {
@@ -148,6 +147,7 @@ btCollisionShape* Physics::CreateCollisionCone(float radius, float height)
 	return shape;
 }
 
+/*
 
 btRigidBody* Physics::CreateRigidBody(Entity e, XMVECTOR position, XMVECTOR rotation, float mass, btCollisionShape* shape, bool isKinematic, bool isTrigger)
 {
@@ -225,59 +225,6 @@ btKinematicCharacterController* Physics::CreateCharacterController(Entity e, XMV
 	return cc;
 }
 
-/*
-RigidBody Physics::CreateDynamicRigidBody(Entity e, XMVECTOR position, XMVECTOR rotation, float mass, btCollisionShape* shape, U32 collisionGroups, U32 collisionMasks)
-{
-	ASSERT_VERBOSE(mass > 0.f, "Dynamic rigid bodies must have a mass greater than 0");
-	if (mass < 0.f)
-	{
-		mass = 1.f;
-	}
-
-	btTransform transform;
-	transform.setIdentity();
-	transform.setOrigin(VecFromDX(position));
-	transform.setRotation(QuatFromDX(rotation));
-
-	btVector3 localInertia(0, 0, 0);
-	shape->calculateLocalInertia(mass, localInertia);
-
-	btDefaultMotionState* motionState = new btDefaultMotionState(transform);
-	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, motionState, shape, localInertia);
-	btRigidBody* body = new btRigidBody(rbInfo);
-
-	m_dynamicsWorld->addRigidBody(body, collisionGroups, collisionMasks);
-
-	RigidBody rigidBody;
-	rigidBody.body = body;
-	rigidBody.SetEntity(e);
-
-	return rigidBody;
-}
-
-
-RigidBody Physics::CreateStaticRigidBody(Entity e, XMVECTOR position, XMVECTOR rotation, btCollisionShape* shape, U32 collisionGroups, U32 collisionMasks)
-{
-	btTransform transform;
-	transform.setIdentity();
-	transform.setOrigin(VecFromDX(position));
-	transform.setRotation(QuatFromDX(rotation));
-	btVector3 localInertia(0, 0, 0);
-
-	btDefaultMotionState* motionState = new btDefaultMotionState(transform);
-	btRigidBody::btRigidBodyConstructionInfo rbInfo(0, motionState, shape, localInertia);
-	btRigidBody* body = new btRigidBody(rbInfo);
-
-	m_dynamicsWorld->addRigidBody(body);
-
-	RigidBody rigidBody;
-	rigidBody.body = body;
-	rigidBody.SetEntity(e);
-
-	return rigidBody;
-}
-
-*/
 
 btRigidBody* Physics::CreateKinematicRigidBody(Entity e, XMVECTOR position, XMVECTOR rotation, btCollisionShape* shape, U32 collisionGroups, U32 collisionMasks)
 {
@@ -303,6 +250,74 @@ btRigidBody* Physics::CreateKinematicRigidBody(Entity e, XMVECTOR position, XMVE
 
 	return body;
 }
+*/
+
+
+RigidBody Physics::CreateDynamicRigidBody(Entity e, btCollisionShape* shape, float mass)
+{
+	ASSERT_VERBOSE(mass > 0.f, "Dynamic rigid bodies must have a mass greater than 0");
+	if (mass < 0.f)
+	{
+		mass = 1.f;
+	}
+
+	btTransform transform;
+	transform.setIdentity();
+
+	btVector3 localInertia(0, 0, 0);
+	shape->calculateLocalInertia(mass, localInertia);
+
+	btDefaultMotionState* motionState = new btDefaultMotionState(transform);
+	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, motionState, shape, localInertia);
+	btRigidBody* body = new btRigidBody(rbInfo);
+
+	m_dynamicsWorld->addRigidBody(body);
+
+	RigidBody rb(body);
+	rb.SetEntity(e);
+	return rb;
+}
+
+
+RigidBody Physics::CreateStaticRigidBody(Entity e, btCollisionShape* shape)
+{
+	btTransform transform;
+	transform.setIdentity();
+	btVector3 localInertia(0, 0, 0);
+
+	btDefaultMotionState* motionState = new btDefaultMotionState(transform);
+	btRigidBody::btRigidBodyConstructionInfo rbInfo(0, motionState, shape, localInertia);
+	btRigidBody* body = new btRigidBody(rbInfo);
+
+	m_dynamicsWorld->addRigidBody(body);
+
+	RigidBody rb(body);
+	rb.SetEntity(e);
+	return rb;
+}
+
+
+RigidBody Physics::CreateKinematicRigidBody(Entity e, btCollisionShape* shape)
+{
+	btTransform transform;
+	transform.setIdentity();
+	btVector3 localInertia(0, 0, 0);
+
+	btDefaultMotionState* motionState = new btDefaultMotionState(transform);
+	btRigidBody::btRigidBodyConstructionInfo rbInfo(0, motionState, shape, localInertia);
+	btRigidBody* body = new btRigidBody(rbInfo);
+
+	// kinematic flags
+	body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
+	body->setActivationState(DISABLE_DEACTIVATION);
+
+	m_dynamicsWorld->addRigidBody(body);
+
+	RigidBody rb(body);
+	rb.SetEntity(e);
+	return rb;
+}
+
 
 btQuaternion Physics::QuatFromDX(XMVECTOR quat)
 {
@@ -385,6 +400,10 @@ void Physics::SimulationCallback(btDynamicsWorld* world, btScalar timeStep)
 				const btVector3& ptA = pt.getPositionWorldOnA();
 				const btVector3& ptB = pt.getPositionWorldOnB();
 				const btVector3& normalOnB = pt.m_normalWorldOnB;
+
+				//DEBUG_PRINT("Point A: (%f, %f, %f)", ptA.x(), ptA.y(), ptA.z());
+				//DEBUG_PRINT("Point B: (%f, %f, %f)", ptB.x(), ptB.y(), ptB.z());
+				//DEBUG_PRINT("Normal : (%f, %f, %f)", normalOnB.x(), normalOnB.y(), normalOnB.z());
 
 				m_eventBus->Publish(&CollisionEvent(eA, eB));
 			}

@@ -2,13 +2,16 @@
 
 #include "Types.h"
 #include "Entity.h"
-#include "Physics.h"
+#include "btBulletDynamicsCommon.h"
 #include <DirectXMath.h>
 using namespace DirectX;
 
 class RigidBody
 {
 public:
+	RigidBody() {};
+	RigidBody(btRigidBody* body);
+	~RigidBody();
 	void SetTransform(XMMATRIX transform);
 	void SetTransform(XMVECTOR position, XMVECTOR rotation);
 	XMMATRIX GetTransform();
@@ -27,6 +30,5 @@ public:
 	bool IsKinematic();
 
 protected:
-	btRigidBody* body;
-	friend class Physics;
+	btRigidBody* m_body;
 };

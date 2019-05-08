@@ -52,6 +52,7 @@ public:
 private:
 	void HandleCollisions(btPairCachingGhostObject* ghostObject, TransformComponent* transform)
 	{
+		/*
 		btManifoldArray manifoldArray;
 		btBroadphasePairArray& pairArray =
 			ghostObject->getOverlappingPairCache()->getOverlappingPairArray();
@@ -102,6 +103,7 @@ private:
 				}
 			}
 		}
+		*/
 	}
 
 private:

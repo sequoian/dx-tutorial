@@ -6,12 +6,12 @@
 #include "TransformSystem.h"
 #include "Physics.h"
 #include "Types.h"
-
+#include "RigidBody.h"
 
 struct KinematicRigidBodyComponent
 {
 	U64 transform = 0;
-	btRigidBody* body = nullptr;
+	RigidBody body = nullptr;
 };
 
 
@@ -30,10 +30,8 @@ public:
 			KinematicRigidBodyComponent* rb = m_pool[i];
 			TransformComponent* transform = m_transformSystem->GetComponentByHandle(rb->transform);
 
-			btQuaternion rotation = Physics::QuatFromDX(transform->rotation);
-			btVector3 position = Physics::VecFromDX(transform->position);
-			btTransform t(rotation, position);
-			rb->body->getMotionState()->setWorldTransform(t);
+			rb->body.SetPosition(transform->position);
+			rb->body.SetRotation(transform->rotation);
 		}
 	}
 
