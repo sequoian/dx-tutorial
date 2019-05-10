@@ -57,7 +57,7 @@ public:
 		return true;
 	}
 
-	bool CreatePrimitive(PrimitiveShapes shape, float mass, Material* mat, vec3 pos, vec3 rot = vec3(0), vec3 scale = vec3(1), vec3 vel = vec3(0))
+	Entity CreatePrimitive(PrimitiveShapes shape, float mass, Material* mat, vec3 pos, vec3 rot = vec3(0), vec3 scale = vec3(1), vec3 vel = vec3(0))
 	{
 		XMVECTOR dxPos = XMVectorSet(pos.x, pos.y, pos.z, 1);
 		XMVECTOR dxRot = XMQuaternionRotationRollPitchYaw(rot.x, rot.y, rot.z);
@@ -142,7 +142,7 @@ public:
 		mesh->model = model;
 		mesh->material = mat;
 
-		return true;
+		return e;
 	}
 
 private:

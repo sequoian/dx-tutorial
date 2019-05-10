@@ -212,9 +212,6 @@
     <ClInclude Include="PrimitiveFactory.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="RBBulletSystem.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="KinematicRigidBodySystem.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -240,6 +237,12 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="CollisionInfo.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RBGunSystem.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RBBulletSystem.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

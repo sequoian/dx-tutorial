@@ -112,9 +112,6 @@ protected:
 			CollisionInfo info(collision->rigidBodyB, collision->rigidBodyA, 1, collision->numContactPoints, collision->contactPoints);
 			OnCollision(&info);
 		}
-
-		CollisionInfo info(collision->rigidBodyB, collision->rigidBodyA, 1, collision->numContactPoints, collision->contactPoints);
-		OnCollision(&info);
 	}
 
 	virtual void OnCollision(CollisionInfo* collision)

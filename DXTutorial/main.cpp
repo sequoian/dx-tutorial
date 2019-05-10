@@ -20,10 +20,11 @@
 #include "FlyCamSystem.h"
 #include "ColliderSystem.h"
 #include "DynamicRigidBodySystem.h"
-#include "RBBulletSystem.h"
+#include "RBGunSystem.h"
 #include "KinematicRigidBodySystem.h"
 #include "GhostObjectSystem.h"
 #include "CharacterControllerSystem.h"
+#include "RBBulletSystem.h"
 
 #include "ResourceManager.h"
 #include "Texture.h"
@@ -227,13 +228,15 @@ public:
 		m_dynamicRBSystem.StartUp(3);
 		m_dynamicRBSystem.AddSystemRefs(&m_transformSystem);
 		m_primFactory.SetUp(&m_entityManager, &m_transformSystem, &m_meshSystem, &m_colliderSystem, &m_dynamicRBSystem, &m_resourceManager, &m_physics);
-		m_rbBulletSystem.AddSystemRefs(&m_transformSystem, &m_primFactory, &m_inputManager, m_eventBus);
+		m_rbGunSystem.AddSystemRefs(&m_transformSystem, &m_primFactory, &m_inputManager, m_eventBus, &m_rbBulletSystem);
 		m_kinematicRBSystem.StartUp(1);
 		m_kinematicRBSystem.AddSystemRefs(&m_transformSystem);
 		m_ghostObjectSystem.StartUp(1);
 		m_ghostObjectSystem.AddSystemRefs(&m_transformSystem, &m_physics);
 		m_characterSystem.StartUp(1);
 		m_characterSystem.AddSystemRefs(&m_transformSystem, m_eventBus);
+		m_rbBulletSystem.StartUp(1);
+		m_rbBulletSystem.AddSystemRefs(m_eventBus);
 
 		Entity e;
 		U64 transformHandle;
@@ -249,7 +252,7 @@ public:
 		U64 rbHandle;
 		DynamicRigidBodyComponent* dynamicRB;
 		U64 bulletHandle;
-		RBBulletComponent* rbBullet;
+		RBGunComponent* rbGun;
 		KinematicRigidBodyComponent* kinematicRB;
 		GhostObjectComponent* ghostObject;
 		CharacterControllerComponent* character;
@@ -320,11 +323,11 @@ public:
 		flycam->moveSpeed = 8;
 		flycam->sprintSpeed = 18;
 		flycam->crawlSpeed = 2;
-		bulletHandle = m_rbBulletSystem.CreateComponent(e);
-		rbBullet = m_rbBulletSystem.GetComponentByHandle(bulletHandle);
-		rbBullet->material = matStone;
-		rbBullet->transform = transformHandle;
-		rbBullet->cooldown = 0.25;
+		bulletHandle = m_rbGunSystem.CreateComponent(e);
+		rbGun = m_rbGunSystem.GetComponentByHandle(bulletHandle);
+		rbGun->material = matStone;
+		rbGun->transform = transformHandle;
+		rbGun->cooldown = 0.25;
 		//colliderHandle = m_colliderSystem.CreateComponent(e);
 		//collider = m_colliderSystem.GetComponentByHandle(colliderHandle);
 		//collider->shape = m_physics.CreateCollisionSphere(1);
@@ -362,7 +365,7 @@ public:
 		m_transformSystem.Execute(dt);
 		m_cameraSystem.Execute(dt);
 		m_flycamSystem.Execute(dt);
-		m_rbBulletSystem.Execute(dt);
+		m_rbGunSystem.Execute(dt);
 
 		m_ghostObjectSystem.Execute(dt);
 		m_kinematicRBSystem.Execute(dt);
@@ -431,10 +434,11 @@ private:
 	FlyCamSystem m_flycamSystem;
 	ColliderSystem m_colliderSystem;
 	DynamicRigidBodySystem m_dynamicRBSystem;
-	RBBulletSystem m_rbBulletSystem;
+	RBGunSystem m_rbGunSystem;
 	KinematicRigidBodySystem m_kinematicRBSystem;
 	GhostObjectSystem m_ghostObjectSystem;
 	CharacterControllerSystem m_characterSystem;
+	RBBulletSystem m_rbBulletSystem;
 };
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow)

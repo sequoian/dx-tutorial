@@ -207,6 +207,7 @@
     <ClInclude Include="PrimitiveFactory.h" />
     <ClInclude Include="Random.h" />
     <ClInclude Include="RBBulletSystem.h" />
+    <ClInclude Include="RBGunSystem.h" />
     <ClInclude Include="RenderTargetState.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ResourceManager.h" />
