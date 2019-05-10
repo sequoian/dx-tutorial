@@ -253,7 +253,7 @@ btRigidBody* Physics::CreateKinematicRigidBody(Entity e, XMVECTOR position, XMVE
 */
 
 
-RigidBody Physics::CreateDynamicRigidBody(Entity e, btCollisionShape* shape, float mass)
+RigidBody Physics::CreateDynamicRigidBody(Entity e, btCollisionShape* shape, XMVECTOR position, XMVECTOR rotation, float mass)
 {
 	ASSERT_VERBOSE(mass > 0.f, "Dynamic rigid bodies must have a mass greater than 0");
 	if (mass < 0.f)
@@ -263,6 +263,8 @@ RigidBody Physics::CreateDynamicRigidBody(Entity e, btCollisionShape* shape, flo
 
 	btTransform transform;
 	transform.setIdentity();
+	transform.setRotation(QuatFromDX(rotation));
+	transform.setOrigin(VecFromDX(position));
 
 	btVector3 localInertia(0, 0, 0);
 	shape->calculateLocalInertia(mass, localInertia);
@@ -279,15 +281,22 @@ RigidBody Physics::CreateDynamicRigidBody(Entity e, btCollisionShape* shape, flo
 }
 
 
-RigidBody Physics::CreateStaticRigidBody(Entity e, btCollisionShape* shape)
+RigidBody Physics::CreateStaticRigidBody(Entity e, btCollisionShape* shape, XMVECTOR position, XMVECTOR rotation, bool isTrigger)
 {
 	btTransform transform;
 	transform.setIdentity();
+	transform.setRotation(QuatFromDX(rotation));
+	transform.setOrigin(VecFromDX(position));
 	btVector3 localInertia(0, 0, 0);
 
 	btDefaultMotionState* motionState = new btDefaultMotionState(transform);
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(0, motionState, shape, localInertia);
 	btRigidBody* body = new btRigidBody(rbInfo);
+
+	if (isTrigger)
+	{
+		body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_NO_CONTACT_RESPONSE);
+	}
 
 	m_dynamicsWorld->addRigidBody(body);
 
@@ -297,10 +306,12 @@ RigidBody Physics::CreateStaticRigidBody(Entity e, btCollisionShape* shape)
 }
 
 
-RigidBody Physics::CreateKinematicRigidBody(Entity e, btCollisionShape* shape)
+RigidBody Physics::CreateKinematicRigidBody(Entity e, btCollisionShape* shape, XMVECTOR position, XMVECTOR rotation, bool isTrigger)
 {
 	btTransform transform;
 	transform.setIdentity();
+	transform.setRotation(QuatFromDX(rotation));
+	transform.setOrigin(VecFromDX(position));
 	btVector3 localInertia(0, 0, 0);
 
 	btDefaultMotionState* motionState = new btDefaultMotionState(transform);
@@ -310,6 +321,11 @@ RigidBody Physics::CreateKinematicRigidBody(Entity e, btCollisionShape* shape)
 	// kinematic flags
 	body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
 	body->setActivationState(DISABLE_DEACTIVATION);
+
+	if (isTrigger)
+	{
+		body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_NO_CONTACT_RESPONSE);
+	}
 
 	m_dynamicsWorld->addRigidBody(body);
 
@@ -380,16 +396,29 @@ void Physics::SimulationCallback(btDynamicsWorld* world, btScalar timeStep)
 	for (int i = 0; i < numManifolds; i++)
 	{
 		btPersistentManifold* contactManifold = world->getDispatcher()->getManifoldByIndexInternal(i);
+
+		// Get first rigid body
 		const btCollisionObject* obA = contactManifold->getBody0();
+		const btRigidBody* crbA = static_cast<const btRigidBody*>(obA);
+		btRigidBody* rbA = const_cast<btRigidBody*>(crbA);
+		RigidBody rigidBodyA = RigidBody(rbA);
+
+		// Get second rigid body
 		const btCollisionObject* obB = contactManifold->getBody1();
+		const btRigidBody* crbB = static_cast<const btRigidBody*>(obB);
+		btRigidBody* rbB = const_cast<btRigidBody*>(crbB);
+		RigidBody rigidBodyB = RigidBody(rbB);
+
+		std::vector<btManifoldPoint> points;
+
+		// test
+		Entity a = rigidBodyA.GetEntity();
+		Entity b = rigidBodyB.GetEntity();
 
 		int numContacts = contactManifold->getNumContacts();
-
-		Entity eA, eB;
-		if (numContacts > 0)
+		if (numContacts <= 0)
 		{
-			eA.id = (U64)obA->getUserIndex2() << 32 | obA->getUserIndex();
-			eB.id = (U64)obB->getUserIndex2() << 32 | obB->getUserIndex();
+			return;
 		}
 
 		for (int j = 0; j < numContacts; j++)
@@ -397,16 +426,19 @@ void Physics::SimulationCallback(btDynamicsWorld* world, btScalar timeStep)
 			btManifoldPoint& pt = contactManifold->getContactPoint(j);
 			if (pt.getDistance() < 0.f)
 			{
-				const btVector3& ptA = pt.getPositionWorldOnA();
-				const btVector3& ptB = pt.getPositionWorldOnB();
-				const btVector3& normalOnB = pt.m_normalWorldOnB;
+				points.push_back(pt);
 
+				//const btVector3& ptA = pt.getPositionWorldOnA();
+				//const btVector3& ptB = pt.getPositionWorldOnB();
+				//const btVector3& normalOnB = pt.m_normalWorldOnB;
 				//DEBUG_PRINT("Point A: (%f, %f, %f)", ptA.x(), ptA.y(), ptA.z());
 				//DEBUG_PRINT("Point B: (%f, %f, %f)", ptB.x(), ptB.y(), ptB.z());
 				//DEBUG_PRINT("Normal : (%f, %f, %f)", normalOnB.x(), normalOnB.y(), normalOnB.z());
 
-				m_eventBus->Publish(&CollisionEvent(eA, eB));
+				
 			}
 		}
+
+		m_eventBus->Publish(&CollisionEvent(rigidBodyA, rigidBodyB, numContacts, points));
 	}
 }

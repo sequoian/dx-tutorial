@@ -20,20 +20,13 @@ public:
 	void AddSystemRefs(TransformSystem* transformSystem, EventBus& eventBus)
 	{
 		m_transformSystem = transformSystem;
-		eventBus.Subscribe(this, &CharacterControllerSystem::OnCollisionEvent);
+		//eventBus.Subscribe(this, &CharacterControllerSystem::OnCollisionEvent);
+		//std::vector<btManifoldPoint> v;
+		//OnCollisionEvent(&CollisionEvent(RigidBody(), RigidBody(), 1, v));
 	}
 
 	inline void Execute(float deltaTime) override
 	{
-	}
-
-private:
-	void OnCollisionEvent(CollisionEvent* collision)
-	{
-		Entity a = collision->entityA;
-		Entity b = collision->entityB;
-		if (FindComponent(a) || FindComponent(b))
-			DEBUG_PRINT("character collided!");
 	}
 
 private:

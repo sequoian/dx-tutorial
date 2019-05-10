@@ -1,6 +1,9 @@
 #pragma once
 
-#include "Entity.h"
+#include "RigidBody.h"
+#include "Types.h"
+#include <vector>
+#include <btBulletDynamicsCommon.h>
 
 class Event
 {
@@ -12,7 +15,9 @@ protected:
 class CollisionEvent : public Event
 {
 public:
-	CollisionEvent(Entity a, Entity b) : entityA{ a }, entityB{ b } {}
-	Entity entityA;
-	Entity entityB;
+	CollisionEvent(RigidBody a, RigidBody b, U32 numPoints, std::vector<btManifoldPoint> points) : rigidBodyA{a}, rigidBodyB{b}, numContactPoints{numPoints}, contactPoints{points} {}
+	RigidBody rigidBodyA;
+	RigidBody rigidBodyB;
+	U32 numContactPoints;
+	std::vector<btManifoldPoint> contactPoints;
 };

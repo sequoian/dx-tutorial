@@ -239,5 +239,8 @@
     <ClInclude Include="DynamicRigidBodySystem.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="CollisionInfo.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

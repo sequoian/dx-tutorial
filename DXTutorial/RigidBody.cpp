@@ -39,7 +39,7 @@ void RigidBody::SetPosition(XMVECTOR position)
 	btTransform t;
 	m_body->getMotionState()->getWorldTransform(t);
 	t.setOrigin(Physics::VecFromDX(position));
-	m_body->getMotionState()->setWorldTransform(t);
+	m_body->setWorldTransform(t);
 }
 
 

@@ -227,7 +227,7 @@ public:
 		m_dynamicRBSystem.StartUp(3);
 		m_dynamicRBSystem.AddSystemRefs(&m_transformSystem);
 		m_primFactory.SetUp(&m_entityManager, &m_transformSystem, &m_meshSystem, &m_colliderSystem, &m_dynamicRBSystem, &m_resourceManager, &m_physics);
-		m_rbBulletSystem.AddSystemRefs(&m_transformSystem, &m_primFactory, &m_inputManager);
+		m_rbBulletSystem.AddSystemRefs(&m_transformSystem, &m_primFactory, &m_inputManager, m_eventBus);
 		m_kinematicRBSystem.StartUp(1);
 		m_kinematicRBSystem.AddSystemRefs(&m_transformSystem);
 		m_ghostObjectSystem.StartUp(1);
@@ -263,22 +263,22 @@ public:
 		m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, vec3(-10, -9, 0), vec3(0, 0, 90.0_rad), vec3(5, 1, 10));
 
 		// trigger
-		e = m_entityManager.CreateEntity();
-		transformHandle = m_transformSystem.CreateComponent(e);
-		transform = m_transformSystem.GetComponentByHandle(transformHandle);
-		transform->position = XMVectorSet(-25, 10, 0, 1);
-		transform->scale = XMVectorSet(8, 8, 8, 1);
-		mesh = m_meshSystem.GetComponentByHandle(m_meshSystem.CreateComponent(e));
-		mesh->transform = transformHandle;
-		mesh->model = modelCube;
-		mesh->material = matStone;
-		colliderHandle = m_colliderSystem.CreateComponent(e);
-		collider = m_colliderSystem.GetComponentByHandle(colliderHandle);
-		collider->shape = m_physics.CreateCollisionBox(1, 1, 1);
-		collider->shape->setLocalScaling(Physics::VecFromDX(transform->scale));
-		rb = m_physics.CreateStaticRigidBody(e, collider->shape);
-		rb.SetPosition(transform->position);
-		rb.SetRotation(transform->rotation);
+		//e = m_entityManager.CreateEntity();
+		//transformHandle = m_transformSystem.CreateComponent(e);
+		//transform = m_transformSystem.GetComponentByHandle(transformHandle);
+		//transform->position = XMVectorSet(-25, 10, 0, 1);
+		//transform->scale = XMVectorSet(8, 8, 8, 1);
+		//mesh = m_meshSystem.GetComponentByHandle(m_meshSystem.CreateComponent(e));
+		//mesh->transform = transformHandle;
+		//mesh->model = modelCube;
+		//mesh->material = matStone;
+		//colliderHandle = m_colliderSystem.CreateComponent(e);
+		//collider = m_colliderSystem.GetComponentByHandle(colliderHandle);
+		//collider->shape = m_physics.CreateCollisionBox(1, 1, 1);
+		//collider->shape->setLocalScaling(Physics::VecFromDX(transform->scale));
+		//rb = m_physics.CreateStaticRigidBody(e, collider->shape);
+		//rb.SetPosition(transform->position);
+		//rb.SetRotation(transform->rotation);
 
 		// spinner
 		e = m_entityManager.CreateEntity();
@@ -300,9 +300,7 @@ public:
 		collider->shape->setLocalScaling(Physics::VecFromDX(transform->scale));
 		kinematicRB = m_kinematicRBSystem.GetComponentByHandle(m_kinematicRBSystem.CreateComponent(e));
 		kinematicRB->transform = transformHandle;
-		kinematicRB->body = m_physics.CreateKinematicRigidBody(e, collider->shape);
-		kinematicRB->body.SetPosition(transform->position);
-		kinematicRB->body.SetRotation(transform->rotation);
+		kinematicRB->body = m_physics.CreateKinematicRigidBody(e, collider->shape, transform->position, transform->rotation);
 
 		// camera
 		e = m_entityManager.CreateEntity();

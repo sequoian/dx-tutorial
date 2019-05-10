@@ -4,6 +4,8 @@
 #include "CompactPool.h"
 #include "Types.h"
 #include "Entity.h"
+#include "EventBus.h"
+#include "CollisionInfo.h"
 
 template <class T>
 class ComponentSystem
@@ -82,6 +84,42 @@ public:
 		}
 	}
 
+protected:
+
+	virtual void SubscribeToCollisionEvents(EventBus& bus)
+	{
+		bus.Subscribe(this, &ComponentSystem<T>::OnCollisionEvent);
+	}
+
+	virtual void OnCollisionEvent(CollisionEvent* collision)
+	{
+		// test
+		Entity a = collision->rigidBodyA.GetEntity();
+		Entity b = collision->rigidBodyB.GetEntity();
+
+		// check first rigidbody
+		T* component = FindComponent(collision->rigidBodyA.GetEntity());
+		if (component)
+		{
+			CollisionInfo info(collision->rigidBodyA, collision->rigidBodyB, -1, collision->numContactPoints, collision->contactPoints);
+			OnCollision(&info);
+		}
+
+		// check second rigidbody
+		component = FindComponent(collision->rigidBodyB.GetEntity());
+		if (component)
+		{
+			CollisionInfo info(collision->rigidBodyB, collision->rigidBodyA, 1, collision->numContactPoints, collision->contactPoints);
+			OnCollision(&info);
+		}
+
+		CollisionInfo info(collision->rigidBodyB, collision->rigidBodyA, 1, collision->numContactPoints, collision->contactPoints);
+		OnCollision(&info);
+	}
+
+	virtual void OnCollision(CollisionInfo* collision)
+	{
+	}
 
 protected:
 	CompactPool<T> m_pool;

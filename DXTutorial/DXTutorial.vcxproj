@@ -178,6 +178,7 @@
     <ClInclude Include="CameraSystem.h" />
     <ClInclude Include="CharacterControllerSystem.h" />
     <ClInclude Include="ColliderSystem.h" />
+    <ClInclude Include="CollisionInfo.h" />
     <ClInclude Include="CompactPool.h" />
     <ClInclude Include="ComponentSystem.h" />
     <ClInclude Include="Entity.h" />

@@ -16,11 +16,12 @@ struct RBBulletComponent
 class RBBulletSystem : public ComponentSystem<RBBulletComponent>
 {
 public:
-	void AddSystemRefs(TransformSystem* transformSystem, PrimitiveFactory* factory, InputManager* input)
+	void AddSystemRefs(TransformSystem* transformSystem, PrimitiveFactory* factory, InputManager* input, EventBus& bus)
 	{
 		m_transformSystem = transformSystem;
 		m_factory = factory;
 		m_input = input;
+		SubscribeToCollisionEvents(bus);
 	}
 
 	inline void Execute(float deltaTime) override
@@ -64,6 +65,11 @@ public:
 	}
 
 private:
+	void OnCollision(CollisionInfo* collision) override
+	{
+		DEBUG_PRINT("works!");
+	}
+
 	vec3 XMVecToVec3(XMVECTOR dxVec)
 	{
 		vec3 vec(

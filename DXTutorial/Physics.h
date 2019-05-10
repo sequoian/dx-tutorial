@@ -23,9 +23,9 @@ public:
 	btCollisionShape* CreateCollisionCylinder(float x, float y, float z);
 	btCollisionShape* CreateCollisionCone(float radius, float height);
 
-	RigidBody CreateDynamicRigidBody(Entity e, btCollisionShape* shape, float mass);
-	RigidBody CreateStaticRigidBody(Entity e, btCollisionShape* shape);
-	RigidBody CreateKinematicRigidBody(Entity e, btCollisionShape* shape);
+	RigidBody CreateDynamicRigidBody(Entity e, btCollisionShape* shape, XMVECTOR position, XMVECTOR rotation, float mass = 1.f);
+	RigidBody CreateStaticRigidBody(Entity e, btCollisionShape* shape, XMVECTOR position, XMVECTOR rotation, bool isTrigger = false);
+	RigidBody CreateKinematicRigidBody(Entity e, btCollisionShape* shape, XMVECTOR position, XMVECTOR rotation, bool isTrigger = false);
 
 
 	//btRigidBody* CreateRigidBody(Entity e, XMVECTOR position, XMVECTOR rotation, float mass, btCollisionShape* shape, bool isKinematic = /false, /bool isTrigger = false);

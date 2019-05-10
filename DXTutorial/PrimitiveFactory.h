@@ -116,22 +116,25 @@ public:
 		collider->shape->setLocalScaling(m_physics->VecFromDX(transform->scale));
 
 		// create rigid body
-		rbHandle = m_rigidBodySystem->CreateComponent(e);
-		rigidBody = m_rigidBodySystem->GetComponentByHandle(rbHandle);
+		
 		if (mass > 0)
 		{
-			rigidBody->body = m_physics->CreateDynamicRigidBody(e, collider->shape, mass);
+			rbHandle = m_rigidBodySystem->CreateComponent(e);
+			rigidBody = m_rigidBodySystem->GetComponentByHandle(rbHandle);
+			rigidBody->body = m_physics->CreateDynamicRigidBody(e, collider->shape, dxPos, dxRot);
+			rigidBody->transform = transformHandle;
+			//rigidBody->body.SetPosition(dxPos);
+			rigidBody->body.SetLinearVelocity(XMVectorSet(vel.x, vel.y, vel.z, 1));
 		}
 		else
 		{
-			rigidBody->body = m_physics->CreateStaticRigidBody(e, collider->shape);
+			RigidBody rb = m_physics->CreateStaticRigidBody(e, collider->shape, dxPos, dxRot);
+			//rb.SetPosition(dxPos);
+			//rb.SetRotation(dxRot);
+			//rb.SetLinearVelocity(XMVectorSet(vel.x, vel.y, vel.z, 1));
 		}
 		
-		rigidBody->transform = transformHandle;
-
-		rigidBody->body.SetPosition(XMVectorSet(pos.x, pos.y, pos.z, 1));
-		rigidBody->body.SetRotation(XMQuaternionRotationRollPitchYaw(rot.x, rot.y, rot.z));
-		rigidBody->body.SetLinearVelocity(XMVectorSet(vel.x, vel.y, vel.z, 1));
+		
 
 		// create mesh
 		mesh = m_meshSystem->GetComponentByHandle(m_meshSystem->CreateComponent(e));
