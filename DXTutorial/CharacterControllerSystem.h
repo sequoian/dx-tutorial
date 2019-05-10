@@ -20,9 +20,6 @@ public:
 	void AddSystemRefs(TransformSystem* transformSystem, EventBus& eventBus)
 	{
 		m_transformSystem = transformSystem;
-		//eventBus.Subscribe(this, &CharacterControllerSystem::OnCollisionEvent);
-		//std::vector<btManifoldPoint> v;
-		//OnCollisionEvent(&CollisionEvent(RigidBody(), RigidBody(), 1, v));
 	}
 
 	inline void Execute(float deltaTime) override

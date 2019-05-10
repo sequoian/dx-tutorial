@@ -27,23 +27,9 @@ public:
 		{
 			DynamicRigidBodyComponent* rb = m_pool[i];
 			TransformComponent* transform = m_transformSystem->GetComponentByHandle(rb->transform);
+
 			transform->position = rb->body.GetPosition();
 			transform->rotation = rb->body.GetRotation();
-			
-			//DynamicRigidBodyComponent* rb = m_pool[i];
-			//TransformComponent* transform = m_transformSystem->GetComponentByHandle(rb->transform);
-			//
-			//float m[16];
-			//btTransform t;
-			//rb->body->getMotionState()->getWorldTransform(t);
-			//t.getOpenGLMatrix(m);
-
-			
-
-			//XMMATRIX mat = XMMATRIX(m);	
-			//transform->position = mat.r[3];
-			//transform->rotation = XMQuaternionRotationMatrix(mat);
-
 		}
 	}
 

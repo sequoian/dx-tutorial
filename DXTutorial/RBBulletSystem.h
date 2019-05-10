@@ -25,6 +25,6 @@ public:
 private:
 	void OnCollision(CollisionInfo* collision) override
 	{
-		DEBUG_PRINT("Bullet Collision!");
+		//DEBUG_PRINT("Bullet Collision!");
 	}
 };
