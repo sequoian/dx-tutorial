@@ -223,6 +223,7 @@
     <ClInclude Include="Timer.h" />
     <ClInclude Include="TransformSystem.h" />
     <ClInclude Include="Types.h" />
+    <ClInclude Include="VelocitySystem.h" />
     <ClInclude Include="VertexBuffer.h" />
     <ClInclude Include="VertexFormat.h" />
     <ClInclude Include="VertexShader.h" />

@@ -27,12 +27,6 @@ public:
 	RigidBody CreateStaticRigidBody(Entity e, btCollisionShape* shape, XMVECTOR position, XMVECTOR rotation, bool isTrigger = false);
 	RigidBody CreateKinematicRigidBody(Entity e, btCollisionShape* shape, XMVECTOR position, XMVECTOR rotation, bool isTrigger = false);
 
-
-	//btRigidBody* CreateRigidBody(Entity e, XMVECTOR position, XMVECTOR rotation, float mass, btCollisionShape* shape, bool isKinematic = /false, /bool isTrigger = false);
-	//btPairCachingGhostObject* CreateGhostObject(Entity e, XMVECTOR position, XMVECTOR rotation, btCollisionShape* shape);
-	//btKinematicCharacterController* CreateCharacterController(Entity e, XMVECTOR position, XMVECTOR rotation, btConvexShape* shape);
-	//btRigidBody* CreateKinematicRigidBody(Entity e, XMVECTOR position, XMVECTOR rotation, btCollisionShape* shape, U32 collisionGroups, U32 collisionMasks);
-
 	static btQuaternion QuatFromDX(XMVECTOR quat);
 	static XMVECTOR QuatToDX(btQuaternion quat);
 	static btVector3 VecFromDX(XMVECTOR vec);
@@ -52,6 +46,4 @@ private:
 	btAlignedObjectArray<btCollisionShape*> m_collisionShapes;
 	float m_gravity;
 	EventBus* m_eventBus;
-	
 };
-

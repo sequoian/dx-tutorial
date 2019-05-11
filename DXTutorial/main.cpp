@@ -25,6 +25,7 @@
 #include "GhostObjectSystem.h"
 #include "CharacterControllerSystem.h"
 #include "RBBulletSystem.h"
+#include "VelocitySystem.h"
 
 #include "ResourceManager.h"
 #include "Texture.h"
@@ -223,7 +224,7 @@ public:
 		m_cameraSystem.AddSystemRefs(&m_transformSystem, &m_window);
 		m_meshSystem.StartUp(3);
 		m_flycamSystem.StartUp(3);
-		m_flycamSystem.AddSystemRefs(&m_inputManager, &m_transformSystem);
+		m_flycamSystem.AddSystemRefs(&m_inputManager, &m_transformSystem, &m_velocitySystem);
 		m_colliderSystem.StartUp(3);
 		m_dynamicRBSystem.StartUp(3);
 		m_dynamicRBSystem.AddSystemRefs(&m_transformSystem);
@@ -237,6 +238,7 @@ public:
 		m_characterSystem.AddSystemRefs(&m_transformSystem, m_eventBus);
 		m_rbBulletSystem.StartUp(1);
 		m_rbBulletSystem.AddSystemRefs(m_eventBus);
+		m_velocitySystem.StartUp(1);
 
 		Entity e;
 		U64 transformHandle;
@@ -257,6 +259,7 @@ public:
 		GhostObjectComponent* ghostObject;
 		CharacterControllerComponent* character;
 		RigidBody rb;
+		U64 velocityHandle;
 
 		// bowl
 		m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, vec3(0, -15, 0), vec3(0), vec3(10, 1, 10));
@@ -311,6 +314,7 @@ public:
 		transform = m_transformSystem.GetComponentByHandle(transformHandle);
 		transform->position = XMVectorSet(0, 10, -25, 1);
 		transform->rotation = XMQuaternionRotationRollPitchYaw(35.0_rad, 0, 0);
+		velocityHandle = m_velocitySystem.CreateComponent(e);
 		cameraHandle = m_cameraSystem.CreateComponent(e);
 		camera = m_cameraSystem.GetComponentByHandle(cameraHandle);
 		camera->transform = transformHandle;
@@ -319,6 +323,7 @@ public:
 		camera->fov = 45.0f;
 		flycam = m_flycamSystem.GetComponentByHandle(m_flycamSystem.CreateComponent(e));
 		flycam->transform = transformHandle;
+		flycam->velocity = velocityHandle;
 		flycam->lookSpeed = 2;
 		flycam->moveSpeed = 8;
 		flycam->sprintSpeed = 18;
@@ -328,6 +333,7 @@ public:
 		rbGun->material = matStone;
 		rbGun->transform = transformHandle;
 		rbGun->cooldown = 0.25;
+		
 		//colliderHandle = m_colliderSystem.CreateComponent(e);
 		//collider = m_colliderSystem.GetComponentByHandle(colliderHandle);
 		//collider->shape = m_physics.CreateCollisionSphere(1);
@@ -439,6 +445,7 @@ private:
 	GhostObjectSystem m_ghostObjectSystem;
 	CharacterControllerSystem m_characterSystem;
 	RBBulletSystem m_rbBulletSystem;
+	VelocitySystem m_velocitySystem;
 };
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow)

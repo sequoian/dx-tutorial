@@ -245,5 +245,8 @@
     <ClInclude Include="RBBulletSystem.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="VelocitySystem.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -28,9 +28,6 @@ bool Physics::StartUp(EventBus* eventBus)
 	// default gravity value
 	SetGravity(10);
 
-	// set tick callback
-	//m_dynamicsWorld->setInternalTickCallback(SimulationCallback);
-
 	// allows ghost objects to be used
 	m_dynamicsWorld->getPairCache()->setInternalGhostPairCallback(new btGhostPairCallback());
 
@@ -146,111 +143,6 @@ btCollisionShape* Physics::CreateCollisionCone(float radius, float height)
 
 	return shape;
 }
-
-/*
-
-btRigidBody* Physics::CreateRigidBody(Entity e, XMVECTOR position, XMVECTOR rotation, float mass, btCollisionShape* shape, bool isKinematic, bool isTrigger)
-{
-	btTransform transform;
-	transform.setIdentity();
-	transform.setOrigin(VecFromDX(position));
-	transform.setRotation(QuatFromDX(rotation));
-
-	// rigidbody is dynamic if and only if mass is non zero, otherwise static
-	bool isDynamic = (mass != 0.f);
-
-	btVector3 localInertia(0, 0, 0);
-	if (isDynamic)
-	{
-		shape->calculateLocalInertia(mass, localInertia);
-	}
-
-	// using motionstate is optional, it provides interpolation capabilities, and only synchronizes 'active' objects
-	btDefaultMotionState* motionState = new btDefaultMotionState(transform);
-	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, motionState, shape, localInertia);
-	btRigidBody* body = new btRigidBody(rbInfo);
-
-	// alter kinematic body properties
-	if (isKinematic)
-	{
-		ASSERT_VERBOSE(mass == 0.f, "Kinematic rigid bodies must have a mass of 0");
-		body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
-		body->setActivationState(DISABLE_DEACTIVATION);
-	}
-
-	// alter trigger body properties
-	if (isTrigger)
-	{
-		body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_NO_CONTACT_RESPONSE);
-	}
-
-	// add the body to the dynamics world
-	m_dynamicsWorld->addRigidBody(body);
-
-	// set entity reference
-	body->setUserIndex(e.index());
-	body->setUserIndex2(e.generation());
-
-	return body;
-}
-
-btPairCachingGhostObject* Physics::CreateGhostObject(Entity e, XMVECTOR position, XMVECTOR rotation, btCollisionShape* shape)
-{
-	btPairCachingGhostObject* ghost = new btPairCachingGhostObject();
-
-	btTransform transform;
-	transform.setIdentity();
-	transform.setOrigin(VecFromDX(position));
-	transform.setRotation(QuatFromDX(rotation));
-
-	ghost->setCollisionShape(shape);
-	
-	// set entity reference
-	ghost->setUserIndex(e.index());
-	ghost->setUserIndex2(e.generation());
-
-	m_dynamicsWorld->addCollisionObject(ghost, btBroadphaseProxy::DefaultFilter, btBroadphaseProxy::AllFilter);
-
-	return ghost;
-}
-
-
-btKinematicCharacterController* Physics::CreateCharacterController(Entity e, XMVECTOR position, XMVECTOR rotation, btConvexShape* shape)
-{
-	btPairCachingGhostObject* ghost = CreateGhostObject(e, position, rotation, shape);
-	btKinematicCharacterController* cc = new btKinematicCharacterController(ghost, shape, 1);
-
-	m_dynamicsWorld->addAction(cc);
-
-	return cc;
-}
-
-
-btRigidBody* Physics::CreateKinematicRigidBody(Entity e, XMVECTOR position, XMVECTOR rotation, btCollisionShape* shape, U32 collisionGroups, U32 collisionMasks)
-{
-	btTransform transform;
-	transform.setIdentity();
-	transform.setOrigin(VecFromDX(position));
-	transform.setRotation(QuatFromDX(rotation));
-	btVector3 localInertia(0, 0, 0);
-
-	btDefaultMotionState* motionState = new btDefaultMotionState(transform);
-	btRigidBody::btRigidBodyConstructionInfo rbInfo(0, motionState, shape, localInertia);
-	btRigidBody* body = new btRigidBody(rbInfo);
-
-	// kinematic flags
-	body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
-	body->setActivationState(DISABLE_DEACTIVATION);
-
-	m_dynamicsWorld->addRigidBody(body, collisionGroups, collisionMasks);
-
-	// set entity reference
-	body->setUserIndex(e.index());
-	body->setUserIndex2(e.generation());
-
-	return body;
-}
-*/
 
 
 RigidBody Physics::CreateDynamicRigidBody(Entity e, btCollisionShape* shape, XMVECTOR position, XMVECTOR rotation, float mass)
@@ -409,33 +301,19 @@ void Physics::SimulationCallback(btDynamicsWorld* world, btScalar timeStep)
 		btRigidBody* rbB = const_cast<btRigidBody*>(crbB);
 		RigidBody rigidBodyB = RigidBody(rbB);
 
-		std::vector<btManifoldPoint> points;
-
-		// test
-		Entity a = rigidBodyA.GetEntity();
-		Entity b = rigidBodyB.GetEntity();
-
 		int numContacts = contactManifold->getNumContacts();
 		if (numContacts <= 0)
 		{
 			return;
 		}
 
+		std::vector<btManifoldPoint> points;
 		for (int j = 0; j < numContacts; j++)
 		{
 			btManifoldPoint& pt = contactManifold->getContactPoint(j);
 			if (pt.getDistance() < 0.f)
 			{
 				points.push_back(pt);
-
-				//const btVector3& ptA = pt.getPositionWorldOnA();
-				//const btVector3& ptB = pt.getPositionWorldOnB();
-				//const btVector3& normalOnB = pt.m_normalWorldOnB;
-				//DEBUG_PRINT("Point A: (%f, %f, %f)", ptA.x(), ptA.y(), ptA.z());
-				//DEBUG_PRINT("Point B: (%f, %f, %f)", ptB.x(), ptB.y(), ptB.z());
-				//DEBUG_PRINT("Normal : (%f, %f, %f)", normalOnB.x(), normalOnB.y(), normalOnB.z());
-
-				
 			}
 		}
 
