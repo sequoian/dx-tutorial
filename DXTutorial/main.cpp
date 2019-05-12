@@ -235,7 +235,7 @@ public:
 		m_ghostObjectSystem.StartUp(1);
 		m_ghostObjectSystem.AddSystemRefs(&m_transformSystem, &m_physics);
 		m_characterSystem.StartUp(1);
-		m_characterSystem.AddSystemRefs(&m_transformSystem, m_eventBus);
+		m_characterSystem.AddSystemRefs(&m_transformSystem, &m_velocitySystem, m_eventBus);
 		m_rbBulletSystem.StartUp(1);
 		m_rbBulletSystem.AddSystemRefs(m_eventBus);
 		m_velocitySystem.StartUp(1);
@@ -325,7 +325,7 @@ public:
 		flycam->transform = transformHandle;
 		flycam->velocity = velocityHandle;
 		flycam->lookSpeed = 2;
-		flycam->moveSpeed = 8;
+		flycam->moveSpeed = 50;//8;
 		flycam->sprintSpeed = 18;
 		flycam->crawlSpeed = 2;
 		bulletHandle = m_rbGunSystem.CreateComponent(e);
@@ -333,10 +333,18 @@ public:
 		rbGun->material = matStone;
 		rbGun->transform = transformHandle;
 		rbGun->cooldown = 0.25;
-		
-		//colliderHandle = m_colliderSystem.CreateComponent(e);
-		//collider = m_colliderSystem.GetComponentByHandle(colliderHandle);
-		//collider->shape = m_physics.CreateCollisionSphere(1);
+		colliderHandle = m_colliderSystem.CreateComponent(e);
+		collider = m_colliderSystem.GetComponentByHandle(colliderHandle);
+		collider->shape = m_physics.CreateCollisionSphere(1);
+		rb = m_physics.CreateDynamicRigidBody(e, collider->shape, transform->position, transform->rotation, 1000);
+		rb.SetGravity(0);
+		dynamicRB = m_dynamicRBSystem.GetComponentByHandle(m_dynamicRBSystem.CreateComponent(e));
+		dynamicRB->body = rb;
+		dynamicRB->transform = transformHandle;
+		character = m_characterSystem.GetComponentByHandle(m_characterSystem.CreateComponent(e));
+		character->transform = transformHandle;
+		character->rigidbody = rb;
+
 		//kinematicRB = m_kinematicRBSystem.GetComponentByHandle(m_kinematicRBSystem.CreateComponent(e));
 		//kinematicRB->transform = transformHandle;
 		//kinematicRB->body = m_physics.CreateKinematicRigidBody(collider->shape);
@@ -344,9 +352,6 @@ public:
 		//ghostObject = m_ghostObjectSystem.GetComponentByHandle(m_ghostObjectSystem.CreateComponent(e));
 		//ghostObject->transform = transformHandle;
 		//ghostObject->ghostObject = m_physics.CreateGhostObject(e, transform->position, transform->rotation, collider->shape);
-		//character = m_characterSystem.GetComponentByHandle(m_characterSystem.CreateComponent(e));
-		//character->transform = transformHandle;
-		//character->character = m_physics.CreateCharacterController(e, transform->position, transform->rotation, static_cast<btConvexShape*>(collider->shape));
 
 		return true;
 	}

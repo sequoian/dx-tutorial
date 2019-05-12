@@ -8,6 +8,7 @@ using namespace DirectX;
 struct VelocityComponent
 {
 	XMVECTOR velocity = XMVectorSet(0.f, 0.f, 0.f, 1.f);
+	XMVECTOR angular = XMVectorSet(0.f, 0.f, 0.f, 1.f);
 };
 
 

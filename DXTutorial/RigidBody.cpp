@@ -125,3 +125,10 @@ bool RigidBody::IsKinematic()
 {
 	return m_body->isKinematicObject();
 }
+
+
+void RigidBody::SetGravity(float gravity)
+{
+	btVector3 grav(0, gravity, 0);
+	m_body->setGravity(grav);
+}

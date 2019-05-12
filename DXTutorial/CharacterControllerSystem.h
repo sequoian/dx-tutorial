@@ -20,15 +20,29 @@ struct CharacterControllerComponent
 class CharacterControllerSystem : public ComponentSystem<CharacterControllerComponent>
 {
 public:
-	void AddSystemRefs(TransformSystem* transformSystem, EventBus& eventBus)
+	void AddSystemRefs(TransformSystem* transformSystem, VelocitySystem* velocitySystem, EventBus& eventBus)
 	{
 		m_transformSystem = transformSystem;
+		m_velocitySystem = velocitySystem;
 	}
 
 	inline void Execute(float deltaTime) override
 	{
+
+		for (U32 i = 0; i < m_pool.Size(); i++)
+		{
+			CharacterControllerComponent* cc = m_pool[i];
+			TransformComponent* transform = m_transformSystem->GetComponentByHandle(cc->transform);
+			VelocityComponent* velocity = m_velocitySystem->GetComponentByHandle(cc->velocity);
+
+			//cc->rigidbody.SetRotation(transform->rotation);
+			cc->rigidbody.SetAngularVelocity(velocity->angular);
+			cc->rigidbody.SetLinearVelocity(velocity->velocity);
+		}
+		
 	}
 
 private:
 	TransformSystem* m_transformSystem;
+	VelocitySystem* m_velocitySystem;
 };

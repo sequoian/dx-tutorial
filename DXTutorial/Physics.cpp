@@ -165,6 +165,10 @@ RigidBody Physics::CreateDynamicRigidBody(Entity e, btCollisionShape* shape, XMV
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, motionState, shape, localInertia);
 	btRigidBody* body = new btRigidBody(rbInfo);
 
+	// character controller changes
+	body->setActivationState(DISABLE_DEACTIVATION);
+	body->setAngularFactor(0);
+	
 	m_dynamicsWorld->addRigidBody(body);
 
 	RigidBody rb(body);

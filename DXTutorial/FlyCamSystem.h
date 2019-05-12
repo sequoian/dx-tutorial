@@ -38,11 +38,10 @@ public:
 			TransformComponent* transform = m_transformSystem->GetComponentByHandle(flycam->transform);
 			VelocityComponent* velocity = m_velocitySystem->GetComponentByHandle(flycam->velocity);
 
-			Look(transform, flycam->lookSpeed, deltaTime);
-
-			MoveByVelocity(transform, velocity, flycam->moveSpeed, flycam->sprintSpeed, flycam->crawlSpeed, deltaTime);
-
+			//Look(transform, flycam->lookSpeed, deltaTime);
 			//Move(transform, flycam->moveSpeed, flycam->sprintSpeed, flycam->crawlSpeed, deltaTime);
+			LookByVelocity(transform, velocity, flycam->lookSpeed, deltaTime);
+			MoveByVelocity(transform, velocity, flycam->moveSpeed, flycam->sprintSpeed, flycam->crawlSpeed, deltaTime);
 		}
 	}
 
@@ -80,7 +79,7 @@ private:
 		movement = XMVector3Rotate(movement, transform->rotation);
 
 		// scale movement
-		movement *= ms * dt;
+		movement *= ms;
 
 		// set velocity
 		velocity->velocity = movement;
@@ -136,6 +135,23 @@ private:
 		XMVECTOR xRot = XMQuaternionRotationAxis(xAxis, -y);
 
 		transform->rotation = XMQuaternionMultiply(XMQuaternionMultiply(xRot, transform->rotation), yRot);
+	}
+
+	// TODO: fix orientation drift on diagonal input
+	inline void LookByVelocity(TransformComponent* transform, VelocityComponent* velocity, float lookSpeed, float dt)
+	{
+		float x = m_inputManager->GetGamepad().GetAxisState(GamepadAxes::RIGHT_THUMB_X);
+		float y = m_inputManager->GetGamepad().GetAxisState(GamepadAxes::RIGHT_THUMB_Y);
+
+		XMVECTOR xAxis = XMVectorSet(1, 0, 0, 1);
+		XMVECTOR yAxis = XMVectorSet(0, 1, 0, 1);
+		XMVECTOR yRot = XMQuaternionRotationAxis(yAxis, x);
+		XMVECTOR xRot = XMQuaternionRotationAxis(xAxis, -y);
+
+		XMVECTOR quat = XMQuaternionMultiply(XMQuaternionMultiply(xRot, transform->rotation), yRot);
+		quat = -XMQuaternionMultiply(XMQuaternionInverse(quat), transform->rotation);
+
+		velocity->angular = quat * 10;
 	}
 
 private:
