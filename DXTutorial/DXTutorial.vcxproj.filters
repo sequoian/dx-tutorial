@@ -84,6 +84,9 @@
     <ClCompile Include="RigidBody.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="KinematicCharacterControllerSystem.h">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseWindow.h">
@@ -227,9 +230,6 @@
     <ClInclude Include="GhostObjectSystem.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="CharacterControllerSystem.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="RigidBody.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -246,6 +246,9 @@
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="VelocitySystem.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DynamicCharacterControllerSystem.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

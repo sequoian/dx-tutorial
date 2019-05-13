@@ -29,6 +29,7 @@ public:
 	bool IsStatic();
 	bool IsKinematic();
 	void SetGravity(float gravity);
+	bool IsTrigger();
 
 protected:
 	btRigidBody* m_body;

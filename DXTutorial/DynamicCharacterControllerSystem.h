@@ -9,7 +9,7 @@
 #include "VelocitySystem.h"
 
 
-struct CharacterControllerComponent
+struct DynamicCharacterControllerComponent
 {
 	U64 transform = 0;
 	U64 velocity = 0;
@@ -17,7 +17,7 @@ struct CharacterControllerComponent
 };
 
 
-class CharacterControllerSystem : public ComponentSystem<CharacterControllerComponent>
+class DynamicCharacterControllerSystem : public ComponentSystem<DynamicCharacterControllerComponent>
 {
 public:
 	void AddSystemRefs(TransformSystem* transformSystem, VelocitySystem* velocitySystem, EventBus& eventBus)
@@ -31,11 +31,10 @@ public:
 
 		for (U32 i = 0; i < m_pool.Size(); i++)
 		{
-			CharacterControllerComponent* cc = m_pool[i];
+			DynamicCharacterControllerComponent* cc = m_pool[i];
 			TransformComponent* transform = m_transformSystem->GetComponentByHandle(cc->transform);
 			VelocityComponent* velocity = m_velocitySystem->GetComponentByHandle(cc->velocity);
 
-			//cc->rigidbody.SetRotation(transform->rotation);
 			cc->rigidbody.SetAngularVelocity(velocity->angular);
 			cc->rigidbody.SetLinearVelocity(velocity->velocity);
 		}

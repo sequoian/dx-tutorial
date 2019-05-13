@@ -132,3 +132,9 @@ void RigidBody::SetGravity(float gravity)
 	btVector3 grav(0, gravity, 0);
 	m_body->setGravity(grav);
 }
+
+
+bool RigidBody::IsTrigger()
+{
+	return m_body->getCollisionFlags() & btCollisionObject::CF_NO_CONTACT_RESPONSE ? true : false;
+}

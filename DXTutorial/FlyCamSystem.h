@@ -38,10 +38,10 @@ public:
 			TransformComponent* transform = m_transformSystem->GetComponentByHandle(flycam->transform);
 			VelocityComponent* velocity = m_velocitySystem->GetComponentByHandle(flycam->velocity);
 
-			//Look(transform, flycam->lookSpeed, deltaTime);
-			//Move(transform, flycam->moveSpeed, flycam->sprintSpeed, flycam->crawlSpeed, deltaTime);
-			LookByVelocity(transform, velocity, flycam->lookSpeed, deltaTime);
-			MoveByVelocity(transform, velocity, flycam->moveSpeed, flycam->sprintSpeed, flycam->crawlSpeed, deltaTime);
+			Look(transform, flycam->lookSpeed, deltaTime);
+			Move(transform, flycam->moveSpeed, flycam->sprintSpeed, flycam->crawlSpeed, deltaTime);
+			//LookByVelocity(transform, velocity, flycam->lookSpeed, deltaTime);
+			//MoveByVelocity(transform, velocity, flycam->moveSpeed, flycam->sprintSpeed, flycam->crawlSpeed, deltaTime);
 		}
 	}
 

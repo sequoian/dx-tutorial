@@ -152,6 +152,7 @@
     <ClCompile Include="IndexBuffer.cpp" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="Keyboard.cpp" />
+    <ClCompile Include="KinematicCharacterControllerSystem.h" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Model.cpp" />
@@ -176,7 +177,7 @@
     <ClInclude Include="BaseWindow.h" />
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="CameraSystem.h" />
-    <ClInclude Include="CharacterControllerSystem.h" />
+    <ClInclude Include="DynamicCharacterControllerSystem.h" />
     <ClInclude Include="ColliderSystem.h" />
     <ClInclude Include="CollisionInfo.h" />
     <ClInclude Include="CompactPool.h" />

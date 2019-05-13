@@ -164,10 +164,6 @@ RigidBody Physics::CreateDynamicRigidBody(Entity e, btCollisionShape* shape, XMV
 	btDefaultMotionState* motionState = new btDefaultMotionState(transform);
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, motionState, shape, localInertia);
 	btRigidBody* body = new btRigidBody(rbInfo);
-
-	// character controller changes
-	body->setActivationState(DISABLE_DEACTIVATION);
-	body->setAngularFactor(0);
 	
 	m_dynamicsWorld->addRigidBody(body);
 
@@ -224,6 +220,30 @@ RigidBody Physics::CreateKinematicRigidBody(Entity e, btCollisionShape* shape, X
 	}
 
 	m_dynamicsWorld->addRigidBody(body);
+
+	RigidBody rb(body);
+	rb.SetEntity(e);
+	return rb;
+}
+
+
+RigidBody Physics::CreateCharacterBody(Entity e, btCollisionShape* shape, XMVECTOR position, XMVECTOR rotation)
+{
+	btTransform transform;
+	transform.setIdentity();
+	transform.setRotation(QuatFromDX(rotation));
+	transform.setOrigin(VecFromDX(position));
+	btVector3 localInertia(0, 0, 0);
+
+	btDefaultMotionState* motionState = new btDefaultMotionState(transform);
+	btRigidBody::btRigidBodyConstructionInfo rbInfo(0, motionState, shape, localInertia);
+	btRigidBody* body = new btRigidBody(rbInfo);
+
+	// kinematic flags
+	body->setCollisionFlags(body->getCollisionFlags() | btCollisionObject::CF_KINEMATIC_OBJECT);
+	body->setActivationState(DISABLE_DEACTIVATION);
+
+	m_dynamicsWorld->addRigidBody(body, btBroadphaseProxy::DefaultFilter, btBroadphaseProxy::AllFilter);
 
 	RigidBody rb(body);
 	rb.SetEntity(e);
