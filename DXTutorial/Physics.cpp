@@ -326,19 +326,11 @@ void Physics::SimulationCallback(btDynamicsWorld* world, btScalar timeStep)
 		RigidBody rigidBodyB = RigidBody(rbB);
 
 		int numContacts = contactManifold->getNumContacts();
-		if (numContacts <= 0)
-		{
-			return;
-		}
-
 		std::vector<btManifoldPoint> points;
 		for (int j = 0; j < numContacts; j++)
 		{
 			btManifoldPoint& pt = contactManifold->getContactPoint(j);
-			if (pt.getDistance() < 0.f)
-			{
-				points.push_back(pt);
-			}
+			points.push_back(pt);
 		}
 
 		m_eventBus->Publish(&CollisionEvent(rigidBodyA, rigidBodyB, numContacts, points));

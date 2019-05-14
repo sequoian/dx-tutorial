@@ -28,17 +28,25 @@ public:
 private:
 	void OnCollision(CollisionInfo* collision) override
 	{
-		if (collision->other.IsTrigger())
+		if (!collision->other.IsDynamic() && !collision->other.IsTrigger())
 		{
-			DEBUG_PRINT("trigger hit");
+			BlockSelf(collision);
 		}
-		else if (collision->other.IsDynamic())
+	}
+
+	void BlockSelf(CollisionInfo* collision)
+	{
+		TransformComponent* transform = m_transformSystem->FindComponent(collision->self.GetEntity());
+
+		for (auto& point : collision->contactPoints)
 		{
-			DEBUG_PRINT("dynamic hit");
-		}
-		else
-		{
-			DEBUG_PRINT("do a block");
+			const auto& ptA = point.getPositionWorldOnA();
+			const auto& ptB = point.getPositionWorldOnB();
+			const auto& normalOnB = point.m_normalWorldOnB;
+
+			XMVECTOR diff = Physics::VecToDX(ptA - ptB) * collision->direction;
+			XMVECTOR norm = Physics::VecToDX(normalOnB);
+			transform->position += XMVectorMultiply(norm, XMVector3Dot(diff, norm));
 		}
 	}
 
