@@ -42,7 +42,7 @@ public:
 
 	bool IsAlive(Entity e)
 	{
-		// Enitty is dead if its generation does not match with the stored genration at its index
+		// Entity is dead if its generation does not match with the stored genration at its index
 		return m_usedGenerations[e.index()] == e.generation();
 	}
 

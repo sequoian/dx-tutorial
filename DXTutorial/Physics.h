@@ -28,6 +28,8 @@ public:
 	RigidBody CreateKinematicRigidBody(Entity e, btCollisionShape* shape, XMVECTOR position, XMVECTOR rotation, bool isTrigger = false);
 	RigidBody CreateCharacterBody(Entity e, btCollisionShape* shape, XMVECTOR position, XMVECTOR rotation);
 
+	void DestroyRigidBody(RigidBody body);
+
 	static btQuaternion QuatFromDX(XMVECTOR quat);
 	static XMVECTOR QuatToDX(btQuaternion quat);
 	static btVector3 VecFromDX(XMVECTOR vec);
@@ -44,7 +46,6 @@ private:
 	btBroadphaseInterface* m_overlappingPairCache;
 	btSequentialImpulseConstraintSolver* m_solver;
 	btDiscreteDynamicsWorld* m_dynamicsWorld;
-	btAlignedObjectArray<btCollisionShape*> m_collisionShapes;
 	float m_gravity;
 	EventBus* m_eventBus;
 };

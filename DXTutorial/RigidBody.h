@@ -6,9 +6,12 @@
 #include <DirectXMath.h>
 using namespace DirectX;
 
+class Physics;
+
 class RigidBody
 {
 public:
+	friend class Physics;
 	RigidBody() {};
 	RigidBody(btRigidBody* body);
 	~RigidBody();

@@ -44,26 +44,27 @@ void Physics::ShutDown()
 		for (int i = m_dynamicsWorld->getNumCollisionObjects() - 1; i >= 0; i--)
 		{
 			btCollisionObject* obj = m_dynamicsWorld->getCollisionObjectArray()[i];
+
+			// delete motion state
 			btRigidBody* body = btRigidBody::upcast(obj);
 			if (body && body->getMotionState())
 			{
 				delete body->getMotionState();
 			}
+
+			// delete collision shape
+			if (obj->getCollisionShape())
+			{
+				delete obj->getCollisionShape();
+			}
+
+			// remove and delete object
 			m_dynamicsWorld->removeCollisionObject(obj);
 			delete obj;
 		}
 
 		delete m_dynamicsWorld;
 		m_dynamicsWorld = nullptr;
-	}
-
-	// delete collision shapes
-	for (int j = 0; j < m_collisionShapes.size(); j++)
-	{
-		btCollisionShape* shape = m_collisionShapes[j];
-		m_collisionShapes[j] = 0;
-		delete shape;
-		m_collisionShapes.clear();
 	}
 	
 	// delete solver
@@ -113,7 +114,6 @@ void Physics::SetGravity(float gravity)
 btCollisionShape* Physics::CreateCollisionBox(float x, float y, float z)
 {
 	btCollisionShape* shape = new btBoxShape(btVector3(btScalar(x), btScalar(y), btScalar(z)));
-	m_collisionShapes.push_back(shape);
 
 	return shape;
 }
@@ -121,7 +121,6 @@ btCollisionShape* Physics::CreateCollisionBox(float x, float y, float z)
 btCollisionShape* Physics::CreateCollisionSphere(float radius)
 {
 	btCollisionShape* shape = new btSphereShape(radius);
-	m_collisionShapes.push_back(shape);
 
 	return shape;
 }
@@ -130,7 +129,6 @@ btCollisionShape* Physics::CreateCollisionSphere(float radius)
 btCollisionShape* Physics::CreateCollisionCylinder(float x, float y, float z)
 {
 	btCollisionShape* shape = new btCylinderShape(btVector3(x, y, z));
-	m_collisionShapes.push_back(shape);
 
 	return shape;
 }
@@ -139,7 +137,6 @@ btCollisionShape* Physics::CreateCollisionCylinder(float x, float y, float z)
 btCollisionShape* Physics::CreateCollisionCone(float radius, float height)
 {
 	btCollisionShape* shape = new btConeShape(radius, height);
-	m_collisionShapes.push_back(shape);
 
 	return shape;
 }
@@ -248,6 +245,25 @@ RigidBody Physics::CreateCharacterBody(Entity e, btCollisionShape* shape, XMVECT
 	RigidBody rb(body);
 	rb.SetEntity(e);
 	return rb;
+}
+
+
+void Physics::DestroyRigidBody(RigidBody body)
+{
+	btRigidBody* rb = body.m_body;
+	
+	if (rb->getMotionState())
+	{
+		delete rb->getMotionState();
+	}
+
+	if (rb->getCollisionShape())
+	{
+		delete rb->getCollisionShape();
+	}
+
+	m_dynamicsWorld->removeRigidBody(rb);
+	delete rb;
 }
 
 
