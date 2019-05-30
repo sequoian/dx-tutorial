@@ -2,8 +2,27 @@
 
 #include <vector>
 #include <deque>
+#include <unordered_map>
 #include "Entity.h"
 #include "Assert.h"
+#include "ComponentSystem.h"
+#include "WriteLog.h"
+
+class ComponentSystemBase;
+
+class OwnedComponent
+{
+public:
+	OwnedComponent() {}
+
+	OwnedComponent(ComponentSystemBase* i, U64 h)
+	{
+		componentSystem = i;
+		componentHandle = h;
+	}
+	ComponentSystemBase* componentSystem;
+	U64 componentHandle;
+};
 
 const unsigned int minFreeIndices = 2048;
 
@@ -11,55 +30,26 @@ class EntityManager
 {
 public:
 	// Pass the number of entities expected to be created
-	bool StartUp(unsigned int numEntities)
-	{
-		m_usedGenerations.reserve(numEntities);
-		return true;
-	}
+	bool StartUp(unsigned int numEntities);
 
-	Entity CreateEntity()
-	{
-		uint32_t idx;
+	Entity CreateEntity(U32 numComponents = 0);
 
-		if (m_freedIndices.size() > minFreeIndices)
-		{
-			// If there are too many freed indices, begin reusing them
-			idx = m_freedIndices.front();
-			m_freedIndices.pop_front();
-		}
-		else
-		{
-			// Create a fresh index with the generation starting at 0
-			m_usedGenerations.push_back(0);
-			idx = m_usedGenerations.size() - 1;
-			ASSERT(idx < (uint64_t)1 << entityIndexBits);
-		}
+	bool IsAlive(Entity e);
 
-		// Return entity, setting index and generation
-		m_next.id = ((uint64_t)m_usedGenerations[idx] << entityGenerationBits) | idx;
-		return m_next;
-	}
+	void Destroy(Entity e);
 
-	bool IsAlive(Entity e)
-	{
-		// Entity is dead if its generation does not match with the stored genration at its index
-		return m_usedGenerations[e.index()] == e.generation();
-	}
+	void AddComponentToEntity(Entity e, ComponentSystemBase* system, U64 handle);
 
-	void Destroy(Entity e)
-	{
-		const unsigned int idx = e.index();
+	void EndFrame();
 
-		// Increment the stored generation to invalidate alive checks
-		++m_usedGenerations[idx];
-
-		// store index for possible resuse
-		m_freedIndices.push_back(idx);
-	}
+protected:
+	void DestroyComponentsOfEntity(Entity e);
 
 private:
+	typedef std::vector<OwnedComponent> ComponentList;
 	Entity m_next;
 	std::vector<unsigned char> m_usedGenerations;
 	std::deque<unsigned int> m_freedIndices;
+	std::unordered_map<U64, ComponentList> m_componentMap;
 
 };

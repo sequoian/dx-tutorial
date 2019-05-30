@@ -218,29 +218,29 @@ public:
 		// Create entities
 
 		m_entityManager.StartUp(4);
-		m_transformSystem.StartUp(4);
-		m_rotatorSystem.StartUp(4);
+		m_transformSystem.StartUp(4, &m_entityManager);
+		m_rotatorSystem.StartUp(4, &m_entityManager);
 		m_rotatorSystem.AddSystemRefs(&m_transformSystem);
-		m_cameraSystem.StartUp(1);
+		m_cameraSystem.StartUp(1, &m_entityManager);
 		m_cameraSystem.AddSystemRefs(&m_transformSystem, &m_window);
-		m_meshSystem.StartUp(3);
-		m_flycamSystem.StartUp(3);
+		m_meshSystem.StartUp(3, &m_entityManager);
+		m_flycamSystem.StartUp(3, &m_entityManager);
 		m_flycamSystem.AddSystemRefs(&m_inputManager, &m_transformSystem, &m_velocitySystem);
-		m_colliderSystem.StartUp(3);
-		m_dynamicRBSystem.StartUp(3);
+		m_colliderSystem.StartUp(3, &m_entityManager);
+		m_dynamicRBSystem.StartUp(3, &m_entityManager);
 		m_dynamicRBSystem.AddSystemRefs(&m_transformSystem);
 		m_primFactory.SetUp(&m_entityManager, &m_transformSystem, &m_meshSystem, &m_colliderSystem, &m_dynamicRBSystem, &m_resourceManager, &m_physics);
 		m_rbGunSystem.AddSystemRefs(&m_transformSystem, &m_primFactory, &m_inputManager, m_eventBus, &m_rbBulletSystem);
-		m_kinematicRBSystem.StartUp(1);
+		m_kinematicRBSystem.StartUp(1, &m_entityManager);
 		m_kinematicRBSystem.AddSystemRefs(&m_transformSystem);
-		m_ghostObjectSystem.StartUp(1);
+		m_ghostObjectSystem.StartUp(1, &m_entityManager);
 		m_ghostObjectSystem.AddSystemRefs(&m_transformSystem, &m_physics);
-		m_characterSystem.StartUp(1);
+		m_characterSystem.StartUp(1, &m_entityManager);
 		m_characterSystem.AddSystemRefs(&m_transformSystem, &m_velocitySystem, m_eventBus);
-		m_rbBulletSystem.StartUp(1);
+		m_rbBulletSystem.StartUp(1, &m_entityManager);
 		m_rbBulletSystem.AddSystemRefs(m_eventBus);
-		m_velocitySystem.StartUp(1);
-		m_kinematicCCSystem.StartUp(1);
+		m_velocitySystem.StartUp(1, &m_entityManager);
+		m_kinematicCCSystem.StartUp(1, &m_entityManager);
 		m_kinematicCCSystem.AddSystemRefs(&m_transformSystem, m_eventBus);
 
 		Entity e;
@@ -266,7 +266,8 @@ public:
 		KinematicCharacterControllerComponent* kinematicCC;
 
 		// bowl
-		m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, vec3(0, -15, 0), vec3(0), vec3(10, 1, 10));
+		e = m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, vec3(0, -15, 0), vec3(0), vec3(10, 1, 10));
+		m_entityManager.Destroy(e);
 		m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, vec3(0, -9, 10), vec3(90.0_rad, 0, 0), vec3(10, 1, 5));
 		m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, vec3(0, -9, -10), vec3(90.0_rad, 0, 0), vec3(10, 1, 5));
 		m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, vec3(10, -9, 0), vec3(0, 0, 90.0_rad), vec3(5, 1, 10));
@@ -332,31 +333,19 @@ public:
 		flycam->moveSpeed = 8;
 		flycam->sprintSpeed = 18;
 		flycam->crawlSpeed = 2;
-		bulletHandle = m_rbGunSystem.CreateComponent(e);
-		rbGun = m_rbGunSystem.GetComponentByHandle(bulletHandle);
-		rbGun->material = matStone;
-		rbGun->transform = transformHandle;
-		rbGun->cooldown = 0.25;
+		//bulletHandle = m_rbGunSystem.CreateComponent(e);
+		//rbGun = m_rbGunSystem.GetComponentByHandle(bulletHandle);
+		//rbGun->material = matStone;
+		//rbGun->transform = transformHandle;
+		//rbGun->cooldown = 0.25;
 		colliderHandle = m_colliderSystem.CreateComponent(e);
 		collider = m_colliderSystem.GetComponentByHandle(colliderHandle);
 		collider->shape = m_physics.CreateCollisionSphere(1);
-		//rb = m_physics.CreateDynamicRigidBody(e, collider->shape, transform->position, transform->rotation, 1000);
-		//rb.SetGravity(0);
-		//dynamicRB = m_dynamicRBSystem.GetComponentByHandle(m_dynamicRBSystem.CreateComponent(e));
-		//dynamicRB->body = rb;
-		//dynamicRB->transform = transformHandle;
-		//character = m_characterSystem.GetComponentByHandle(m_characterSystem.CreateComponent(e));
-		//character->transform = transformHandle;
-		//character->rigidbody = rb;
 		kinematicRB = m_kinematicRBSystem.GetComponentByHandle(m_kinematicRBSystem.CreateComponent(e));
 		kinematicRB->transform = transformHandle;
 		kinematicRB->body = m_physics.CreateCharacterBody(e, collider->shape, transform->position, transform->rotation);
 		kinematicCC = m_kinematicCCSystem.GetComponentByHandle(m_kinematicCCSystem.CreateComponent(e));
 		kinematicCC->transform = transformHandle;
-		//character = m_characterSystem.GetComponentByHandle(m_characterSystem.CreateComponent(e));
-		//ghostObject = m_ghostObjectSystem.GetComponentByHandle(m_ghostObjectSystem.CreateComponent(e));
-		//ghostObject->transform = transformHandle;
-		//ghostObject->ghostObject = m_physics.CreateGhostObject(e, transform->position, transform->rotation, collider->shape);
 
 		return true;
 	}

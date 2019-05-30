@@ -6,17 +6,27 @@
 #include "Entity.h"
 #include "EventBus.h"
 #include "CollisionInfo.h"
+#include "EntityManager.h"
+
+class EntityManager;
+
+class ComponentSystemBase
+{
+public:
+	virtual void DestroyComponent(Entity e) = 0;
+};
 
 template <class T>
-class ComponentSystem
+class ComponentSystem : public ComponentSystemBase
 {
 public:
 	// execute system
 	virtual void Execute(float deltaTime) = 0;
 
-	virtual inline bool StartUp(U32 numComponents)
+	virtual inline bool StartUp(U32 numComponents, EntityManager* em)
 	{
 		m_pool.StartUp(numComponents);
+		m_entityManager = em;
 		return true;
 	}
 
@@ -27,6 +37,8 @@ public:
 
 		// set entity map
 		m_entityMap.emplace(e.id, handle);
+
+		m_entityManager->AddComponentToEntity(e, this, handle);
 
 		return handle;
 	}
@@ -121,4 +133,5 @@ protected:
 protected:
 	CompactPool<T> m_pool;
 	std::unordered_map<U64, U64> m_entityMap;
+	EntityManager* m_entityManager = nullptr;
 };
