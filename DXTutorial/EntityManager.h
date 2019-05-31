@@ -43,6 +43,7 @@ public:
 	void EndFrame();
 
 protected:
+	void DestroyEntity(Entity e);
 	void DestroyComponentsOfEntity(Entity e);
 
 private:
@@ -51,5 +52,5 @@ private:
 	std::vector<unsigned char> m_usedGenerations;
 	std::deque<unsigned int> m_freedIndices;
 	std::unordered_map<U64, ComponentList> m_componentMap;
-
+	std::vector<Entity> m_condemnedEntities;
 };

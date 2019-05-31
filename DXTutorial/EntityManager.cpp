@@ -46,15 +46,7 @@ bool EntityManager::IsAlive(Entity e)
 
 void EntityManager::Destroy(Entity e)
 {
-	DestroyComponentsOfEntity(e);
-
-	const unsigned int idx = e.index();
-
-	// Increment the stored generation to invalidate alive checks
-	++m_usedGenerations[idx];
-
-	// store index for possible resuse
-	m_freedIndices.push_back(idx);
+	m_condemnedEntities.push_back(e);
 }
 
 
@@ -73,7 +65,26 @@ void EntityManager::AddComponentToEntity(Entity e, ComponentSystemBase* system, 
 
 void EntityManager::EndFrame()
 {
+	// destroy condemned entities at the end of the frame
+	for (int i = 0; i < m_condemnedEntities.size(); ++i)
+	{
+		DestroyEntity(m_condemnedEntities[i]);
+	}
+	m_condemnedEntities.clear();
+}
 
+
+void EntityManager::DestroyEntity(Entity e)
+{
+	DestroyComponentsOfEntity(e);
+
+	const unsigned int idx = e.index();
+
+	// Increment the stored generation to invalidate alive checks
+	++m_usedGenerations[idx];
+
+	// store index for possible resuse
+	m_freedIndices.push_back(idx);
 }
 
 

@@ -398,6 +398,9 @@ public:
 		m_ghostObjectSystem.HandleCollisionsTemp(dt);
 
 		m_transformSystem.Execute(dt);
+
+		// end frame
+		m_entityManager.EndFrame();
 	}
 
 	virtual void Render() override
