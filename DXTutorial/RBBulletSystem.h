@@ -20,11 +20,15 @@ public:
 
 	inline void Execute(float deltaTime) override
 	{
+
 	}
 
 private:
 	void OnCollision(CollisionInfo* collision) override
 	{
-		//DEBUG_PRINT("Bullet Collision!");
+		if (!collision->other.IsTrigger())
+		{
+			m_entityManager->Destroy(collision->self.GetEntity());
+		}
 	}
 };

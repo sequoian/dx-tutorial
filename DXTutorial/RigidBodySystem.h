@@ -28,6 +28,23 @@ public:
 		}
 	}
 
+	inline void DestroyComponent(Entity e) override
+	{
+		auto itr = m_entityMap.find(e.id);
+		if (itr != m_entityMap.end())
+		{
+			// destroy rigid body
+			RigidBodyComponent* comp = GetComponentByHandle(itr->second);
+			m_physics->DestroyRigidBody(comp->body);
+
+			// destroy component
+			m_pool.DestroyObject(itr->second);
+
+			// remove entity from map
+			m_entityMap.erase(itr);
+		}
+	}
+
 private:
 	Physics* m_physics;
 };
