@@ -7,6 +7,7 @@
 #include "DynamicRigidBodySystem.h"
 #include "ResourceManager.h"
 #include "RigidBody.h"
+#include "RigidBodySystem.h"
 
 #include "Material.h"
 #include <DirectXMath.h>
@@ -44,15 +45,16 @@ struct vec3
 class PrimitiveFactory
 {
 public:
-	bool SetUp(EntityManager* em, TransformSystem* ts, MeshSystem* ms, ColliderSystem* cs, DynamicRigidBodySystem* rs, ResourceManager* rm, Physics* p)
+	bool SetUp(EntityManager* em, TransformSystem* ts, MeshSystem* ms, ColliderSystem* cs, RigidBodySystem* rb, DynamicRigidBodySystem* rs, ResourceManager* rm, Physics* p)
 	{
 		m_entityManager = em;
 		m_transformSystem = ts;
 		m_meshSystem = ms;
 		m_colliderSystem = cs;
-		m_rigidBodySystem = rs;
+		m_dynamicRigidBodySystem = rs;
 		m_resourceManager = rm;
 		m_physics = p;
+		m_rigidBodySystem = rb;
 
 		return true;
 	}
@@ -70,8 +72,10 @@ public:
 		MeshComponent* mesh;
 		U64 colliderHandle;
 		ColliderComponent* collider;
+		U64 drbHandle;
+		DynamicRigidBodyComponent* dynamicRigidBody;
 		U64 rbHandle;
-		DynamicRigidBodyComponent* rigidBody;
+		RigidBodyComponent* rigidBody;
 
 		Model* model;
 		btCollisionShape* colShape;
@@ -122,16 +126,17 @@ public:
 			rbHandle = m_rigidBodySystem->CreateComponent(e);
 			rigidBody = m_rigidBodySystem->GetComponentByHandle(rbHandle);
 			rigidBody->body = m_physics->CreateDynamicRigidBody(e, collider->shape, dxPos, dxRot);
-			rigidBody->transform = transformHandle;
-			//rigidBody->body.SetPosition(dxPos);
 			rigidBody->body.SetLinearVelocity(XMVectorSet(vel.x, vel.y, vel.z, 1));
+			drbHandle = m_dynamicRigidBodySystem->CreateComponent(e);
+			dynamicRigidBody = m_dynamicRigidBodySystem->GetComponentByHandle(drbHandle);
+			dynamicRigidBody->rigidBody = rbHandle;
+			dynamicRigidBody->transform = transformHandle;
 		}
 		else
 		{
 			RigidBody rb = m_physics->CreateStaticRigidBody(e, collider->shape, dxPos, dxRot);
-			//rb.SetPosition(dxPos);
-			//rb.SetRotation(dxRot);
-			//rb.SetLinearVelocity(XMVectorSet(vel.x, vel.y, vel.z, 1));
+			rigidBody = m_rigidBodySystem->GetComponentByHandle(m_rigidBodySystem->CreateComponent(e));
+			rigidBody->body = rb;
 		}
 		
 		
@@ -150,9 +155,10 @@ private:
 	TransformSystem* m_transformSystem; 
 	MeshSystem* m_meshSystem; 
 	ColliderSystem* m_colliderSystem; 
-	DynamicRigidBodySystem* m_rigidBodySystem;
+	DynamicRigidBodySystem* m_dynamicRigidBodySystem;
 	ResourceManager* m_resourceManager;
 	Physics* m_physics;
+	RigidBodySystem* m_rigidBodySystem;
 
 };
 

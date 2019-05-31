@@ -216,6 +216,7 @@
     <ClInclude Include="ResourcePool.h" />
     <ClInclude Include="RigidBody.h" />
     <ClInclude Include="DynamicRigidBodySystem.h" />
+    <ClInclude Include="RigidBodySystem.h" />
     <ClInclude Include="RotatorSystem.h" />
     <ClInclude Include="SampleApplication.h" />
     <ClInclude Include="SampleWindow.h" />

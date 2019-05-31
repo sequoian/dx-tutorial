@@ -27,6 +27,7 @@
 #include "RBBulletSystem.h"
 #include "VelocitySystem.h"
 #include "KinematicCharacterControllerSystem.h"
+#include "RigidBodySystem.h"
 
 #include "ResourceManager.h"
 #include "Texture.h"
@@ -227,12 +228,15 @@ public:
 		m_flycamSystem.StartUp(3, &m_entityManager);
 		m_flycamSystem.AddSystemRefs(&m_inputManager, &m_transformSystem, &m_velocitySystem);
 		m_colliderSystem.StartUp(3, &m_entityManager);
+		m_rigidBodySystem.StartUp(3, &m_entityManager);
+		m_rigidBodySystem.AddSystemRefs(&m_physics);
 		m_dynamicRBSystem.StartUp(3, &m_entityManager);
-		m_dynamicRBSystem.AddSystemRefs(&m_transformSystem);
-		m_primFactory.SetUp(&m_entityManager, &m_transformSystem, &m_meshSystem, &m_colliderSystem, &m_dynamicRBSystem, &m_resourceManager, &m_physics);
+		m_dynamicRBSystem.AddSystemRefs(&m_transformSystem, &m_rigidBodySystem);
+		m_primFactory.SetUp(&m_entityManager, &m_transformSystem, &m_meshSystem, &m_colliderSystem, &m_rigidBodySystem, &m_dynamicRBSystem, &m_resourceManager, &m_physics);
+		m_rbGunSystem.StartUp(1, &m_entityManager);
 		m_rbGunSystem.AddSystemRefs(&m_transformSystem, &m_primFactory, &m_inputManager, m_eventBus, &m_rbBulletSystem);
 		m_kinematicRBSystem.StartUp(1, &m_entityManager);
-		m_kinematicRBSystem.AddSystemRefs(&m_transformSystem);
+		m_kinematicRBSystem.AddSystemRefs(&m_transformSystem, &m_rigidBodySystem);
 		m_ghostObjectSystem.StartUp(1, &m_entityManager);
 		m_ghostObjectSystem.AddSystemRefs(&m_transformSystem, &m_physics);
 		m_characterSystem.StartUp(1, &m_entityManager);
@@ -264,6 +268,8 @@ public:
 		RigidBody rb;
 		U64 velocityHandle;
 		KinematicCharacterControllerComponent* kinematicCC;
+		U64 rigidBodyHandle;
+		RigidBodyComponent* rigidBody;
 
 		// bowl
 		e = m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, vec3(0, -15, 0), vec3(0), vec3(10, 1, 10));
@@ -290,6 +296,8 @@ public:
 		rb = m_physics.CreateStaticRigidBody(e, collider->shape, transform->position, transform->rotation, true);
 		rb.SetPosition(transform->position);
 		rb.SetRotation(transform->rotation);
+		rigidBody = m_rigidBodySystem.GetComponentByHandle(m_rigidBodySystem.CreateComponent(e));
+		rigidBody->body = rb;
 
 		// spinner
 		e = m_entityManager.CreateEntity();
@@ -309,9 +317,13 @@ public:
 		collider = m_colliderSystem.GetComponentByHandle(colliderHandle);
 		collider->shape = m_physics.CreateCollisionBox(1, 1, 1);
 		collider->shape->setLocalScaling(Physics::VecFromDX(transform->scale));
+		rb = m_physics.CreateKinematicRigidBody(e, collider->shape, transform->position, transform->rotation);
+		rigidBodyHandle = m_rigidBodySystem.CreateComponent(e);
+		rigidBody = m_rigidBodySystem.GetComponentByHandle(rigidBodyHandle);
+		rigidBody->body = rb;
 		kinematicRB = m_kinematicRBSystem.GetComponentByHandle(m_kinematicRBSystem.CreateComponent(e));
 		kinematicRB->transform = transformHandle;
-		kinematicRB->body = m_physics.CreateKinematicRigidBody(e, collider->shape, transform->position, transform->rotation);
+		kinematicRB->rigidBody = rigidBodyHandle;
 
 		// camera
 		e = m_entityManager.CreateEntity();
@@ -333,17 +345,21 @@ public:
 		flycam->moveSpeed = 8;
 		flycam->sprintSpeed = 18;
 		flycam->crawlSpeed = 2;
-		//bulletHandle = m_rbGunSystem.CreateComponent(e);
-		//rbGun = m_rbGunSystem.GetComponentByHandle(bulletHandle);
-		//rbGun->material = matStone;
-		//rbGun->transform = transformHandle;
-		//rbGun->cooldown = 0.25;
+		bulletHandle = m_rbGunSystem.CreateComponent(e);
+		rbGun = m_rbGunSystem.GetComponentByHandle(bulletHandle);
+		rbGun->material = matStone;
+		rbGun->transform = transformHandle;
+		rbGun->cooldown = 0.25;
 		colliderHandle = m_colliderSystem.CreateComponent(e);
 		collider = m_colliderSystem.GetComponentByHandle(colliderHandle);
 		collider->shape = m_physics.CreateCollisionSphere(1);
+		rb = m_physics.CreateCharacterBody(e, collider->shape, transform->position, transform->rotation);
+		rigidBodyHandle = m_rigidBodySystem.CreateComponent(e);
+		rigidBody = m_rigidBodySystem.GetComponentByHandle(rigidBodyHandle);
+		rigidBody->body = rb;
 		kinematicRB = m_kinematicRBSystem.GetComponentByHandle(m_kinematicRBSystem.CreateComponent(e));
 		kinematicRB->transform = transformHandle;
-		kinematicRB->body = m_physics.CreateCharacterBody(e, collider->shape, transform->position, transform->rotation);
+		kinematicRB->rigidBody = rigidBodyHandle;
 		kinematicCC = m_kinematicCCSystem.GetComponentByHandle(m_kinematicCCSystem.CreateComponent(e));
 		kinematicCC->transform = transformHandle;
 
@@ -446,6 +462,7 @@ private:
 	RBBulletSystem m_rbBulletSystem;
 	VelocitySystem m_velocitySystem;
 	KinematicCharacterControllerSystem m_kinematicCCSystem;
+	RigidBodySystem m_rigidBodySystem;
 };
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow)

@@ -6,29 +6,32 @@
 #include "TransformSystem.h"
 #include "Physics.h"
 #include "Types.h"
-#include "RigidBody.h"
+#include "RigidBodySystem.h"
 
 struct KinematicRigidBodyComponent
 {
 	U64 transform = 0;
-	RigidBody body = nullptr;
+	U64 rigidBody = 0;
 };
 
 
 class KinematicRigidBodySystem : public ComponentSystem<KinematicRigidBodyComponent>
 {
 public:
-	void AddSystemRefs(TransformSystem* transformSystem)
+	void AddSystemRefs(TransformSystem* transformSystem, RigidBodySystem* rigidBodySystem)
 	{
 		m_transformSystem = transformSystem;
+		m_rigidBodySystem = rigidBodySystem;
 	}
 
 	inline void Execute(float deltaTime) override
 	{
 		for (U32 i = 0; i < m_pool.Size(); i++)
 		{
-			KinematicRigidBodyComponent* rb = m_pool[i];
-			TransformComponent* transform = m_transformSystem->GetComponentByHandle(rb->transform);
+			KinematicRigidBodyComponent* krb = m_pool[i];
+			RigidBodyComponent* rb = m_rigidBodySystem->GetComponentByHandle(krb->rigidBody);
+
+			TransformComponent* transform = m_transformSystem->GetComponentByHandle(krb->transform);
 
 			rb->body.SetPosition(transform->position);
 			rb->body.SetRotation(transform->rotation);
@@ -37,4 +40,5 @@ public:
 
 private:
 	TransformSystem * m_transformSystem;
+	RigidBodySystem* m_rigidBodySystem;
 };

@@ -254,5 +254,8 @@
     <ClInclude Include="DynamicCharacterControllerSystem.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="RigidBodySystem.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
