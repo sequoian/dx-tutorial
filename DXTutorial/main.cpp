@@ -28,6 +28,7 @@
 #include "VelocitySystem.h"
 #include "KinematicCharacterControllerSystem.h"
 #include "RigidBodySystem.h"
+#include "YDespawnSystem.h"
 
 #include "ResourceManager.h"
 #include "Texture.h"
@@ -232,7 +233,9 @@ public:
 		m_rigidBodySystem.AddSystemRefs(&m_physics);
 		m_dynamicRBSystem.StartUp(3, &m_entityManager);
 		m_dynamicRBSystem.AddSystemRefs(&m_transformSystem, &m_rigidBodySystem);
-		m_primFactory.SetUp(&m_entityManager, &m_transformSystem, &m_meshSystem, &m_colliderSystem, &m_rigidBodySystem, &m_dynamicRBSystem, &m_resourceManager, &m_physics);
+		m_yDespawnSystem.StartUp(20, &m_entityManager);
+		m_yDespawnSystem.AddSystemRefs(&m_transformSystem);
+		m_primFactory.SetUp(&m_entityManager, &m_transformSystem, &m_meshSystem, &m_colliderSystem, &m_rigidBodySystem, &m_dynamicRBSystem, &m_resourceManager, &m_physics, &m_yDespawnSystem);
 		m_rbGunSystem.StartUp(1, &m_entityManager);
 		m_rbGunSystem.AddSystemRefs(&m_transformSystem, &m_primFactory, &m_inputManager, m_eventBus, &m_rbBulletSystem);
 		m_kinematicRBSystem.StartUp(1, &m_entityManager);
@@ -272,12 +275,27 @@ public:
 		RigidBodyComponent* rigidBody;
 
 		// bowl
-		e = m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, vec3(0, -15, 0), vec3(0), vec3(10, 1, 10));
-		m_entityManager.Destroy(e);
+		m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, vec3(0, -15, 0), vec3(0), vec3(10, 1, 10));
 		m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, vec3(0, -9, 10), vec3(90.0_rad, 0, 0), vec3(10, 1, 5));
 		m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, vec3(0, -9, -10), vec3(90.0_rad, 0, 0), vec3(10, 1, 5));
 		m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, vec3(10, -9, 0), vec3(0, 0, 90.0_rad), vec3(5, 1, 10));
 		m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, vec3(-10, -9, 0), vec3(0, 0, 90.0_rad), vec3(5, 1, 10));
+
+		// tower
+		m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, vec3(0, 0, 25), vec3(0), vec3(10, 1, 10));
+
+		int x = 0;
+		int y = 2;
+		int z = 25;
+		for (int i = 0; i < 10; ++i)
+		{
+			m_primFactory.CreatePrimitive(PRIM_CUBE, 1, matStone, vec3(x, y, z));
+			m_primFactory.CreatePrimitive(PRIM_CUBE, 1, matStone, vec3(x, y, z+2));
+			m_primFactory.CreatePrimitive(PRIM_CUBE, 1, matStone, vec3(x, y, z-2));
+			m_primFactory.CreatePrimitive(PRIM_CUBE, 1, matStone, vec3(x+2, y, z));
+			m_primFactory.CreatePrimitive(PRIM_CUBE, 1, matStone, vec3(x-2, y, z));
+			y += 2;
+		}
 
 		// trigger
 		e = m_entityManager.CreateEntity();
@@ -396,6 +414,7 @@ public:
 
 		m_dynamicRBSystem.Execute(dt);
 		m_ghostObjectSystem.HandleCollisionsTemp(dt);
+		m_yDespawnSystem.Execute(dt);
 
 		m_transformSystem.Execute(dt);
 
@@ -466,6 +485,7 @@ private:
 	VelocitySystem m_velocitySystem;
 	KinematicCharacterControllerSystem m_kinematicCCSystem;
 	RigidBodySystem m_rigidBodySystem;
+	YDespawnSystem m_yDespawnSystem;
 };
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow)

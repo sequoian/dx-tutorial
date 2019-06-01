@@ -1,3 +1,5 @@
+#pragma once
+
 #include "TransformSystem.h"
 #include "Physics.h"
 #include "Types.h"

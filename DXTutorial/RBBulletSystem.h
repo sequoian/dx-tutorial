@@ -26,9 +26,5 @@ public:
 private:
 	void OnCollision(CollisionInfo* collision) override
 	{
-		if (!collision->other.IsTrigger())
-		{
-			m_entityManager->Destroy(collision->self.GetEntity());
-		}
 	}
 };

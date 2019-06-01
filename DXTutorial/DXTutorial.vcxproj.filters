@@ -257,5 +257,8 @@
     <ClInclude Include="RigidBodySystem.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="YDespawnSystem.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

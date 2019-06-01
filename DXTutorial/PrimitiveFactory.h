@@ -8,6 +8,7 @@
 #include "ResourceManager.h"
 #include "RigidBody.h"
 #include "RigidBodySystem.h"
+#include "YDespawnSystem.h"
 
 #include "Material.h"
 #include <DirectXMath.h>
@@ -45,7 +46,7 @@ struct vec3
 class PrimitiveFactory
 {
 public:
-	bool SetUp(EntityManager* em, TransformSystem* ts, MeshSystem* ms, ColliderSystem* cs, RigidBodySystem* rb, DynamicRigidBodySystem* rs, ResourceManager* rm, Physics* p)
+	bool SetUp(EntityManager* em, TransformSystem* ts, MeshSystem* ms, ColliderSystem* cs, RigidBodySystem* rb, DynamicRigidBodySystem* rs, ResourceManager* rm, Physics* p, YDespawnSystem* yd)
 	{
 		m_entityManager = em;
 		m_transformSystem = ts;
@@ -55,6 +56,7 @@ public:
 		m_resourceManager = rm;
 		m_physics = p;
 		m_rigidBodySystem = rb;
+		m_yDespawnSystem = yd;
 
 		return true;
 	}
@@ -76,6 +78,7 @@ public:
 		DynamicRigidBodyComponent* dynamicRigidBody;
 		U64 rbHandle;
 		RigidBodyComponent* rigidBody;
+		YDespawnComponent* despawn;
 
 		Model* model;
 		btCollisionShape* colShape;
@@ -113,6 +116,12 @@ public:
 		transform->rotation = dxRot;
 		transform->scale = dxScale;
 
+		// y despawn
+		despawn = m_yDespawnSystem->GetComponentByHandle(m_yDespawnSystem->CreateComponent(e));
+		despawn->entity = e;
+		despawn->transform = transformHandle;
+		despawn->yLimit = -50;
+		
 		// create collider
 		colliderHandle = m_colliderSystem->CreateComponent(e);
 		collider = m_colliderSystem->GetComponentByHandle(colliderHandle);
@@ -159,6 +168,7 @@ private:
 	ResourceManager* m_resourceManager;
 	Physics* m_physics;
 	RigidBodySystem* m_rigidBodySystem;
+	YDespawnSystem* m_yDespawnSystem;
 
 };
 

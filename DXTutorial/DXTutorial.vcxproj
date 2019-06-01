@@ -178,6 +178,7 @@
     <ClInclude Include="BaseWindow.h" />
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="CameraSystem.h" />
+    <ClInclude Include="YDespawnSystem.h" />
     <ClInclude Include="DynamicCharacterControllerSystem.h" />
     <ClInclude Include="ColliderSystem.h" />
     <ClInclude Include="CollisionInfo.h" />
