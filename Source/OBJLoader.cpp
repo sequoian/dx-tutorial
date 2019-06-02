@@ -1,6 +1,6 @@
 // these must be defined once here
 #define TINYOBJLOADER_IMPLEMENTATION
-#include "../Headers/tiny_obj_loader.h"
+#include <tiny_obj_loader.h>
 
 #include "OBJLoader.h"
 #include <unordered_map>
