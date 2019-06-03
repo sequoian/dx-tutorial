@@ -3,7 +3,6 @@
 #include "EntityManager.h"
 #include "TransformSystem.h"
 #include "MeshSystem.h"
-#include "ColliderSystem.h"
 #include "DynamicRigidBodySystem.h"
 #include "ResourceManager.h"
 #include "RigidBody.h"
@@ -46,12 +45,11 @@ struct vec3
 class PrimitiveFactory
 {
 public:
-	bool SetUp(EntityManager* em, TransformSystem* ts, MeshSystem* ms, ColliderSystem* cs, RigidBodySystem* rb, DynamicRigidBodySystem* rs, ResourceManager* rm, Physics* p, YDespawnSystem* yd)
+	bool SetUp(EntityManager* em, TransformSystem* ts, MeshSystem* ms, RigidBodySystem* rb, DynamicRigidBodySystem* rs, ResourceManager* rm, Physics* p, YDespawnSystem* yd)
 	{
 		m_entityManager = em;
 		m_transformSystem = ts;
 		m_meshSystem = ms;
-		m_colliderSystem = cs;
 		m_dynamicRigidBodySystem = rs;
 		m_resourceManager = rm;
 		m_physics = p;
@@ -73,7 +71,7 @@ public:
 		TransformComponent* transform;
 		MeshComponent* mesh;
 		U64 colliderHandle;
-		ColliderComponent* collider;
+		btCollisionShape* collider;
 		U64 drbHandle;
 		DynamicRigidBodyComponent* dynamicRigidBody;
 		U64 rbHandle;
@@ -123,10 +121,8 @@ public:
 		despawn->yLimit = -50;
 		
 		// create collider
-		colliderHandle = m_colliderSystem->CreateComponent(e);
-		collider = m_colliderSystem->GetComponentByHandle(colliderHandle);
-		collider->shape = colShape;
-		collider->shape->setLocalScaling(m_physics->VecFromDX(transform->scale));
+		collider = colShape;
+		collider->setLocalScaling(m_physics->VecFromDX(transform->scale));
 
 		// create rigid body
 		
@@ -134,7 +130,7 @@ public:
 		{
 			rbHandle = m_rigidBodySystem->CreateComponent(e);
 			rigidBody = m_rigidBodySystem->GetComponentByHandle(rbHandle);
-			rigidBody->body = m_physics->CreateDynamicRigidBody(e, collider->shape, dxPos, dxRot);
+			rigidBody->body = m_physics->CreateDynamicRigidBody(e, collider, dxPos, dxRot);
 			rigidBody->body.SetLinearVelocity(XMVectorSet(vel.x, vel.y, vel.z, 1));
 			drbHandle = m_dynamicRigidBodySystem->CreateComponent(e);
 			dynamicRigidBody = m_dynamicRigidBodySystem->GetComponentByHandle(drbHandle);
@@ -143,7 +139,7 @@ public:
 		}
 		else
 		{
-			RigidBody rb = m_physics->CreateStaticRigidBody(e, collider->shape, dxPos, dxRot);
+			RigidBody rb = m_physics->CreateStaticRigidBody(e, collider, dxPos, dxRot);
 			rigidBody = m_rigidBodySystem->GetComponentByHandle(m_rigidBodySystem->CreateComponent(e));
 			rigidBody->body = rb;
 		}
@@ -163,7 +159,6 @@ private:
 	EntityManager* m_entityManager;
 	TransformSystem* m_transformSystem; 
 	MeshSystem* m_meshSystem; 
-	ColliderSystem* m_colliderSystem; 
 	DynamicRigidBodySystem* m_dynamicRigidBodySystem;
 	ResourceManager* m_resourceManager;
 	Physics* m_physics;
@@ -171,4 +166,3 @@ private:
 	YDespawnSystem* m_yDespawnSystem;
 
 };
-

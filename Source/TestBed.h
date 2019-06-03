@@ -20,7 +20,6 @@
 #include "CameraSystem.h"
 #include "MeshSystem.h"
 #include "FlyCamSystem.h"
-#include "ColliderSystem.h"
 #include "DynamicRigidBodySystem.h"
 #include "RBGunSystem.h"
 #include "KinematicRigidBodySystem.h"
@@ -227,14 +226,13 @@ public:
 		m_meshSystem.StartUp(3, &m_entityManager);
 		m_flycamSystem.StartUp(3, &m_entityManager);
 		m_flycamSystem.AddSystemRefs(&m_inputManager, &m_transformSystem);
-		m_colliderSystem.StartUp(3, &m_entityManager);
 		m_rigidBodySystem.StartUp(3, &m_entityManager);
 		m_rigidBodySystem.AddSystemRefs(&m_physics);
 		m_dynamicRBSystem.StartUp(3, &m_entityManager);
 		m_dynamicRBSystem.AddSystemRefs(&m_transformSystem, &m_rigidBodySystem);
 		m_yDespawnSystem.StartUp(20, &m_entityManager);
 		m_yDespawnSystem.AddSystemRefs(&m_transformSystem);
-		m_primFactory.SetUp(&m_entityManager, &m_transformSystem, &m_meshSystem, &m_colliderSystem, &m_rigidBodySystem, &m_dynamicRBSystem, &m_resourceManager, &m_physics, &m_yDespawnSystem);
+		m_primFactory.SetUp(&m_entityManager, &m_transformSystem, &m_meshSystem, &m_rigidBodySystem, &m_dynamicRBSystem, &m_resourceManager, &m_physics, &m_yDespawnSystem);
 		m_rbGunSystem.StartUp(1, &m_entityManager);
 		m_rbGunSystem.AddSystemRefs(&m_transformSystem, &m_primFactory, &m_inputManager, m_eventBus, &m_rbBulletSystem);
 		m_kinematicRBSystem.StartUp(1, &m_entityManager);
@@ -254,7 +252,7 @@ public:
 		MeshComponent* mesh;
 		FlyCamComponent* flycam;
 		U64 colliderHandle;
-		ColliderComponent* collider;
+		btCollisionShape* collider;
 		U64 rbHandle;
 		DynamicRigidBodyComponent* dynamicRB;
 		U64 bulletHandle;
@@ -299,11 +297,9 @@ public:
 		mesh->transform = transformHandle;
 		mesh->model = modelCube;
 		mesh->material = matStone;
-		colliderHandle = m_colliderSystem.CreateComponent(e);
-		collider = m_colliderSystem.GetComponentByHandle(colliderHandle);
-		collider->shape = m_physics.CreateCollisionBox(1, 1, 1);
-		collider->shape->setLocalScaling(Physics::VecFromDX(transform->scale));
-		rb = m_physics.CreateStaticRigidBody(e, collider->shape, transform->position, transform->rotation, true);
+		collider = m_physics.CreateCollisionBox(1, 1, 1);
+		collider->setLocalScaling(Physics::VecFromDX(transform->scale));
+		rb = m_physics.CreateStaticRigidBody(e, collider, transform->position, transform->rotation, true);
 		rb.SetPosition(transform->position);
 		rb.SetRotation(transform->rotation);
 		rigidBody = m_rigidBodySystem.GetComponentByHandle(m_rigidBodySystem.CreateComponent(e));
@@ -323,11 +319,9 @@ public:
 		rotator->angle = 1;
 		rotator->speed = 2;
 		rotator->transform = transformHandle;
-		colliderHandle = m_colliderSystem.CreateComponent(e);
-		collider = m_colliderSystem.GetComponentByHandle(colliderHandle);
-		collider->shape = m_physics.CreateCollisionBox(1, 1, 1);
-		collider->shape->setLocalScaling(Physics::VecFromDX(transform->scale));
-		rb = m_physics.CreateKinematicRigidBody(e, collider->shape, transform->position, transform->rotation);
+		collider = m_physics.CreateCollisionBox(1, 1, 1);
+		collider->setLocalScaling(Physics::VecFromDX(transform->scale));
+		rb = m_physics.CreateKinematicRigidBody(e, collider, transform->position, transform->rotation);
 		rigidBodyHandle = m_rigidBodySystem.CreateComponent(e);
 		rigidBody = m_rigidBodySystem.GetComponentByHandle(rigidBodyHandle);
 		rigidBody->body = rb;
@@ -358,10 +352,8 @@ public:
 		rbGun->material = matStone;
 		rbGun->transform = transformHandle;
 		rbGun->cooldown = 0.25;
-		colliderHandle = m_colliderSystem.CreateComponent(e);
-		collider = m_colliderSystem.GetComponentByHandle(colliderHandle);
-		collider->shape = m_physics.CreateCollisionSphere(1);
-		rb = m_physics.CreateCharacterBody(e, collider->shape, transform->position, transform->rotation);
+		collider = m_physics.CreateCollisionSphere(1);
+		rb = m_physics.CreateCharacterBody(e, collider, transform->position, transform->rotation);
 		rigidBodyHandle = m_rigidBodySystem.CreateComponent(e);
 		rigidBody = m_rigidBodySystem.GetComponentByHandle(rigidBodyHandle);
 		rigidBody->body = rb;
@@ -462,7 +454,6 @@ private:
 	CameraSystem m_cameraSystem;
 	MeshSystem m_meshSystem;
 	FlyCamSystem m_flycamSystem;
-	ColliderSystem m_colliderSystem;
 	DynamicRigidBodySystem m_dynamicRBSystem;
 	RBGunSystem m_rbGunSystem;
 	KinematicRigidBodySystem m_kinematicRBSystem;

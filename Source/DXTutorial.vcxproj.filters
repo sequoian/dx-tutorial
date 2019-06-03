@@ -1,256 +1,253 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="App">
+      <UniqueIdentifier>{2ecbff26-8ddf-47f6-8a04-7170f3c70ddc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Component Systems">
+    <Filter Include="App\Component Systems">
       <UniqueIdentifier>{25bad8a9-83cb-492b-adb1-dfdca989e867}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Apps">
-      <UniqueIdentifier>{2ecbff26-8ddf-47f6-8a04-7170f3c70ddc}</UniqueIdentifier>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Graphics.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="SampleWindow.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="SampleApplication.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="VertexFormat.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="RenderTargetState.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="Material.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="VertexBuffer.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="IndexBuffer.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="Buffer.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="OBJLoader.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="Model.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="WriteLog.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="Assert.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="Random.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="Timer.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="Gamepad.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="Keyboard.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="Mouse.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="InputManager.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="ResourceManager.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="Physics.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="RigidBody.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="EntityManager.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="KinematicCharacterControllerSystem.h">
-      <Filter>Component Systems</Filter>
+      <Filter>App\Component Systems</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
-      <Filter>Apps</Filter>
+      <Filter>App</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseWindow.h">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="SampleApplication.h">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="SampleWindow.h">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="Graphics.h">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="WriteLog.h">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="VertexFormat.h">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="RenderTargetState.h">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="Material.h">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="VertexBuffer.h">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="IndexBuffer.h">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="Buffer.h">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="OBJLoader.h">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="Model.h">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="Assert.h">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="Random.h">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="Timer.h">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="Gamepad.h">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="Keyboard.h">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="Mouse.h">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="Entity.h">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="EntityManager.h">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="Types.h">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="CompactPool.h">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="ComponentSystem.h">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="InputManager.h">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="VertexShader.h">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="PixelShader.h">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="ResourceManager.h">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="ResourcePool.h">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="StringUtility.h">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="Texture.h">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="StringId.h">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="Resource.h">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="Physics.h">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="MathUtility.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="PrimitiveFactory.h">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="Events.h">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="EventFunctionHandler.h">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="EventBus.h">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="RigidBody.h">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="CollisionInfo.h">
-      <Filter>Source Files</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="CameraSystem.h">
-      <Filter>Component Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="ColliderSystem.h">
-      <Filter>Component Systems</Filter>
+      <Filter>App\Component Systems</Filter>
     </ClInclude>
     <ClInclude Include="DynamicRigidBodySystem.h">
-      <Filter>Component Systems</Filter>
+      <Filter>App\Component Systems</Filter>
     </ClInclude>
     <ClInclude Include="FlyCamSystem.h">
-      <Filter>Component Systems</Filter>
+      <Filter>App\Component Systems</Filter>
     </ClInclude>
     <ClInclude Include="KinematicRigidBodySystem.h">
-      <Filter>Component Systems</Filter>
+      <Filter>App\Component Systems</Filter>
     </ClInclude>
     <ClInclude Include="MeshSystem.h">
-      <Filter>Component Systems</Filter>
+      <Filter>App\Component Systems</Filter>
     </ClInclude>
     <ClInclude Include="RBBulletSystem.h">
-      <Filter>Component Systems</Filter>
+      <Filter>App\Component Systems</Filter>
     </ClInclude>
     <ClInclude Include="RBGunSystem.h">
-      <Filter>Component Systems</Filter>
+      <Filter>App\Component Systems</Filter>
     </ClInclude>
     <ClInclude Include="RigidBodySystem.h">
-      <Filter>Component Systems</Filter>
+      <Filter>App\Component Systems</Filter>
     </ClInclude>
     <ClInclude Include="RotatorSystem.h">
-      <Filter>Component Systems</Filter>
+      <Filter>App\Component Systems</Filter>
     </ClInclude>
     <ClInclude Include="TransformSystem.h">
-      <Filter>Component Systems</Filter>
+      <Filter>App\Component Systems</Filter>
     </ClInclude>
     <ClInclude Include="YDespawnSystem.h">
-      <Filter>Component Systems</Filter>
+      <Filter>App\Component Systems</Filter>
     </ClInclude>
     <ClInclude Include="TestBed.h">
-      <Filter>Apps</Filter>
+      <Filter>App</Filter>
+    </ClInclude>
+    <ClInclude Include="PrimitiveFactory.h">
+      <Filter>App</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
