@@ -15,6 +15,8 @@ struct FlyCamComponent
 	float sprintSpeed;
 	float crawlSpeed;
 	float lookSpeed;
+	float pitch = 0;
+	float yaw = 0;
 };
 
 
@@ -34,10 +36,8 @@ public:
 			FlyCamComponent* flycam = m_pool[i];
 			TransformComponent* transform = m_transformSystem->GetComponentByHandle(flycam->transform);
 
-			Look(transform, flycam->lookSpeed, deltaTime);
+			Look(transform, flycam->lookSpeed, deltaTime, flycam->pitch, flycam->yaw);
 			Move(transform, flycam->moveSpeed, flycam->sprintSpeed, flycam->crawlSpeed, deltaTime);
-			//LookByVelocity(transform, velocity, flycam->lookSpeed, deltaTime);
-			//MoveByVelocity(transform, velocity, flycam->moveSpeed, flycam->sprintSpeed, flycam->crawlSpeed, deltaTime);
 		}
 	}
 
@@ -82,17 +82,25 @@ private:
 		transform->position += movement;
 	}
 
-	inline void Look(TransformComponent* transform, float lookSpeed, float dt)
+	inline void Look(TransformComponent* transform, float lookSpeed, float dt, float &pitch, float& yaw)
 	{
 		float x = m_inputManager->GetGamepad().GetAxisState(GamepadAxes::RIGHT_THUMB_X) * lookSpeed * dt;
+		yaw += x;
 		float y = m_inputManager->GetGamepad().GetAxisState(GamepadAxes::RIGHT_THUMB_Y) * lookSpeed * dt;
+		pitch += y;
+
+		// limit pitch
+		pitch = RadiansToDegrees(pitch);
+		if (pitch > 90) pitch = 90;
+		else if (pitch < -90) pitch = -90;
+		pitch = DegreesToRadians(pitch);
 
 		XMVECTOR xAxis = XMVectorSet(1, 0, 0, 1);
 		XMVECTOR yAxis = XMVectorSet(0, 1, 0, 1);
-		XMVECTOR yRot = XMQuaternionRotationAxis(yAxis, x);
-		XMVECTOR xRot = XMQuaternionRotationAxis(xAxis, -y);
+		XMVECTOR yRot = XMQuaternionRotationAxis(yAxis, yaw);
+		XMVECTOR xRot = XMQuaternionRotationAxis(xAxis, -pitch);
 
-		transform->rotation = XMQuaternionMultiply(XMQuaternionMultiply(xRot, transform->rotation), yRot);
+		transform->rotation = XMQuaternionMultiply(xRot, yRot);
 	}
 
 private:

@@ -334,7 +334,6 @@ public:
 		transformHandle = m_transformSystem.CreateComponent(e);
 		transform = m_transformSystem.GetComponentByHandle(transformHandle);
 		transform->position = XMVectorSet(0, 10, -25, 1);
-		transform->rotation = XMQuaternionRotationRollPitchYaw(35.0_rad, 0, 0);
 		cameraHandle = m_cameraSystem.CreateComponent(e);
 		camera = m_cameraSystem.GetComponentByHandle(cameraHandle);
 		camera->transform = transformHandle;
