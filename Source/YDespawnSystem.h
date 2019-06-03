@@ -5,7 +5,6 @@
 #include "Types.h"
 #include "RigidBody.h"
 #include "EventBus.h"
-#include "VelocitySystem.h"
 
 
 struct YDespawnComponent

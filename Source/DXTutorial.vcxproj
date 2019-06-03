@@ -180,8 +180,8 @@
     <ClInclude Include="BaseWindow.h" />
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="CameraSystem.h" />
+    <ClInclude Include="TestBed.h" />
     <ClInclude Include="YDespawnSystem.h" />
-    <ClInclude Include="DynamicCharacterControllerSystem.h" />
     <ClInclude Include="ColliderSystem.h" />
     <ClInclude Include="CollisionInfo.h" />
     <ClInclude Include="CompactPool.h" />
@@ -193,7 +193,6 @@
     <ClInclude Include="FlyCamSystem.h" />
     <ClInclude Include="EventFunctionHandler.h" />
     <ClInclude Include="Gamepad.h" />
-    <ClInclude Include="GhostObjectSystem.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="IndexBuffer.h" />
     <ClInclude Include="InputManager.h" />
@@ -229,7 +228,6 @@
     <ClInclude Include="Timer.h" />
     <ClInclude Include="TransformSystem.h" />
     <ClInclude Include="Types.h" />
-    <ClInclude Include="VelocitySystem.h" />
     <ClInclude Include="VertexBuffer.h" />
     <ClInclude Include="VertexFormat.h" />
     <ClInclude Include="VertexShader.h" />

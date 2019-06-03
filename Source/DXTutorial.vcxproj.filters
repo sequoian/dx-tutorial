@@ -5,19 +5,14 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    <Filter Include="Component Systems">
+      <UniqueIdentifier>{25bad8a9-83cb-492b-adb1-dfdca989e867}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="Apps">
+      <UniqueIdentifier>{2ecbff26-8ddf-47f6-8a04-7170f3c70ddc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Graphics.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -84,11 +79,14 @@
     <ClCompile Include="RigidBody.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="KinematicCharacterControllerSystem.h">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="EntityManager.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="KinematicCharacterControllerSystem.h">
+      <Filter>Component Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Apps</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -164,21 +162,6 @@
     <ClInclude Include="ComponentSystem.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="TransformSystem.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="RotatorSystem.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CameraSystem.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MeshSystem.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="FlyCamSystem.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="InputManager.h">
       <Filter>Source Files</Filter>
     </ClInclude>
@@ -209,16 +192,10 @@
     <ClInclude Include="Physics.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="ColliderSystem.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="MathUtility.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="PrimitiveFactory.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="KinematicRigidBodySystem.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="Events.h">
@@ -230,35 +207,50 @@
     <ClInclude Include="EventBus.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="GhostObjectSystem.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="RigidBody.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DynamicRigidBodySystem.h">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="CollisionInfo.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="RBGunSystem.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="CameraSystem.h">
+      <Filter>Component Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="ColliderSystem.h">
+      <Filter>Component Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="DynamicRigidBodySystem.h">
+      <Filter>Component Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="FlyCamSystem.h">
+      <Filter>Component Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="KinematicRigidBodySystem.h">
+      <Filter>Component Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshSystem.h">
+      <Filter>Component Systems</Filter>
     </ClInclude>
     <ClInclude Include="RBBulletSystem.h">
-      <Filter>Source Files</Filter>
+      <Filter>Component Systems</Filter>
     </ClInclude>
-    <ClInclude Include="VelocitySystem.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DynamicCharacterControllerSystem.h">
-      <Filter>Source Files</Filter>
+    <ClInclude Include="RBGunSystem.h">
+      <Filter>Component Systems</Filter>
     </ClInclude>
     <ClInclude Include="RigidBodySystem.h">
-      <Filter>Source Files</Filter>
+      <Filter>Component Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="RotatorSystem.h">
+      <Filter>Component Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformSystem.h">
+      <Filter>Component Systems</Filter>
     </ClInclude>
     <ClInclude Include="YDespawnSystem.h">
-      <Filter>Source Files</Filter>
+      <Filter>Component Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="TestBed.h">
+      <Filter>Apps</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
