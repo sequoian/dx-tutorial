@@ -69,7 +69,6 @@ public:
 		}
 	}
 
-
 	inline void DestroyObject(U64 handle)
 	{
 		U32 idxToRemap = Idx(handle);

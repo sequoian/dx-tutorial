@@ -27,6 +27,8 @@
 #include "KinematicCharacterControllerSystem.h"
 #include "RigidBodySystem.h"
 #include "YDespawnSystem.h"
+#include "DoorSystem.h"
+#include "DoorTriggerSystem.h"
 
 #include "ResourceManager.h"
 #include "Texture.h"
@@ -232,7 +234,7 @@ public:
 		m_dynamicRBSystem.AddSystemRefs(&m_transformSystem, &m_rigidBodySystem);
 		m_yDespawnSystem.StartUp(20, &m_entityManager);
 		m_yDespawnSystem.AddSystemRefs(&m_transformSystem);
-		m_primFactory.SetUp(&m_entityManager, &m_transformSystem, &m_meshSystem, &m_rigidBodySystem, &m_dynamicRBSystem, &m_resourceManager, &m_physics, &m_yDespawnSystem);
+		m_primFactory.SetUp(&m_entityManager, &m_transformSystem, &m_meshSystem, &m_rigidBodySystem, &m_dynamicRBSystem, &m_kinematicRBSystem, &m_resourceManager, &m_physics, &m_yDespawnSystem);
 		m_rbGunSystem.StartUp(1, &m_entityManager);
 		m_rbGunSystem.AddSystemRefs(&m_transformSystem, &m_primFactory, &m_inputManager, m_eventBus, &m_rbBulletSystem);
 		m_kinematicRBSystem.StartUp(1, &m_entityManager);
@@ -241,6 +243,11 @@ public:
 		m_rbBulletSystem.AddSystemRefs(m_eventBus);
 		m_kinematicCCSystem.StartUp(1, &m_entityManager);
 		m_kinematicCCSystem.AddSystemRefs(&m_transformSystem, m_eventBus);
+		m_doorSystem.StartUp(1, &m_entityManager);
+		m_doorSystem.AddSystemRefs(&m_transformSystem);
+		m_doorTriggerSystem.StartUp(1, &m_entityManager);
+		m_doorTriggerSystem.AddSystemRefs(m_eventBus);
+
 
 		Entity e;
 		U64 transformHandle;
@@ -263,6 +270,8 @@ public:
 		KinematicCharacterControllerComponent* kinematicCC;
 		U64 rigidBodyHandle;
 		RigidBodyComponent* rigidBody;
+		DoorComponent* door;
+		DoorTriggerComponent* doorTrigger;
 
 		// bowl
 		m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, vec3(0, -15, 0), vec3(0), vec3(10, 1, 10));
@@ -292,7 +301,7 @@ public:
 		transformHandle = m_transformSystem.CreateComponent(e);
 		transform = m_transformSystem.GetComponentByHandle(transformHandle);
 		transform->position = XMVectorSet(-25, 10, 0, 1);
-		transform->scale = XMVectorSet(8, 8, 8, 1);
+		transform->scale = XMVectorSet(3, 3, 3, 1);
 		mesh = m_meshSystem.GetComponentByHandle(m_meshSystem.CreateComponent(e));
 		mesh->transform = transformHandle;
 		mesh->model = modelCube;
@@ -304,6 +313,21 @@ public:
 		rb.SetRotation(transform->rotation);
 		rigidBody = m_rigidBodySystem.GetComponentByHandle(m_rigidBodySystem.CreateComponent(e));
 		rigidBody->body = rb;
+		doorTrigger = m_doorTriggerSystem.GetComponentByHandle(m_doorTriggerSystem.CreateComponent(e));
+
+		// door
+		e = m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, vec3(-25, 10, 25), vec3(90.0_rad, 0, 0), vec3(5, 1, 5), vec3(0), true);
+		door = m_doorSystem.GetComponentByHandle(m_doorSystem.CreateComponent(e));
+		door->active = true;
+		door->startingPosition = XMVectorSet(-25, 10, 25, 1);
+		door->endingPosition = XMVectorSet(-25, 20, 25, 1);
+		door->secondsToMove = 3;
+		m_transformSystem.GetComponentHandle(e, door->transform);
+		// walls
+		m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, vec3(-35, 10, 25), vec3(90.0_rad, 0, 0), vec3(5, 1, 5));
+		m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, vec3(-15, 10, 25), vec3(90.0_rad, 0, 0), vec3(5, 1, 5));
+
+		
 
 		// spinner
 		e = m_entityManager.CreateEntity();
@@ -386,6 +410,7 @@ public:
 		m_cameraSystem.Execute(dt);
 		m_flycamSystem.Execute(dt);
 		m_rbGunSystem.Execute(dt);
+		m_doorSystem.Execute(dt);
 
 		m_kinematicRBSystem.Execute(dt);
 
@@ -460,4 +485,6 @@ private:
 	KinematicCharacterControllerSystem m_kinematicCCSystem;
 	RigidBodySystem m_rigidBodySystem;
 	YDespawnSystem m_yDespawnSystem;
+	DoorSystem m_doorSystem;
+	DoorTriggerSystem m_doorTriggerSystem;
 };

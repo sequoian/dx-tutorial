@@ -176,10 +176,13 @@
     <ClCompile Include="WriteLog.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AppEvents.h" />
     <ClInclude Include="Assert.h" />
     <ClInclude Include="BaseWindow.h" />
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="CameraSystem.h" />
+    <ClInclude Include="DoorSystem.h" />
+    <ClInclude Include="DoorTriggerSystem.h" />
     <ClInclude Include="TestBed.h" />
     <ClInclude Include="YDespawnSystem.h" />
     <ClInclude Include="CollisionInfo.h" />

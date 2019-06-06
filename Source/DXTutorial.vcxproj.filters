@@ -249,5 +249,14 @@
     <ClInclude Include="PrimitiveFactory.h">
       <Filter>App</Filter>
     </ClInclude>
+    <ClInclude Include="DoorSystem.h">
+      <Filter>App\Component Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="DoorTriggerSystem.h">
+      <Filter>App\Component Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="AppEvents.h">
+      <Filter>App</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

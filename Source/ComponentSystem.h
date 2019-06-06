@@ -96,6 +96,17 @@ public:
 		}
 	}
 
+	virtual inline bool GetComponentHandle(Entity e, U64& handle)
+	{
+		auto itr = m_entityMap.find(e.id);
+		if (itr != m_entityMap.end())
+		{
+			handle = itr->second;
+			return true;
+		}
+		return false;
+	}
+
 protected:
 
 	virtual void SubscribeToCollisionEvents(EventBus& bus)

@@ -8,6 +8,7 @@
 #include "RigidBody.h"
 #include "RigidBodySystem.h"
 #include "YDespawnSystem.h"
+#include "KinematicRigidBodySystem.h"
 
 #include "Material.h"
 #include <DirectXMath.h>
@@ -45,7 +46,7 @@ struct vec3
 class PrimitiveFactory
 {
 public:
-	bool SetUp(EntityManager* em, TransformSystem* ts, MeshSystem* ms, RigidBodySystem* rb, DynamicRigidBodySystem* rs, ResourceManager* rm, Physics* p, YDespawnSystem* yd)
+	bool SetUp(EntityManager* em, TransformSystem* ts, MeshSystem* ms, RigidBodySystem* rb, DynamicRigidBodySystem* rs, KinematicRigidBodySystem* krs, ResourceManager* rm, Physics* p, YDespawnSystem* yd)
 	{
 		m_entityManager = em;
 		m_transformSystem = ts;
@@ -55,11 +56,13 @@ public:
 		m_physics = p;
 		m_rigidBodySystem = rb;
 		m_yDespawnSystem = yd;
+		m_kinematicRigidBodySystem = krs;
+
 
 		return true;
 	}
 
-	Entity CreatePrimitive(PrimitiveShapes shape, float mass, Material* mat, vec3 pos, vec3 rot = vec3(0), vec3 scale = vec3(1), vec3 vel = vec3(0))
+	Entity CreatePrimitive(PrimitiveShapes shape, float mass, Material* mat, vec3 pos, vec3 rot = vec3(0), vec3 scale = vec3(1), vec3 vel = vec3(0), bool isKinematic = false)
 	{
 		XMVECTOR dxPos = XMVectorSet(pos.x, pos.y, pos.z, 1);
 		XMVECTOR dxRot = XMQuaternionRotationRollPitchYaw(rot.x, rot.y, rot.z);
@@ -77,6 +80,7 @@ public:
 		U64 rbHandle;
 		RigidBodyComponent* rigidBody;
 		YDespawnComponent* despawn;
+		
 
 		Model* model;
 		btCollisionShape* colShape;
@@ -137,6 +141,16 @@ public:
 			dynamicRigidBody->rigidBody = rbHandle;
 			dynamicRigidBody->transform = transformHandle;
 		}
+		else if (isKinematic)
+		{
+			rbHandle = m_rigidBodySystem->CreateComponent(e);
+			rigidBody = m_rigidBodySystem->GetComponentByHandle(rbHandle);
+			rigidBody->body = m_physics->CreateKinematicRigidBody(e, collider, dxPos, dxRot);
+			U64 krbHandle = m_kinematicRigidBodySystem->CreateComponent(e);
+			KinematicRigidBodyComponent* kinematicRigidBody = m_kinematicRigidBodySystem->GetComponentByHandle(krbHandle);
+			kinematicRigidBody->rigidBody = rbHandle;
+			kinematicRigidBody->transform = transformHandle;
+		}
 		else
 		{
 			RigidBody rb = m_physics->CreateStaticRigidBody(e, collider, dxPos, dxRot);
@@ -164,5 +178,6 @@ private:
 	Physics* m_physics;
 	RigidBodySystem* m_rigidBodySystem;
 	YDespawnSystem* m_yDespawnSystem;
+	KinematicRigidBodySystem* m_kinematicRigidBodySystem;
 
 };
