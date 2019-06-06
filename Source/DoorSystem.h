@@ -4,7 +4,9 @@
 #include "TransformSystem.h"
 #include "WriteLog.h"
 #include "Timer.h"
+#include "EventBus.h"
 #include <DirectXMath.h>
+#include "AppEvents.h"
 using namespace DirectX;
 
 struct DoorComponent
@@ -14,7 +16,8 @@ struct DoorComponent
 	XMVECTOR endingPosition;
 	float secondsToMove;
 	float timeTaken = 0;
-	bool active;
+	bool active = false;
+	bool finished = false;
 };
 
 
@@ -22,9 +25,10 @@ class DoorSystem : public ComponentSystem<DoorComponent>
 {
 public:
 
-	void AddSystemRefs(TransformSystem* transformSystem)
+	void AddSystemRefs(TransformSystem* transformSystem, EventBus& bus)
 	{
 		m_transformSystem = transformSystem;
+		bus.Subscribe(this, &DoorSystem::Activate);
 	}
 
 	inline void Execute(float deltaTime) override
@@ -47,6 +51,7 @@ public:
 			if (door->timeTaken >= door->secondsToMove)
 			{
 				door->active = false;
+				door->finished = true;
 				door->timeTaken = door->secondsToMove;
 			}
 			
@@ -58,6 +63,15 @@ public:
 	inline DoorComponent* operator[] (I32 idx)
 	{
 		return m_pool[idx];
+	}
+
+	void Activate(OpenDoorEvent* doorEvent)
+	{
+		DoorComponent* comp = FindComponent(doorEvent->door);
+		if (!comp->active && !comp->finished)
+		{
+			comp->active = true;
+		}
 	}
 
 private:

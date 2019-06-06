@@ -244,7 +244,7 @@ public:
 		m_kinematicCCSystem.StartUp(1, &m_entityManager);
 		m_kinematicCCSystem.AddSystemRefs(&m_transformSystem, m_eventBus);
 		m_doorSystem.StartUp(1, &m_entityManager);
-		m_doorSystem.AddSystemRefs(&m_transformSystem);
+		m_doorSystem.AddSystemRefs(&m_transformSystem, m_eventBus);
 		m_doorTriggerSystem.StartUp(1, &m_entityManager);
 		m_doorTriggerSystem.AddSystemRefs(m_eventBus);
 
@@ -318,11 +318,13 @@ public:
 		// door
 		e = m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, vec3(-25, 10, 25), vec3(90.0_rad, 0, 0), vec3(5, 1, 5), vec3(0), true);
 		door = m_doorSystem.GetComponentByHandle(m_doorSystem.CreateComponent(e));
-		door->active = true;
 		door->startingPosition = XMVectorSet(-25, 10, 25, 1);
 		door->endingPosition = XMVectorSet(-25, 20, 25, 1);
 		door->secondsToMove = 3;
 		m_transformSystem.GetComponentHandle(e, door->transform);
+		// add door to door trigger
+		doorTrigger->door = e;
+		
 		// walls
 		m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, vec3(-35, 10, 25), vec3(90.0_rad, 0, 0), vec3(5, 1, 5));
 		m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, vec3(-15, 10, 25), vec3(90.0_rad, 0, 0), vec3(5, 1, 5));
