@@ -16,9 +16,13 @@ struct RigidBodyComponent
 class RigidBodySystem : public ComponentSystem<RigidBodyComponent>
 {
 public:
-	void AddSystemRefs(Physics* physics)
+	bool StartUp(U32 numComponents, EntityManager& em, Physics& physics)
 	{
-		m_physics = physics;
+		ComponentSystem<RigidBodyComponent>::StartUp(numComponents, em);
+
+		m_physics = &physics;
+
+		return true;
 	}
 
 	inline void Execute(float deltaTime) override

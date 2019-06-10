@@ -13,9 +13,13 @@ struct RBBulletComponent
 class RBBulletSystem : public ComponentSystem<RBBulletComponent>
 {
 public:
-	void AddSystemRefs(EventBus& bus)
+	bool StartUp(U32 numComponents, EntityManager& em, EventBus& bus)
 	{
+		ComponentSystem<RBBulletComponent>::StartUp(numComponents, em);
+
 		SubscribeToCollisionEvents(bus);
+
+		return true;
 	}
 
 	inline void Execute(float deltaTime) override

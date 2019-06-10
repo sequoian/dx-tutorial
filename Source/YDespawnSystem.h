@@ -18,9 +18,11 @@ struct YDespawnComponent
 class YDespawnSystem : public ComponentSystem<YDespawnComponent>
 {
 public:
-	void AddSystemRefs(TransformSystem* transformSystem)
+	bool StartUp(U32 numComponents, EntityManager& em, TransformSystem& transformSystem)
 	{
-		m_transformSystem = transformSystem;
+		ComponentSystem<YDespawnComponent>::StartUp(numComponents, em);
+		m_transformSystem = &transformSystem;
+		return true;
 	}
 
 	inline void Execute(float deltaTime) override

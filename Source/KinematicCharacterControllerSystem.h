@@ -16,10 +16,15 @@ struct KinematicCharacterControllerComponent
 class KinematicCharacterControllerSystem : public ComponentSystem<KinematicCharacterControllerComponent>
 {
 public:
-	void AddSystemRefs(TransformSystem* transformSystem, EventBus& eventBus)
+
+	bool StartUp(U32 numComponents, EntityManager& em, TransformSystem& transformSystem, EventBus& eventBus)
 	{
-		m_transformSystem = transformSystem;
+		ComponentSystem<KinematicCharacterControllerComponent>::StartUp(numComponents, em);
+
+		m_transformSystem = &transformSystem;
 		SubscribeToCollisionEvents(eventBus);
+
+		return true;
 	}
 
 	inline void Execute(float deltaTime) override

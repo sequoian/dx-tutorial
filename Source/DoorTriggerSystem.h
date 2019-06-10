@@ -17,10 +17,14 @@ class DoorTriggerSystem : public ComponentSystem<DoorTriggerComponent>
 {
 public:
 
-	void AddSystemRefs(EventBus& bus)
+	bool StartUp(U32 numComponents, EntityManager& em, EventBus& bus)
 	{
+		ComponentSystem<DoorTriggerComponent>::StartUp(numComponents, em);
+
 		SubscribeToCollisionEvents(bus);
 		m_eventBus = &bus;
+
+		return true;
 	}
 
 	inline void Execute(float deltaTime) override

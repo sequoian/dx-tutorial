@@ -217,37 +217,29 @@ public:
 		m_timer.Start();
 		m_inputManager.StartUp(m_window);
 
-		// Create entities
+		m_primFactory.SetUp(&m_entityManager, &m_transformSystem, &m_meshSystem, &m_rigidBodySystem, &m_dynamicRBSystem, &m_kinematicRBSystem, &m_resourceManager, &m_physics, &m_yDespawnSystem);
+
+		//  Init Component System
 
 		m_entityManager.StartUp(4);
-		m_transformSystem.StartUp(4, &m_entityManager);
-		m_rotatorSystem.StartUp(4, &m_entityManager);
-		m_rotatorSystem.AddSystemRefs(&m_transformSystem);
-		m_cameraSystem.StartUp(1, &m_entityManager);
-		m_cameraSystem.AddSystemRefs(&m_transformSystem, &m_window);
-		m_meshSystem.StartUp(3, &m_entityManager);
-		m_flycamSystem.StartUp(3, &m_entityManager);
-		m_flycamSystem.AddSystemRefs(&m_inputManager, &m_transformSystem);
-		m_rigidBodySystem.StartUp(3, &m_entityManager);
-		m_rigidBodySystem.AddSystemRefs(&m_physics);
-		m_dynamicRBSystem.StartUp(3, &m_entityManager);
-		m_dynamicRBSystem.AddSystemRefs(&m_transformSystem, &m_rigidBodySystem);
-		m_yDespawnSystem.StartUp(20, &m_entityManager);
-		m_yDespawnSystem.AddSystemRefs(&m_transformSystem);
-		m_primFactory.SetUp(&m_entityManager, &m_transformSystem, &m_meshSystem, &m_rigidBodySystem, &m_dynamicRBSystem, &m_kinematicRBSystem, &m_resourceManager, &m_physics, &m_yDespawnSystem);
-		m_rbGunSystem.StartUp(1, &m_entityManager);
-		m_rbGunSystem.AddSystemRefs(&m_transformSystem, &m_primFactory, &m_inputManager, m_eventBus, &m_rbBulletSystem);
-		m_kinematicRBSystem.StartUp(1, &m_entityManager);
-		m_kinematicRBSystem.AddSystemRefs(&m_transformSystem, &m_rigidBodySystem);
-		m_rbBulletSystem.StartUp(1, &m_entityManager);
-		m_rbBulletSystem.AddSystemRefs(m_eventBus);
-		m_kinematicCCSystem.StartUp(1, &m_entityManager);
-		m_kinematicCCSystem.AddSystemRefs(&m_transformSystem, m_eventBus);
-		m_doorSystem.StartUp(1, &m_entityManager);
-		m_doorSystem.AddSystemRefs(&m_transformSystem, m_eventBus);
-		m_doorTriggerSystem.StartUp(1, &m_entityManager);
-		m_doorTriggerSystem.AddSystemRefs(m_eventBus);
+		m_transformSystem.StartUp(50, m_entityManager);
+		m_rotatorSystem.StartUp(1, m_entityManager, m_transformSystem);
+		m_cameraSystem.StartUp(1, m_entityManager, m_transformSystem, m_window);
+		m_meshSystem.StartUp(3, m_entityManager);
+		m_flycamSystem.StartUp(3, m_entityManager, m_inputManager, m_transformSystem);
+		m_rigidBodySystem.StartUp(3, m_entityManager, m_physics);
+		m_dynamicRBSystem.StartUp(3, m_entityManager, m_transformSystem, m_rigidBodySystem);
+		m_yDespawnSystem.StartUp(20, m_entityManager, m_transformSystem);
+		m_rbGunSystem.StartUp(1, m_entityManager, m_transformSystem, m_primFactory, m_inputManager,
+			                  m_eventBus, m_rbBulletSystem);
+		m_kinematicRBSystem.StartUp(1, m_entityManager, m_transformSystem, m_rigidBodySystem);
+		m_rbBulletSystem.StartUp(1, m_entityManager, m_eventBus);
+		m_kinematicCCSystem.StartUp(1, m_entityManager, m_transformSystem, m_eventBus);
+		m_doorSystem.StartUp(1, m_entityManager, m_transformSystem, m_eventBus);
+		m_doorTriggerSystem.StartUp(1, m_entityManager, m_eventBus);
 
+
+		// Create Entities
 
 		Entity e;
 		U64 transformHandle;

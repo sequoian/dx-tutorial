@@ -23,10 +23,10 @@ public:
 	// execute system
 	virtual void Execute(float deltaTime) = 0;
 
-	virtual inline bool StartUp(U32 numComponents, EntityManager* em)
+	virtual inline bool StartUp(U32 numComponents, EntityManager& em)
 	{
 		m_pool.StartUp(numComponents);
-		m_entityManager = em;
+		m_entityManager = &em;
 		return true;
 	}
 

@@ -17,12 +17,18 @@ struct RBGunComponent
 class RBGunSystem : public ComponentSystem<RBGunComponent>
 {
 public:
-	void AddSystemRefs(TransformSystem* transformSystem, PrimitiveFactory* factory, InputManager* input, EventBus& bus, RBBulletSystem* bullet)
+
+	bool StartUp(U32 numComponents, EntityManager& em, TransformSystem& transformSystem, PrimitiveFactory& factory,
+		InputManager& input, EventBus& bus, RBBulletSystem& bullet)
 	{
-		m_transformSystem = transformSystem;
-		m_factory = factory;
-		m_input = input;
-		m_bulletSystem = bullet;
+		ComponentSystem<RBGunComponent>::StartUp(numComponents, em);
+
+		m_transformSystem = &transformSystem;
+		m_factory = &factory;
+		m_input = &input;
+		m_bulletSystem = &bullet;
+
+		return true;
 	}
 
 	inline void Execute(float deltaTime) override

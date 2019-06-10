@@ -20,10 +20,14 @@ struct CameraComponent
 class CameraSystem : public ComponentSystem<CameraComponent>
 {
 public:
-	void AddSystemRefs(TransformSystem* transformSystem, SampleWindow* window)
+	bool StartUp(U32 numComponents, EntityManager& em, TransformSystem& transformSystem, SampleWindow& window)
 	{
-		m_transformSystem = transformSystem;
-		m_window = window;
+		ComponentSystem<CameraComponent>::StartUp(numComponents, em);
+
+		m_transformSystem = &transformSystem;
+		m_window = &window;
+
+		return true;
 	}
 
 	inline void Execute(float deltaTime) override

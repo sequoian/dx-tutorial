@@ -23,10 +23,15 @@ struct FlyCamComponent
 class FlyCamSystem : public ComponentSystem<FlyCamComponent>
 {
 public:
-	void AddSystemRefs(InputManager* inputManager, TransformSystem* transformSystem)
+
+	bool StartUp(U32 numComponents, EntityManager& em, InputManager& inputManager, TransformSystem& transformSystem)
 	{
-		m_inputManager = inputManager;
-		m_transformSystem = transformSystem;
+		ComponentSystem<FlyCamComponent>::StartUp(numComponents, em);
+
+		m_inputManager = &inputManager;
+		m_transformSystem = &transformSystem;
+
+		return true;
 	}
 
 	inline void Execute(float deltaTime) override

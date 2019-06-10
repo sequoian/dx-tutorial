@@ -18,10 +18,15 @@ struct KinematicRigidBodyComponent
 class KinematicRigidBodySystem : public ComponentSystem<KinematicRigidBodyComponent>
 {
 public:
-	void AddSystemRefs(TransformSystem* transformSystem, RigidBodySystem* rigidBodySystem)
+
+	bool StartUp(U32 numComponents, EntityManager& em, TransformSystem& transformSystem, RigidBodySystem& rigidBodySystem)
 	{
-		m_transformSystem = transformSystem;
-		m_rigidBodySystem = rigidBodySystem;
+		ComponentSystem<KinematicRigidBodyComponent>::StartUp(numComponents, em);
+
+		m_transformSystem = &transformSystem;
+		m_rigidBodySystem = &rigidBodySystem;
+
+		return true;
 	}
 
 	inline void Execute(float deltaTime) override

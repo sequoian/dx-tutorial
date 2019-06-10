@@ -24,11 +24,14 @@ struct DoorComponent
 class DoorSystem : public ComponentSystem<DoorComponent>
 {
 public:
-
-	void AddSystemRefs(TransformSystem* transformSystem, EventBus& bus)
+	bool StartUp(U32 numComponents, EntityManager& em, TransformSystem& transformSystem, EventBus& bus)
 	{
-		m_transformSystem = transformSystem;
+		ComponentSystem<DoorComponent>::StartUp(numComponents, em);
+
+		m_transformSystem = &transformSystem;
 		bus.Subscribe(this, &DoorSystem::Activate);
+
+		return true;
 	}
 
 	inline void Execute(float deltaTime) override
