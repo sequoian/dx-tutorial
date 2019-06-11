@@ -195,9 +195,6 @@
     <ClInclude Include="MathUtility.h">
       <Filter>Engine</Filter>
     </ClInclude>
-    <ClInclude Include="Events.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
     <ClInclude Include="EventFunctionHandler.h">
       <Filter>Engine</Filter>
     </ClInclude>
@@ -257,6 +254,12 @@
     </ClInclude>
     <ClInclude Include="AppEvents.h">
       <Filter>App</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineEvents.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Event.h">
+      <Filter>Engine</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

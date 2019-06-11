@@ -7,6 +7,7 @@
 #include "EventBus.h"
 #include "CollisionInfo.h"
 #include "EntityManager.h"
+#include "EngineEvents.h"
 
 class EntityManager;
 

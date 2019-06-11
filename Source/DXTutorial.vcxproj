@@ -183,6 +183,7 @@
     <ClInclude Include="CameraSystem.h" />
     <ClInclude Include="DoorSystem.h" />
     <ClInclude Include="DoorTriggerSystem.h" />
+    <ClInclude Include="EngineEvents.h" />
     <ClInclude Include="TestBed.h" />
     <ClInclude Include="YDespawnSystem.h" />
     <ClInclude Include="CollisionInfo.h" />
@@ -191,7 +192,7 @@
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntityManager.h" />
     <ClInclude Include="EventBus.h" />
-    <ClInclude Include="Events.h" />
+    <ClInclude Include="Event.h" />
     <ClInclude Include="FlyCamSystem.h" />
     <ClInclude Include="EventFunctionHandler.h" />
     <ClInclude Include="Gamepad.h" />
