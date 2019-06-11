@@ -19,9 +19,6 @@
     <ClCompile Include="SampleWindow.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="SampleApplication.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
     <ClCompile Include="VertexFormat.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
@@ -88,12 +85,12 @@
     <ClCompile Include="main.cpp">
       <Filter>App</Filter>
     </ClCompile>
+    <ClCompile Include="Application.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseWindow.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="SampleApplication.h">
       <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="SampleWindow.h">
@@ -259,6 +256,9 @@
       <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="Event.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Application.h">
       <Filter>Engine</Filter>
     </ClInclude>
   </ItemGroup>

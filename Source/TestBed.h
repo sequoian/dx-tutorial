@@ -1,6 +1,6 @@
 #pragma once
 
-#include "SampleApplication.h"
+#include "Application.h"
 #include "PrimitiveFactory.h"
 #include "StringId.h"
 #include "MathUtility.h"
@@ -48,7 +48,7 @@ struct ModelConstants
 	XMVECTOR m_specularColor;
 };
 
-class TestBed : public SampleApplication
+class TestBed : public Application
 {
 public:
 
@@ -59,7 +59,7 @@ public:
 
 	virtual bool StartUp() override
 	{
-		if (!SampleApplication::StartUp())
+		if (!Application::StartUp())
 			return false;
 
 		// create constant buffer
@@ -367,7 +367,7 @@ public:
 
 	virtual void ShutDown() override
 	{
-		SampleApplication::ShutDown();
+		Application::ShutDown();
 
 		if (m_dss != nullptr)
 			m_dss->Release();
@@ -379,7 +379,7 @@ public:
 
 	virtual void Update() override
 	{
-		SampleApplication::Update();
+		Application::Update();
 
 		float dt = m_timer.GetDeltaTime();
 
@@ -402,7 +402,7 @@ public:
 
 	virtual void Render() override
 	{
-		SampleApplication::Render();
+		Application::Render();
 
 		// update our constants with data for this frame
 		ModelConstants consts;

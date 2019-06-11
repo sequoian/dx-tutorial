@@ -10,7 +10,7 @@
 #include "InputManager.h"
 #include "EntityManager.h"
 
-class SampleApplication 
+class Application 
 {
 protected:
 	Graphics m_graphics;
@@ -27,8 +27,8 @@ protected:
 	bool ProcessWindowMessages();
 
 public:
-	SampleApplication();
-	~SampleApplication();
+	Application();
+	~Application();
 	virtual bool StartUp();
 	virtual void ShutDown();
 	virtual void Run();

@@ -1,21 +1,21 @@
-#include "SampleApplication.h"
+#include "Application.h"
 #include "Assert.h"
 #include "Timer.h"
 
 
-SampleApplication::SampleApplication()
+Application::Application()
 {
 	initialized = false;
 }
 
 
-SampleApplication::~SampleApplication()
+Application::~Application()
 {
 	ShutDown();
 }
 
 
-bool SampleApplication::StartUp()
+bool Application::StartUp()
 {
 	// make sure startup is only called once
 	ASSERT(!initialized);
@@ -50,7 +50,7 @@ bool SampleApplication::StartUp()
 }
 
 
-void SampleApplication::ShutDown()
+void Application::ShutDown()
 {
 	m_inputManager.ShutDown();
 	m_physics.ShutDown();
@@ -61,7 +61,7 @@ void SampleApplication::ShutDown()
 }
 
 
-void SampleApplication::Run()
+void Application::Run()
 {
 	// Run the message loop.
 	while (ProcessWindowMessages())
@@ -74,19 +74,19 @@ void SampleApplication::Run()
 }
 
 
-void SampleApplication::Update()
+void Application::Update()
 {
 	m_timer.Update();
 	m_inputManager.UpdateAll();
 }
 
 
-void SampleApplication::Render()
+void Application::Render()
 {
 }
 
 
-bool SampleApplication::ProcessWindowMessages()
+bool Application::ProcessWindowMessages()
 {
 	MSG msg;
 	bool keepRunning = true;
