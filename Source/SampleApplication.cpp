@@ -40,16 +40,23 @@ bool SampleApplication::StartUp()
 
 	ShowWindow(m_window.Window(), 1);
 
+	m_resourceManager.StartUp(m_graphics);
+	m_physics.StartUp(&m_eventBus);
+	m_timer.Start();
+	m_inputManager.StartUp(m_window);
+	m_entityManager.StartUp(10);
+
 	return true;
 }
 
 
 void SampleApplication::ShutDown()
 {
+	m_inputManager.ShutDown();
+	m_physics.ShutDown();
 	m_window.ShutDown();
-
+	m_eventBus.ShutDown();
 	m_graphics.ShutDown();
-
 	ShutDownLogger();
 }
 
@@ -69,6 +76,8 @@ void SampleApplication::Run()
 
 void SampleApplication::Update()
 {
+	m_timer.Update();
+	m_inputManager.UpdateAll();
 }
 
 
