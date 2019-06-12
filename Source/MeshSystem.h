@@ -7,14 +7,25 @@
 struct MeshComponent
 {
 	U64 transform;
-	Model* model;
-	Material* material;
+	Model* model = nullptr;
+	Material* material = nullptr;
 };
 
 
 class MeshSystem : public ComponentSystem<MeshComponent>
 {
 public:
+	U64 CreateComponent(Entity e, U64 hTransform, Model* model, Material* material)
+	{
+		U64 handle = TParent::CreateComponent(e);
+		MeshComponent* comp = GetComponentByHandle(handle);
+		comp->transform = hTransform;
+		comp->model = model;
+		comp->material = material;
+
+		return handle;
+	}
+
 	inline void Execute(float deltaTime) override
 	{
 	}

@@ -20,9 +20,20 @@ class YDespawnSystem : public ComponentSystem<YDespawnComponent>
 public:
 	bool StartUp(U32 numComponents, EntityManager& em, TransformSystem& transformSystem)
 	{
-		ComponentSystem<YDespawnComponent>::StartUp(numComponents, em);
+		TParent::StartUp(numComponents, em);
 		m_transformSystem = &transformSystem;
 		return true;
+	}
+
+	U64 CreateComponent(Entity e, U64 hTransform, I32 yLimit)
+	{
+		U64 handle = TParent::CreateComponent(e);
+		YDespawnComponent* comp = GetComponentByHandle(handle);
+		comp->entity = e;
+		comp->transform = hTransform;
+		comp->yLimit = yLimit;
+
+		return handle;
 	}
 
 	inline void Execute(float deltaTime) override

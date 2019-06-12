@@ -31,6 +31,17 @@ public:
 		return true;
 	}
 
+	U64 CreateComponent(Entity e, U64 hTransform, Material* material, float cooldown)
+	{
+		U64 handle = TParent::CreateComponent(e);
+		RBGunComponent* comp = GetComponentByHandle(handle);
+		comp->transform = hTransform;
+		comp->material = material;
+		comp->cooldown = cooldown;
+
+		return handle;
+	}
+
 	inline void Execute(float deltaTime) override
 	{
 		for (U32 i = 0; i < m_pool.Size(); i++)

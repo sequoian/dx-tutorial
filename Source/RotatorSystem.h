@@ -25,6 +25,16 @@ public:
 		return true;
 	}
 
+	U64 CreateComponent(Entity e, U64 hTransform, float speed)
+	{
+		U64 handle = TParent::CreateComponent(e);
+		RotatorComponent* comp = GetComponentByHandle(handle);
+		comp->transform = hTransform;
+		comp->speed = speed;
+
+		return handle;
+	}
+
 	inline void Execute(float deltaTime) override
 	{
 		// hard coded axis

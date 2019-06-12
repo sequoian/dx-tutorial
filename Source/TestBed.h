@@ -242,28 +242,11 @@ public:
 		// Create Entities
 
 		Entity e;
-		U64 transformHandle;
-		TransformComponent* transform;
-		U64 rotatorHandle;
-		RotatorComponent* rotator;
-		U64 cameraHandle;
-		CameraComponent* camera;
-		MeshComponent* mesh;
-		FlyCamComponent* flycam;
-		U64 colliderHandle;
-		btCollisionShape* collider;
-		U64 rbHandle;
-		DynamicRigidBodyComponent* dynamicRB;
-		U64 bulletHandle;
-		RBGunComponent* rbGun;
-		KinematicRigidBodyComponent* kinematicRB;
+		U64 hTransform;
+		U64 hRigidBody;
 		RigidBody rb;
-		U64 velocityHandle;
-		KinematicCharacterControllerComponent* kinematicCC;
-		U64 rigidBodyHandle;
-		RigidBodyComponent* rigidBody;
-		DoorComponent* door;
-		DoorTriggerComponent* doorTrigger;
+		TransformComponent* transform;
+		btCollisionShape* collider;
 
 		// bowl
 		m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, vec3(0, -15, 0), vec3(0), vec3(10, 1, 10));
@@ -288,97 +271,53 @@ public:
 			y += 2;
 		}
 
+		// door
+		e = m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, vec3(-25, 10, 25), vec3(90.0_rad, 0, 0), vec3(5, 1, 5), vec3(0), true);
+		m_transformSystem.GetComponentHandle(e, hTransform);
+		m_doorSystem.CreateComponent(e, hTransform, XMVectorSet(-25, 10, 25, 1), XMVectorSet(-25, 20, 25, 1), 3);
+		Entity doorEntity = e;
+
 		// trigger
 		e = m_entityManager.CreateEntity();
-		transformHandle = m_transformSystem.CreateComponent(e);
-		transform = m_transformSystem.GetComponentByHandle(transformHandle);
-		transform->position = XMVectorSet(-25, 10, 0, 1);
-		transform->scale = XMVectorSet(3, 3, 3, 1);
-		mesh = m_meshSystem.GetComponentByHandle(m_meshSystem.CreateComponent(e));
-		mesh->transform = transformHandle;
-		mesh->model = modelCube;
-		mesh->material = matStone;
+		hTransform = m_transformSystem.CreateComponent(e, XMVectorSet(-25, 10, 0, 1), XMQuaternionIdentity(), 
+															XMVectorSet(3, 3, 3, 1));
+		transform = m_transformSystem.GetComponentByHandle(hTransform);
+		m_meshSystem.CreateComponent(e, hTransform, modelCube, matStone);
 		collider = m_physics.CreateCollisionBox(1, 1, 1);
 		collider->setLocalScaling(Physics::VecFromDX(transform->scale));
 		rb = m_physics.CreateStaticRigidBody(e, collider, transform->position, transform->rotation, true);
-		rb.SetPosition(transform->position);
-		rb.SetRotation(transform->rotation);
-		rigidBody = m_rigidBodySystem.GetComponentByHandle(m_rigidBodySystem.CreateComponent(e));
-		rigidBody->body = rb;
-		doorTrigger = m_doorTriggerSystem.GetComponentByHandle(m_doorTriggerSystem.CreateComponent(e));
-
-		// door
-		e = m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, vec3(-25, 10, 25), vec3(90.0_rad, 0, 0), vec3(5, 1, 5), vec3(0), true);
-		door = m_doorSystem.GetComponentByHandle(m_doorSystem.CreateComponent(e));
-		door->startingPosition = XMVectorSet(-25, 10, 25, 1);
-		door->endingPosition = XMVectorSet(-25, 20, 25, 1);
-		door->secondsToMove = 3;
-		m_transformSystem.GetComponentHandle(e, door->transform);
-		// add door to door trigger
-		doorTrigger->door = e;
+		m_rigidBodySystem.CreateComponent(e, rb);
+		m_doorTriggerSystem.CreateComponent(e, doorEntity);
 		
-		// walls
+		// walls surrounding door
 		m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, vec3(-35, 10, 25), vec3(90.0_rad, 0, 0), vec3(5, 1, 5));
 		m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, vec3(-15, 10, 25), vec3(90.0_rad, 0, 0), vec3(5, 1, 5));
 
-		
-
 		// spinner
 		e = m_entityManager.CreateEntity();
-		transformHandle = m_transformSystem.CreateComponent(e);
-		transform = m_transformSystem.GetComponentByHandle(transformHandle);
-		transform->position = XMVectorSet(25, 10, 0, 1);
-		transform->scale = XMVectorSet(1, 8, 8, 1);
-		mesh = m_meshSystem.GetComponentByHandle(m_meshSystem.CreateComponent(e));
-		mesh->transform = transformHandle;
-		mesh->model = modelCube;
-		mesh->material = matStone;
-		rotator = m_rotatorSystem.GetComponentByHandle(m_rotatorSystem.CreateComponent(e));
-		rotator->angle = 1;
-		rotator->speed = 2;
-		rotator->transform = transformHandle;
+		hTransform = m_transformSystem.CreateComponent(e, XMVectorSet(25, 10, 0, 1), XMQuaternionIdentity(), 
+															XMVectorSet(1, 8, 8, 1));
+		transform = m_transformSystem.GetComponentByHandle(hTransform);
+		m_meshSystem.CreateComponent(e, hTransform, modelCube, matStone);
+		m_rotatorSystem.CreateComponent(e, hTransform, 2);
 		collider = m_physics.CreateCollisionBox(1, 1, 1);
 		collider->setLocalScaling(Physics::VecFromDX(transform->scale));
 		rb = m_physics.CreateKinematicRigidBody(e, collider, transform->position, transform->rotation);
-		rigidBodyHandle = m_rigidBodySystem.CreateComponent(e);
-		rigidBody = m_rigidBodySystem.GetComponentByHandle(rigidBodyHandle);
-		rigidBody->body = rb;
-		kinematicRB = m_kinematicRBSystem.GetComponentByHandle(m_kinematicRBSystem.CreateComponent(e));
-		kinematicRB->transform = transformHandle;
-		kinematicRB->rigidBody = rigidBodyHandle;
+		hRigidBody = m_rigidBodySystem.CreateComponent(e, rb);
+		m_kinematicRBSystem.CreateComponent(e, hTransform, hRigidBody);
 
-		// camera
+		// player
 		e = m_entityManager.CreateEntity();
-		transformHandle = m_transformSystem.CreateComponent(e);
-		transform = m_transformSystem.GetComponentByHandle(transformHandle);
-		transform->position = XMVectorSet(0, 10, -25, 1);
-		cameraHandle = m_cameraSystem.CreateComponent(e);
-		camera = m_cameraSystem.GetComponentByHandle(cameraHandle);
-		camera->transform = transformHandle;
-		camera->nearZ = 0.01f;
-		camera->farZ = 1000.0f;
-		camera->fov = 45.0f;
-		flycam = m_flycamSystem.GetComponentByHandle(m_flycamSystem.CreateComponent(e));
-		flycam->transform = transformHandle;
-		flycam->lookSpeed = 2;
-		flycam->moveSpeed = 8;
-		flycam->sprintSpeed = 18;
-		flycam->crawlSpeed = 2;
-		bulletHandle = m_rbGunSystem.CreateComponent(e);
-		rbGun = m_rbGunSystem.GetComponentByHandle(bulletHandle);
-		rbGun->material = matStone;
-		rbGun->transform = transformHandle;
-		rbGun->cooldown = 0.25;
+		hTransform = m_transformSystem.CreateComponent(e, XMVectorSet(0, 10, -25, 1));
+		transform = m_transformSystem.GetComponentByHandle(hTransform);
+		m_cameraSystem.CreateComponent(e, hTransform, 0.01f, 1000.0f, 45.0f);
+		m_flycamSystem.CreateComponent(e, hTransform, 8, 18, 2, 2);
+		m_rbGunSystem.CreateComponent(e, hTransform, matStone, 0.25);
 		collider = m_physics.CreateCollisionSphere(1);
 		rb = m_physics.CreateCharacterBody(e, collider, transform->position, transform->rotation);
-		rigidBodyHandle = m_rigidBodySystem.CreateComponent(e);
-		rigidBody = m_rigidBodySystem.GetComponentByHandle(rigidBodyHandle);
-		rigidBody->body = rb;
-		kinematicRB = m_kinematicRBSystem.GetComponentByHandle(m_kinematicRBSystem.CreateComponent(e));
-		kinematicRB->transform = transformHandle;
-		kinematicRB->rigidBody = rigidBodyHandle;
-		kinematicCC = m_kinematicCCSystem.GetComponentByHandle(m_kinematicCCSystem.CreateComponent(e));
-		kinematicCC->transform = transformHandle;
+		hRigidBody = m_rigidBodySystem.CreateComponent(e, rb);
+		m_kinematicRBSystem.CreateComponent(e, hTransform, hRigidBody);
+		m_kinematicCCSystem.CreateComponent(e, hTransform);
 
 		return true;
 	}

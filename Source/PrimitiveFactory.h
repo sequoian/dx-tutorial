@@ -80,6 +80,7 @@ public:
 		U64 rbHandle;
 		RigidBodyComponent* rigidBody;
 		YDespawnComponent* despawn;
+		RigidBody rb;
 		
 
 		Model* model;
@@ -112,17 +113,11 @@ public:
 		e = m_entityManager->CreateEntity();
 
 		// create transform
-		transformHandle = m_transformSystem->CreateComponent(e);
+		transformHandle = m_transformSystem->CreateComponent(e, dxPos, dxRot, dxScale);
 		transform = m_transformSystem->GetComponentByHandle(transformHandle);
-		transform->position = dxPos;
-		transform->rotation = dxRot;
-		transform->scale = dxScale;
 
 		// y despawn
-		despawn = m_yDespawnSystem->GetComponentByHandle(m_yDespawnSystem->CreateComponent(e));
-		despawn->entity = e;
-		despawn->transform = transformHandle;
-		despawn->yLimit = -50;
+		despawn = m_yDespawnSystem->GetComponentByHandle(m_yDespawnSystem->CreateComponent(e, transformHandle, -50));
 		
 		// create collider
 		collider = colShape;
@@ -132,39 +127,26 @@ public:
 		
 		if (mass > 0)
 		{
-			rbHandle = m_rigidBodySystem->CreateComponent(e);
-			rigidBody = m_rigidBodySystem->GetComponentByHandle(rbHandle);
-			rigidBody->body = m_physics->CreateDynamicRigidBody(e, collider, dxPos, dxRot);
-			rigidBody->body.SetLinearVelocity(XMVectorSet(vel.x, vel.y, vel.z, 1));
-			drbHandle = m_dynamicRigidBodySystem->CreateComponent(e);
-			dynamicRigidBody = m_dynamicRigidBodySystem->GetComponentByHandle(drbHandle);
-			dynamicRigidBody->rigidBody = rbHandle;
-			dynamicRigidBody->transform = transformHandle;
+			rb = m_physics->CreateDynamicRigidBody(e, collider, dxPos, dxRot);
+			rb.SetLinearVelocity(XMVectorSet(vel.x, vel.y, vel.z, 1));
+			rbHandle = m_rigidBodySystem->CreateComponent(e, rb);
+			m_dynamicRigidBodySystem->CreateComponent(e, transformHandle, rbHandle);
 		}
 		else if (isKinematic)
 		{
-			rbHandle = m_rigidBodySystem->CreateComponent(e);
-			rigidBody = m_rigidBodySystem->GetComponentByHandle(rbHandle);
-			rigidBody->body = m_physics->CreateKinematicRigidBody(e, collider, dxPos, dxRot);
-			U64 krbHandle = m_kinematicRigidBodySystem->CreateComponent(e);
-			KinematicRigidBodyComponent* kinematicRigidBody = m_kinematicRigidBodySystem->GetComponentByHandle(krbHandle);
-			kinematicRigidBody->rigidBody = rbHandle;
-			kinematicRigidBody->transform = transformHandle;
+			rb = m_physics->CreateKinematicRigidBody(e, collider, dxPos, dxRot);
+			rbHandle = m_rigidBodySystem->CreateComponent(e, rb);
+			m_kinematicRigidBodySystem->CreateComponent(e, transformHandle, rbHandle);
+
 		}
 		else
 		{
-			RigidBody rb = m_physics->CreateStaticRigidBody(e, collider, dxPos, dxRot);
-			rigidBody = m_rigidBodySystem->GetComponentByHandle(m_rigidBodySystem->CreateComponent(e));
-			rigidBody->body = rb;
+			rb = m_physics->CreateStaticRigidBody(e, collider, dxPos, dxRot);
+			m_rigidBodySystem->CreateComponent(e, rb);
 		}
 		
-		
-
 		// create mesh
-		mesh = m_meshSystem->GetComponentByHandle(m_meshSystem->CreateComponent(e));
-		mesh->transform = transformHandle;
-		mesh->model = model;
-		mesh->material = mat;
+		m_meshSystem->GetComponentByHandle(m_meshSystem->CreateComponent(e, transformHandle, model, mat));
 
 		return e;
 	}

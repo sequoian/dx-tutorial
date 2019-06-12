@@ -19,12 +19,22 @@ public:
 
 	bool StartUp(U32 numComponents, EntityManager& em, EventBus& bus)
 	{
-		ComponentSystem<DoorTriggerComponent>::StartUp(numComponents, em);
+		TParent::StartUp(numComponents, em);
 
 		SubscribeToCollisionEvents(bus);
 		m_eventBus = &bus;
 
 		return true;
+	}
+
+	U64 CreateComponent(Entity e, Entity door)
+	{
+		U64 handle = TParent::CreateComponent(e);
+		DoorTriggerComponent* comp = GetComponentByHandle(handle);
+
+		comp->door = door;
+
+		return handle;
 	}
 
 	inline void Execute(float deltaTime) override

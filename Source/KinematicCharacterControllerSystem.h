@@ -19,12 +19,22 @@ public:
 
 	bool StartUp(U32 numComponents, EntityManager& em, TransformSystem& transformSystem, EventBus& eventBus)
 	{
-		ComponentSystem<KinematicCharacterControllerComponent>::StartUp(numComponents, em);
+		TParent::StartUp(numComponents, em);
 
 		m_transformSystem = &transformSystem;
 		SubscribeToCollisionEvents(eventBus);
 
 		return true;
+	}
+
+	U64 CreateComponent(Entity e, U64 hTransform)
+	{
+		U64 handle = TParent::CreateComponent(e);
+		KinematicCharacterControllerComponent* comp = GetComponentByHandle(handle);
+
+		comp->transform = hTransform;
+
+		return handle;
 	}
 
 	inline void Execute(float deltaTime) override

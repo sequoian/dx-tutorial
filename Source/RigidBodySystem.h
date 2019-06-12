@@ -25,6 +25,15 @@ public:
 		return true;
 	}
 
+	U64 CreateComponent(Entity e, RigidBody rigidBody)
+	{
+		U64 handle = TParent::CreateComponent(e);
+		RigidBodyComponent* comp = GetComponentByHandle(handle);
+		comp->body = rigidBody;
+
+		return handle;
+	}
+
 	inline void Execute(float deltaTime) override
 	{
 		for (U32 i = 0; i < m_pool.Size(); i++)

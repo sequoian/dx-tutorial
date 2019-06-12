@@ -26,12 +26,26 @@ public:
 
 	bool StartUp(U32 numComponents, EntityManager& em, InputManager& inputManager, TransformSystem& transformSystem)
 	{
-		ComponentSystem<FlyCamComponent>::StartUp(numComponents, em);
+		TParent::StartUp(numComponents, em);
 
 		m_inputManager = &inputManager;
 		m_transformSystem = &transformSystem;
 
 		return true;
+	}
+
+	U64 CreateComponent(Entity e, U64 hTransform, float moveSpeed, float sprintSpeed, float crawlspeed, float lookSpeed)
+	{
+		U64 handle = TParent::CreateComponent(e);
+		FlyCamComponent* comp = GetComponentByHandle(handle);
+
+		comp->transform = hTransform;
+		comp->moveSpeed = moveSpeed;
+		comp->sprintSpeed = sprintSpeed;
+		comp->crawlSpeed = crawlspeed;
+		comp->lookSpeed = lookSpeed;
+
+		return handle;
 	}
 
 	inline void Execute(float deltaTime) override

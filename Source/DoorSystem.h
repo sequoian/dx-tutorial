@@ -26,12 +26,26 @@ class DoorSystem : public ComponentSystem<DoorComponent>
 public:
 	bool StartUp(U32 numComponents, EntityManager& em, TransformSystem& transformSystem, EventBus& bus)
 	{
-		ComponentSystem<DoorComponent>::StartUp(numComponents, em);
+		TParent::StartUp(numComponents, em);
 
 		m_transformSystem = &transformSystem;
 		bus.Subscribe(this, &DoorSystem::Activate);
 
 		return true;
+	}
+
+	U64 CreateComponent(Entity e, U64 hTransform, XMVECTOR startPos, XMVECTOR endPos, float secToMove, bool active = false)
+	{
+		U64 handle = TParent::CreateComponent(e);
+		DoorComponent* comp = GetComponentByHandle(handle);
+
+		comp->transform = hTransform;
+		comp->startingPosition = startPos;
+		comp->endingPosition = endPos;
+		comp->secondsToMove = secToMove;
+		comp->active = active;
+		
+		return handle;
 	}
 
 	inline void Execute(float deltaTime) override

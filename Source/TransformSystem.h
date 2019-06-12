@@ -8,9 +8,9 @@ using namespace DirectX;
 
 struct TransformComponent
 {
-	XMVECTOR position = XMVectorSet(0, 0, 0, 1);
-	XMVECTOR rotation = XMQuaternionIdentity();
-	XMVECTOR scale = XMVectorSet(1, 1, 1, 1);
+	XMVECTOR position;
+	XMVECTOR rotation;
+	XMVECTOR scale;
 	XMMATRIX world;
 };
 
@@ -18,6 +18,18 @@ struct TransformComponent
 class TransformSystem : public ComponentSystem<TransformComponent>
 {
 public:
+	U64 CreateComponent(Entity e, XMVECTOR position, XMVECTOR rotation = XMQuaternionIdentity(), 
+						XMVECTOR scale = XMVectorSet(1, 1, 1, 1))
+	{
+		U64 handle = TParent::CreateComponent(e);
+		TransformComponent* comp = GetComponentByHandle(handle);
+		comp->position = position;
+		comp->rotation = rotation;
+		comp->scale = scale;
+
+		return handle;
+	}
+
 	inline void Execute(float deltaTime) override
 	{
 		for (U32 i = 0; i < m_pool.Size(); i++)

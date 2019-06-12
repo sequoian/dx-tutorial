@@ -21,12 +21,23 @@ public:
 
 	bool StartUp(U32 numComponents, EntityManager& em, TransformSystem& transformSystem, RigidBodySystem& rigidBodySystem)
 	{
-		ComponentSystem<KinematicRigidBodyComponent>::StartUp(numComponents, em);
+		TParent::StartUp(numComponents, em);
 
 		m_transformSystem = &transformSystem;
 		m_rigidBodySystem = &rigidBodySystem;
 
 		return true;
+	}
+
+	U64 CreateComponent(Entity e, U64 hTransform, U64 hRigidBody)
+	{
+		U64 handle = TParent::CreateComponent(e);
+		KinematicRigidBodyComponent* comp = GetComponentByHandle(handle);
+
+		comp->transform = hTransform;
+		comp->rigidBody = hRigidBody;
+
+		return handle;
 	}
 
 	inline void Execute(float deltaTime) override

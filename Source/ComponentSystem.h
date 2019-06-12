@@ -108,6 +108,7 @@ public:
 	}
 
 protected:
+	typedef ComponentSystem<T> TParent;
 
 	virtual void SubscribeToCollisionEvents(EventBus& bus)
 	{
