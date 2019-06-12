@@ -168,7 +168,7 @@
     <ClCompile Include="RenderTargetState.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="RigidBody.cpp" />
-    <ClCompile Include="SampleApplication.cpp" />
+    <ClCompile Include="Application.cpp" />
     <ClCompile Include="SampleWindow.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />
@@ -183,6 +183,7 @@
     <ClInclude Include="CameraSystem.h" />
     <ClInclude Include="DoorSystem.h" />
     <ClInclude Include="DoorTriggerSystem.h" />
+    <ClInclude Include="EngineEvents.h" />
     <ClInclude Include="TestBed.h" />
     <ClInclude Include="YDespawnSystem.h" />
     <ClInclude Include="CollisionInfo.h" />
@@ -191,7 +192,7 @@
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntityManager.h" />
     <ClInclude Include="EventBus.h" />
-    <ClInclude Include="Events.h" />
+    <ClInclude Include="Event.h" />
     <ClInclude Include="FlyCamSystem.h" />
     <ClInclude Include="EventFunctionHandler.h" />
     <ClInclude Include="Gamepad.h" />
@@ -222,7 +223,7 @@
     <ClInclude Include="DynamicRigidBodySystem.h" />
     <ClInclude Include="RigidBodySystem.h" />
     <ClInclude Include="RotatorSystem.h" />
-    <ClInclude Include="SampleApplication.h" />
+    <ClInclude Include="Application.h" />
     <ClInclude Include="SampleWindow.h" />
     <ClInclude Include="StringId.h" />
     <ClInclude Include="StringUtility.h" />

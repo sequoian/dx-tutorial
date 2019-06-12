@@ -1,20 +1,17 @@
 #pragma once
 
-#include "SampleApplication.h"
-#include "RenderTargetState.h"
-#include "Material.h"
-#include "VertexBuffer.h"
-#include "IndexBuffer.h"
-#include "Model.h"
-#include "VertexFormat.h"
-#include "Timer.h"
-#include "InputManager.h"
-#include "EntityManager.h"
+#include "Application.h"
+#include "PrimitiveFactory.h"
 #include "StringId.h"
 #include "MathUtility.h"
-#include "PrimitiveFactory.h"
-#include "EventBus.h"
 
+// rendering
+#include "RenderTargetState.h"
+#include "VertexBuffer.h"
+#include "IndexBuffer.h"
+#include "VertexFormat.h"
+
+// component systems
 #include "TransformSystem.h"
 #include "RotatorSystem.h"
 #include "CameraSystem.h"
@@ -30,12 +27,12 @@
 #include "DoorSystem.h"
 #include "DoorTriggerSystem.h"
 
-#include "ResourceManager.h"
+// resourcess
 #include "Texture.h"
 #include "VertexShader.h"
 #include "PixelShader.h"
-
-#include "Physics.h"
+#include "Material.h"
+#include "Model.h"
 
 #include <DirectXMath.h>
 using namespace DirectX;
@@ -51,30 +48,19 @@ struct ModelConstants
 	XMVECTOR m_specularColor;
 };
 
-class TestBed : public SampleApplication
+class TestBed : public Application
 {
 public:
 
 	virtual ~TestBed()
 	{
-		if (m_dss != nullptr)
-			m_dss->Release();
-		if (m_dsv != nullptr)
-			m_dsv->Release();
-		if (m_depth != nullptr)
-			m_depth->Release();
-
 		ShutDown();
 	}
 
 	virtual bool StartUp() override
 	{
-		if (!SampleApplication::StartUp())
+		if (!Application::StartUp())
 			return false;
-
-		// Start systems
-		m_resourceManager.StartUp(m_graphics);
-		m_physics.StartUp(&m_eventBus);
 
 		// create constant buffer
 		if (!m_cb.CreateConstantBuffer(m_graphics, sizeof(ModelConstants), true,
@@ -214,14 +200,10 @@ public:
 		m_rtState.SetClearDepthStencil(true, 1.0f);
 		m_rtState.SetSize(m_window.GetScreenWidth(), m_window.GetScreenHeight());
 
-		m_timer.Start();
-		m_inputManager.StartUp(m_window);
-
 		m_primFactory.SetUp(&m_entityManager, &m_transformSystem, &m_meshSystem, &m_rigidBodySystem, &m_dynamicRBSystem, &m_kinematicRBSystem, &m_resourceManager, &m_physics, &m_yDespawnSystem);
 
 		//  Init Component System
 
-		m_entityManager.StartUp(4);
 		m_transformSystem.StartUp(50, m_entityManager);
 		m_rotatorSystem.StartUp(1, m_entityManager, m_transformSystem);
 		m_cameraSystem.StartUp(1, m_entityManager, m_transformSystem, m_window);
@@ -324,18 +306,21 @@ public:
 
 	virtual void ShutDown() override
 	{
-		SampleApplication::ShutDown();
+		Application::ShutDown();
 
-		m_inputManager.ShutDown();
-		m_physics.ShutDown();
+		if (m_dss != nullptr)
+			m_dss->Release();
+		if (m_dsv != nullptr)
+			m_dsv->Release();
+		if (m_depth != nullptr)
+			m_depth->Release();
 	}
 
 	virtual void Update() override
 	{
-		m_timer.Update();
-		float dt = m_timer.GetDeltaTime();
+		Application::Update();
 
-		m_inputManager.UpdateAll();
+		float dt = m_timer.GetDeltaTime();
 
 		// update systems
 		m_rotatorSystem.Execute(dt);
@@ -344,14 +329,10 @@ public:
 		m_flycamSystem.Execute(dt);
 		m_rbGunSystem.Execute(dt);
 		m_doorSystem.Execute(dt);
-
 		m_kinematicRBSystem.Execute(dt);
-
 		m_physics.RunSimulation(dt);
-
 		m_dynamicRBSystem.Execute(dt);
 		m_yDespawnSystem.Execute(dt);
-
 		m_transformSystem.Execute(dt);
 
 		// end frame
@@ -360,6 +341,8 @@ public:
 
 	virtual void Render() override
 	{
+		Application::Render();
+
 		// update our constants with data for this frame
 		ModelConstants consts;
 		consts.m_viewproj = m_cameraSystem[0]->viewProjMatrix;
@@ -388,22 +371,12 @@ public:
 	}
 
 private:
-	// rendering
+	// rendering instances
 	RenderTargetState m_rtState;
 	ID3D11Texture2D* m_depth = nullptr;
 	ID3D11DepthStencilView* m_dsv = nullptr;
 	ID3D11DepthStencilState* m_dss = nullptr;
-
 	Buffer m_cb;
-
-	// systems
-	Timer m_timer;
-	ResourceManager m_resourceManager;
-	InputManager m_inputManager;
-	EntityManager m_entityManager;
-	Physics m_physics;
-	PrimitiveFactory m_primFactory;
-	EventBus m_eventBus;
 
 	// component systems
 	TransformSystem m_transformSystem;
@@ -420,4 +393,7 @@ private:
 	YDespawnSystem m_yDespawnSystem;
 	DoorSystem m_doorSystem;
 	DoorTriggerSystem m_doorTriggerSystem;
+
+	// other
+	PrimitiveFactory m_primFactory;
 };

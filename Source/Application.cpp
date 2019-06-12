@@ -1,21 +1,21 @@
-#include "SampleApplication.h"
+#include "Application.h"
 #include "Assert.h"
 #include "Timer.h"
 
 
-SampleApplication::SampleApplication()
+Application::Application()
 {
 	initialized = false;
 }
 
 
-SampleApplication::~SampleApplication()
+Application::~Application()
 {
 	ShutDown();
 }
 
 
-bool SampleApplication::StartUp()
+bool Application::StartUp()
 {
 	// make sure startup is only called once
 	ASSERT(!initialized);
@@ -40,21 +40,28 @@ bool SampleApplication::StartUp()
 
 	ShowWindow(m_window.Window(), 1);
 
+	m_resourceManager.StartUp(m_graphics);
+	m_physics.StartUp(&m_eventBus);
+	m_timer.Start();
+	m_inputManager.StartUp(m_window);
+	m_entityManager.StartUp(10);
+
 	return true;
 }
 
 
-void SampleApplication::ShutDown()
+void Application::ShutDown()
 {
+	m_inputManager.ShutDown();
+	m_physics.ShutDown();
 	m_window.ShutDown();
-
+	m_eventBus.ShutDown();
 	m_graphics.ShutDown();
-
 	ShutDownLogger();
 }
 
 
-void SampleApplication::Run()
+void Application::Run()
 {
 	// Run the message loop.
 	while (ProcessWindowMessages())
@@ -67,17 +74,19 @@ void SampleApplication::Run()
 }
 
 
-void SampleApplication::Update()
+void Application::Update()
+{
+	m_timer.Update();
+	m_inputManager.UpdateAll();
+}
+
+
+void Application::Render()
 {
 }
 
 
-void SampleApplication::Render()
-{
-}
-
-
-bool SampleApplication::ProcessWindowMessages()
+bool Application::ProcessWindowMessages()
 {
 	MSG msg;
 	bool keepRunning = true;

@@ -22,6 +22,7 @@ public:
 				delete handler;
 			}
 		}
+		m_subscribers.clear();
 	}
 
 	template<typename EventType>
