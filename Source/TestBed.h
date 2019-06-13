@@ -228,7 +228,7 @@ public:
 		U64 hRigidBody;
 		RigidBody rb;
 		TransformComponent* transform;
-		btCollisionShape* collider;
+		ColliderPtr collider;
 
 		// bowl
 		m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, vec3(0, -15, 0), vec3(0), vec3(10, 1, 10));
@@ -266,7 +266,7 @@ public:
 		transform = m_transformSystem.GetComponentByHandle(hTransform);
 		m_meshSystem.CreateComponent(e, hTransform, modelCube, matStone);
 		collider = m_physics.CreateCollisionBox(1, 1, 1);
-		collider->setLocalScaling(Physics::VecFromDX(transform->scale));
+		collider.SetScale(transform->scale);
 		rb = m_physics.CreateStaticRigidBody(e, collider, transform->position, transform->rotation, true);
 		m_rigidBodySystem.CreateComponent(e, rb);
 		m_doorTriggerSystem.CreateComponent(e, doorEntity);
@@ -283,7 +283,7 @@ public:
 		m_meshSystem.CreateComponent(e, hTransform, modelCube, matStone);
 		m_rotatorSystem.CreateComponent(e, hTransform, 2);
 		collider = m_physics.CreateCollisionBox(1, 1, 1);
-		collider->setLocalScaling(Physics::VecFromDX(transform->scale));
+		collider.SetScale(transform->scale);
 		rb = m_physics.CreateKinematicRigidBody(e, collider, transform->position, transform->rotation);
 		hRigidBody = m_rigidBodySystem.CreateComponent(e, rb);
 		m_kinematicRBSystem.CreateComponent(e, hTransform, hRigidBody);

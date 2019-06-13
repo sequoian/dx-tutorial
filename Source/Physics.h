@@ -7,6 +7,7 @@
 #include "Entity.h"
 #include "RigidBody.h"
 #include "EventBus.h"
+#include "ColliderPtr.h"
 #include <DirectXMath.h>
 using namespace DirectX;
 
@@ -18,15 +19,15 @@ public:
 	void ShutDown();
 	void RunSimulation(float deltaTime);
 	void SetGravity(float gravity);
-	btCollisionShape* CreateCollisionBox(float x, float y, float z);
-	btCollisionShape* CreateCollisionSphere(float radius);
-	btCollisionShape* CreateCollisionCylinder(float x, float y, float z);
-	btCollisionShape* CreateCollisionCone(float radius, float height);
+	ColliderPtr CreateCollisionBox(float x, float y, float z);
+	ColliderPtr CreateCollisionSphere(float radius);
+	ColliderPtr CreateCollisionCylinder(float x, float y, float z);
+	ColliderPtr CreateCollisionCone(float radius, float height);
 
-	RigidBody CreateDynamicRigidBody(Entity e, btCollisionShape* shape, XMVECTOR position, XMVECTOR rotation, float mass = 1.f);
-	RigidBody CreateStaticRigidBody(Entity e, btCollisionShape* shape, XMVECTOR position, XMVECTOR rotation, bool isTrigger = false);
-	RigidBody CreateKinematicRigidBody(Entity e, btCollisionShape* shape, XMVECTOR position, XMVECTOR rotation, bool isTrigger = false);
-	RigidBody CreateCharacterBody(Entity e, btCollisionShape* shape, XMVECTOR position, XMVECTOR rotation);
+	RigidBody CreateDynamicRigidBody(Entity e, ColliderPtr shape, XMVECTOR position, XMVECTOR rotation, float mass = 1.f);
+	RigidBody CreateStaticRigidBody(Entity e, ColliderPtr shape, XMVECTOR position, XMVECTOR rotation, bool isTrigger = false);
+	RigidBody CreateKinematicRigidBody(Entity e, ColliderPtr shape, XMVECTOR position, XMVECTOR rotation, bool isTrigger = false);
+	RigidBody CreateCharacterBody(Entity e, ColliderPtr shape, XMVECTOR position, XMVECTOR rotation);
 
 	void DestroyRigidBody(RigidBody body);
 

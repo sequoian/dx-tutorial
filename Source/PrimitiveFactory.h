@@ -9,6 +9,8 @@
 #include "RigidBodySystem.h"
 #include "YDespawnSystem.h"
 #include "KinematicRigidBodySystem.h"
+#include "Physics.h"
+#include "ColliderPtr.h"
 
 #include "Material.h"
 #include <DirectXMath.h>
@@ -74,7 +76,7 @@ public:
 		TransformComponent* transform;
 		MeshComponent* mesh;
 		U64 colliderHandle;
-		btCollisionShape* collider;
+		ColliderPtr collider;
 		U64 drbHandle;
 		DynamicRigidBodyComponent* dynamicRigidBody;
 		U64 rbHandle;
@@ -84,7 +86,7 @@ public:
 		
 
 		Model* model;
-		btCollisionShape* colShape;
+		ColliderPtr colShape;
 
 		switch (shape)
 		{
@@ -121,7 +123,7 @@ public:
 		
 		// create collider
 		collider = colShape;
-		collider->setLocalScaling(m_physics->VecFromDX(transform->scale));
+		collider.SetScale(transform->scale);
 
 		// create rigid body
 		

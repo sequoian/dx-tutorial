@@ -88,6 +88,9 @@
     <ClCompile Include="Application.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
+    <ClCompile Include="ColliderPtr.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseWindow.h">
@@ -259,6 +262,9 @@
       <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="Application.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="ColliderPtr.h">
       <Filter>Engine</Filter>
     </ClInclude>
   </ItemGroup>

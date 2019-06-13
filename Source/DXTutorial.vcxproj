@@ -149,6 +149,7 @@
   <ItemGroup>
     <ClCompile Include="Assert.cpp" />
     <ClCompile Include="Buffer.cpp" />
+    <ClCompile Include="ColliderPtr.cpp" />
     <ClCompile Include="EntityManager.cpp" />
     <ClCompile Include="Gamepad.cpp" />
     <ClCompile Include="Graphics.cpp" />
@@ -181,6 +182,7 @@
     <ClInclude Include="BaseWindow.h" />
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="CameraSystem.h" />
+    <ClInclude Include="ColliderPtr.h" />
     <ClInclude Include="DoorSystem.h" />
     <ClInclude Include="DoorTriggerSystem.h" />
     <ClInclude Include="EngineEvents.h" />

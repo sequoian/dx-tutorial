@@ -112,38 +112,38 @@ void Physics::SetGravity(float gravity)
 }
 
 
-btCollisionShape* Physics::CreateCollisionBox(float x, float y, float z)
+ColliderPtr Physics::CreateCollisionBox(float x, float y, float z)
 {
 	btCollisionShape* shape = new btBoxShape(btVector3(btScalar(x), btScalar(y), btScalar(z)));
 
-	return shape;
+	return ColliderPtr(shape);
 }
 
-btCollisionShape* Physics::CreateCollisionSphere(float radius)
+ColliderPtr Physics::CreateCollisionSphere(float radius)
 {
 	btCollisionShape* shape = new btSphereShape(radius);
 
-	return shape;
+	return ColliderPtr(shape);
 }
 
 
-btCollisionShape* Physics::CreateCollisionCylinder(float x, float y, float z)
+ColliderPtr Physics::CreateCollisionCylinder(float x, float y, float z)
 {
 	btCollisionShape* shape = new btCylinderShape(btVector3(x, y, z));
 
-	return shape;
+	return ColliderPtr(shape);
 }
 
 
-btCollisionShape* Physics::CreateCollisionCone(float radius, float height)
+ColliderPtr Physics::CreateCollisionCone(float radius, float height)
 {
 	btCollisionShape* shape = new btConeShape(radius, height);
 
-	return shape;
+	return ColliderPtr(shape);
 }
 
 
-RigidBody Physics::CreateDynamicRigidBody(Entity e, btCollisionShape* shape, XMVECTOR position, XMVECTOR rotation, float mass)
+RigidBody Physics::CreateDynamicRigidBody(Entity e, ColliderPtr shape, XMVECTOR position, XMVECTOR rotation, float mass)
 {
 	ASSERT_VERBOSE(mass > 0.f, "Dynamic rigid bodies must have a mass greater than 0");
 	if (mass < 0.f)
@@ -157,10 +157,10 @@ RigidBody Physics::CreateDynamicRigidBody(Entity e, btCollisionShape* shape, XMV
 	transform.setOrigin(VecFromDX(position));
 
 	btVector3 localInertia(0, 0, 0);
-	shape->calculateLocalInertia(mass, localInertia);
+	shape.m_collider->calculateLocalInertia(mass, localInertia);
 
 	btDefaultMotionState* motionState = new btDefaultMotionState(transform);
-	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, motionState, shape, localInertia);
+	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, motionState, shape.m_collider, localInertia);
 	btRigidBody* body = new btRigidBody(rbInfo);
 	
 	m_dynamicsWorld->addRigidBody(body);
@@ -171,7 +171,7 @@ RigidBody Physics::CreateDynamicRigidBody(Entity e, btCollisionShape* shape, XMV
 }
 
 
-RigidBody Physics::CreateStaticRigidBody(Entity e, btCollisionShape* shape, XMVECTOR position, XMVECTOR rotation, bool isTrigger)
+RigidBody Physics::CreateStaticRigidBody(Entity e, ColliderPtr shape, XMVECTOR position, XMVECTOR rotation, bool isTrigger)
 {
 	btTransform transform;
 	transform.setIdentity();
@@ -180,7 +180,7 @@ RigidBody Physics::CreateStaticRigidBody(Entity e, btCollisionShape* shape, XMVE
 	btVector3 localInertia(0, 0, 0);
 
 	btDefaultMotionState* motionState = new btDefaultMotionState(transform);
-	btRigidBody::btRigidBodyConstructionInfo rbInfo(0, motionState, shape, localInertia);
+	btRigidBody::btRigidBodyConstructionInfo rbInfo(0, motionState, shape.m_collider, localInertia);
 	btRigidBody* body = new btRigidBody(rbInfo);
 
 	if (isTrigger)
@@ -196,7 +196,7 @@ RigidBody Physics::CreateStaticRigidBody(Entity e, btCollisionShape* shape, XMVE
 }
 
 
-RigidBody Physics::CreateKinematicRigidBody(Entity e, btCollisionShape* shape, XMVECTOR position, XMVECTOR rotation, bool isTrigger)
+RigidBody Physics::CreateKinematicRigidBody(Entity e, ColliderPtr shape, XMVECTOR position, XMVECTOR rotation, bool isTrigger)
 {
 	btTransform transform;
 	transform.setIdentity();
@@ -205,7 +205,7 @@ RigidBody Physics::CreateKinematicRigidBody(Entity e, btCollisionShape* shape, X
 	btVector3 localInertia(0, 0, 0);
 
 	btDefaultMotionState* motionState = new btDefaultMotionState(transform);
-	btRigidBody::btRigidBodyConstructionInfo rbInfo(0, motionState, shape, localInertia);
+	btRigidBody::btRigidBodyConstructionInfo rbInfo(0, motionState, shape.m_collider, localInertia);
 	btRigidBody* body = new btRigidBody(rbInfo);
 
 	// kinematic flags
@@ -225,7 +225,7 @@ RigidBody Physics::CreateKinematicRigidBody(Entity e, btCollisionShape* shape, X
 }
 
 
-RigidBody Physics::CreateCharacterBody(Entity e, btCollisionShape* shape, XMVECTOR position, XMVECTOR rotation)
+RigidBody Physics::CreateCharacterBody(Entity e, ColliderPtr shape, XMVECTOR position, XMVECTOR rotation)
 {
 	btTransform transform;
 	transform.setIdentity();
@@ -234,7 +234,7 @@ RigidBody Physics::CreateCharacterBody(Entity e, btCollisionShape* shape, XMVECT
 	btVector3 localInertia(0, 0, 0);
 
 	btDefaultMotionState* motionState = new btDefaultMotionState(transform);
-	btRigidBody::btRigidBodyConstructionInfo rbInfo(0, motionState, shape, localInertia);
+	btRigidBody::btRigidBodyConstructionInfo rbInfo(0, motionState, shape.m_collider, localInertia);
 	btRigidBody* body = new btRigidBody(rbInfo);
 
 	// kinematic flags
