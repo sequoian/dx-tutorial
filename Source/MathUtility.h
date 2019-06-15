@@ -1,5 +1,8 @@
 #pragma once
 
+#include <DirectXMath.h>
+using namespace std;
+
 const long double PI = 3.14159265358979323846;
 
 inline float RadiansToDegrees(float radians)
@@ -20,4 +23,29 @@ inline float DegreesToRadians(float degrees)
 inline float operator "" _rad(long double degrees)
 {
 	return DegreesToRadians(degrees);
+}
+
+// =======================================================================
+// DirectX Math functions
+// =======================================================================
+
+inline XMVECTOR Vector3(float x, float y, float z, float w = 1)
+{
+	return XMVectorSet(x, y, z, w);
+}
+
+inline XMVECTOR Vector3(float xyz, float w = 1)
+{
+	return XMVectorSet(xyz, xyz, xyz, w);
+}
+
+// return identity quaternion
+inline XMVECTOR Quaternion()
+{
+	return XMQuaternionIdentity();
+}
+
+inline XMVECTOR Quaternion(float pitch, float yaw, float roll)
+{
+	return XMQuaternionRotationRollPitchYaw(pitch, yaw, roll);
 }

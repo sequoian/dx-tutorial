@@ -13,8 +13,7 @@
 #include "ColliderPtr.h"
 
 #include "Material.h"
-#include <DirectXMath.h>
-using namespace DirectX;
+#include "MathUtility.h"
 
 enum PrimitiveShapes
 {
@@ -22,27 +21,6 @@ enum PrimitiveShapes
 	PRIM_SPHERE,
 	PRIM_CYLINDER,
 	PRIM_CONE
-};
-
-struct vec3
-{
-	vec3(float a, float b, float c)
-	{
-		x = a;
-		y = b;
-		z = c;
-	}
-
-	vec3(float a)
-	{
-		x = a;
-		y = a;
-		z = a;
-	}
-
-	float x;
-	float y;
-	float z;
 };
 
 class PrimitiveFactory
@@ -64,13 +42,9 @@ public:
 		return true;
 	}
 
-	Entity CreatePrimitive(PrimitiveShapes shape, float mass, Material* mat, vec3 pos, vec3 rot = vec3(0), vec3 scale = vec3(1), vec3 vel = vec3(0), bool isKinematic = false)
+	Entity CreatePrimitive(PrimitiveShapes shape, float mass, Material* mat, XMVECTOR pos, XMVECTOR rot = Vector3(0),
+		                   XMVECTOR scale = Vector3(1), XMVECTOR vel = Vector3(0), bool isKinematic = false)
 	{
-		XMVECTOR dxPos = XMVectorSet(pos.x, pos.y, pos.z, 1);
-		XMVECTOR dxRot = XMQuaternionRotationRollPitchYaw(rot.x, rot.y, rot.z);
-		XMVECTOR dxScale = XMVectorSet(scale.x, scale.y, scale.z, 1);
-
-
 		Entity e;
 		U64 transformHandle;
 		TransformComponent* transform;
@@ -115,7 +89,7 @@ public:
 		e = m_entityManager->CreateEntity();
 
 		// create transform
-		transformHandle = m_transformSystem->CreateComponent(e, dxPos, dxRot, dxScale);
+		transformHandle = m_transformSystem->CreateComponent(e, pos, rot, scale);
 		transform = m_transformSystem->GetComponentByHandle(transformHandle);
 
 		// y despawn
@@ -129,21 +103,21 @@ public:
 		
 		if (mass > 0)
 		{
-			rb = m_physics->CreateDynamicRigidBody(e, collider, dxPos, dxRot);
-			rb.SetLinearVelocity(XMVectorSet(vel.x, vel.y, vel.z, 1));
+			rb = m_physics->CreateDynamicRigidBody(e, collider, pos, rot);
+			rb.SetLinearVelocity(vel);
 			rbHandle = m_rigidBodySystem->CreateComponent(e, rb);
 			m_dynamicRigidBodySystem->CreateComponent(e, transformHandle, rbHandle);
 		}
 		else if (isKinematic)
 		{
-			rb = m_physics->CreateKinematicRigidBody(e, collider, dxPos, dxRot);
+			rb = m_physics->CreateKinematicRigidBody(e, collider, pos, rot);
 			rbHandle = m_rigidBodySystem->CreateComponent(e, rb);
 			m_kinematicRigidBodySystem->CreateComponent(e, transformHandle, rbHandle);
 
 		}
 		else
 		{
-			rb = m_physics->CreateStaticRigidBody(e, collider, dxPos, dxRot);
+			rb = m_physics->CreateStaticRigidBody(e, collider, pos, rot);
 			m_rigidBodySystem->CreateComponent(e, rb);
 		}
 		

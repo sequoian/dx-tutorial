@@ -231,30 +231,30 @@ public:
 		ColliderPtr collider;
 
 		// bowl
-		m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, vec3(0, -15, 0), vec3(0), vec3(10, 1, 10));
-		m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, vec3(0, -9, 10), vec3(90.0_rad, 0, 0), vec3(10, 1, 5));
-		m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, vec3(0, -9, -10), vec3(90.0_rad, 0, 0), vec3(10, 1, 5));
-		m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, vec3(10, -9, 0), vec3(0, 0, 90.0_rad), vec3(5, 1, 10));
-		m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, vec3(-10, -9, 0), vec3(0, 0, 90.0_rad), vec3(5, 1, 10));
+		m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, Vector3(0, -15, 0), Quaternion(), Vector3(10, 1, 10));
+		m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, Vector3(0, -9, 10), Quaternion(90.0_rad, 0, 0), Vector3(10, 1, 5));
+		m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, Vector3(0, -9, -10), Quaternion(90.0_rad, 0, 0), Vector3(10, 1, 5));
+		m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, Vector3(10, -9, 0), Quaternion(0, 0, 90.0_rad), Vector3(5, 1, 10));
+		m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, Vector3(-10, -9, 0), Quaternion(0, 0, 90.0_rad), Vector3(5, 1, 10));
 
 		// tower
-		m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, vec3(0, 0, 25), vec3(0), vec3(10, 1, 10));
+		m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, Vector3(0, 0, 25), Quaternion(), Vector3(10, 1, 10));
 
 		int x = 0;
 		int y = 2;
 		int z = 25;
 		for (int i = 0; i < 10; ++i)
 		{
-			m_primFactory.CreatePrimitive(PRIM_CUBE, 1, matStone, vec3(x, y, z));
-			m_primFactory.CreatePrimitive(PRIM_CUBE, 1, matStone, vec3(x, y, z + 2));
-			m_primFactory.CreatePrimitive(PRIM_CUBE, 1, matStone, vec3(x, y, z - 2));
-			m_primFactory.CreatePrimitive(PRIM_CUBE, 1, matStone, vec3(x + 2, y, z));
-			m_primFactory.CreatePrimitive(PRIM_CUBE, 1, matStone, vec3(x - 2, y, z));
+			m_primFactory.CreatePrimitive(PRIM_CUBE, 1, matStone, Vector3(x, y, z));
+			m_primFactory.CreatePrimitive(PRIM_CUBE, 1, matStone, Vector3(x, y, z + 2));
+			m_primFactory.CreatePrimitive(PRIM_CUBE, 1, matStone, Vector3(x, y, z - 2));
+			m_primFactory.CreatePrimitive(PRIM_CUBE, 1, matStone, Vector3(x + 2, y, z));
+			m_primFactory.CreatePrimitive(PRIM_CUBE, 1, matStone, Vector3(x - 2, y, z));
 			y += 2;
 		}
 
 		// door
-		e = m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, vec3(-25, 10, 25), vec3(90.0_rad, 0, 0), vec3(5, 1, 5), vec3(0), true);
+		e = m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, Vector3(-25, 10, 25), Quaternion(90.0_rad, 0, 0), Vector3(5, 1, 5), Vector3(0), true);
 		m_transformSystem.GetComponentHandle(e, hTransform);
 		m_doorSystem.CreateComponent(e, hTransform, XMVectorSet(-25, 10, 25, 1), XMVectorSet(-25, 20, 25, 1), 3);
 		Entity doorEntity = e;
@@ -272,8 +272,8 @@ public:
 		m_doorTriggerSystem.CreateComponent(e, doorEntity);
 		
 		// walls surrounding door
-		m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, vec3(-35, 10, 25), vec3(90.0_rad, 0, 0), vec3(5, 1, 5));
-		m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, vec3(-15, 10, 25), vec3(90.0_rad, 0, 0), vec3(5, 1, 5));
+		m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, Vector3(-35, 10, 25), Quaternion(90.0_rad, 0, 0), Vector3(5, 1, 5));
+		m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, Vector3(-15, 10, 25), Quaternion(90.0_rad, 0, 0), Vector3(5, 1, 5));
 
 		// spinner
 		e = m_entityManager.CreateEntity();

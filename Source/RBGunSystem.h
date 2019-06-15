@@ -78,23 +78,10 @@ public:
 
 			XMVECTOR velocity = forward * force;
 
-			Entity e = m_factory->CreatePrimitive(PRIM_SPHERE, 1, comp->material, XMVecToVec3(position), vec3(0), vec3(1), XMVecToVec3(velocity));
+			Entity e = m_factory->CreatePrimitive(PRIM_SPHERE, 1, comp->material, position, Vector3(0), Vector3(1), velocity);
 
 			m_bulletSystem->CreateComponent(e);
 		}
-	}
-
-private:
-
-	vec3 XMVecToVec3(XMVECTOR dxVec)
-	{
-		vec3 vec(
-			dxVec.m128_f32[0],
-			dxVec.m128_f32[1],
-			dxVec.m128_f32[2]
-		);
-
-		return vec;
 	}
 
 private:
