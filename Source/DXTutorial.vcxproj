@@ -186,7 +186,9 @@
     <ClInclude Include="DoorSystem.h" />
     <ClInclude Include="DoorTriggerSystem.h" />
     <ClInclude Include="EngineEvents.h" />
+    <ClInclude Include="PivotCamSystem.h" />
     <ClInclude Include="TestBed.h" />
+    <ClInclude Include="ThirdPersonApp.h" />
     <ClInclude Include="YDespawnSystem.h" />
     <ClInclude Include="CollisionInfo.h" />
     <ClInclude Include="CompactPool.h" />

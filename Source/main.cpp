@@ -1,8 +1,8 @@
-#include "TestBed.h"
+#include "ThirdPersonApp.h"
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE, PWSTR pCmdLine, int nCmdShow)
 {
-	TestBed app;
+	ThirdPersonApp app;
 	if (!app.StartUp())
 	{
 		MessageBox(NULL, L"Failed to initialize the application", L"ERROR", MB_OK);

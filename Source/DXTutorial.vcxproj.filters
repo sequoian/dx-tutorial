@@ -267,5 +267,11 @@
     <ClInclude Include="ColliderPtr.h">
       <Filter>Engine</Filter>
     </ClInclude>
+    <ClInclude Include="ThirdPersonApp.h">
+      <Filter>App</Filter>
+    </ClInclude>
+    <ClInclude Include="PivotCamSystem.h">
+      <Filter>App\Component Systems</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
