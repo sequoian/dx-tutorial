@@ -254,8 +254,15 @@ public:
 		}
 
 		// door
-		e = m_primFactory.CreatePrimitive(PRIM_CUBE, 0, matSand, Vector3(-25, 10, 25), Quaternion(90.0_rad, 0, 0), Vector3(5, 1, 5), Vector3(0), true);
-		m_transformSystem.GetComponentHandle(e, hTransform);
+		e = m_entityManager.CreateEntity();
+		hTransform = m_transformSystem.CreateComponent(e, Vector3(-25, 10, 25), Quaternion(90.0_rad, 0, 0), Vector3(5, 1, 5));
+		transform = m_transformSystem.GetComponentByHandle(hTransform);
+		m_meshSystem.CreateComponent(e, hTransform, modelCube, matSand);
+		collider = m_physics.CreateCollisionBox(1, 1, 1);
+		collider.SetScale(transform->scale);
+		rb = m_physics.CreateKinematicRigidBody(e, collider, transform->position, transform->rotation);
+		hRigidBody = m_rigidBodySystem.CreateComponent(e, rb);
+		m_kinematicRBSystem.CreateComponent(e, hTransform, hRigidBody);
 		m_doorSystem.CreateComponent(e, hTransform, XMVectorSet(-25, 10, 25, 1), XMVectorSet(-25, 20, 25, 1), 3);
 		Entity doorEntity = e;
 

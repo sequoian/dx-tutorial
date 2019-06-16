@@ -48,37 +48,28 @@ public:
 		Entity e;
 		U64 transformHandle;
 		TransformComponent* transform;
-		MeshComponent* mesh;
-		U64 colliderHandle;
 		ColliderPtr collider;
-		U64 drbHandle;
-		DynamicRigidBodyComponent* dynamicRigidBody;
 		U64 rbHandle;
-		RigidBodyComponent* rigidBody;
-		YDespawnComponent* despawn;
 		RigidBody rb;
-		
-
 		Model* model;
-		ColliderPtr colShape;
 
 		switch (shape)
 		{
 		case PRIM_CUBE:
 			model = static_cast<Model*>(m_resourceManager->FindResourceByStringId("Assets/cube.obj"_sid));
-			colShape = m_physics->CreateCollisionBox(1, 1, 1);
+			collider = m_physics->CreateCollisionBox(1, 1, 1);
 			break;
 		case PRIM_SPHERE:
 			model = static_cast<Model*>(m_resourceManager->FindResourceByStringId("Assets/sphere.obj"_sid));
-			colShape = m_physics->CreateCollisionSphere(1);
+			collider = m_physics->CreateCollisionSphere(1);
 			break;
 		case PRIM_CYLINDER:
 			model = static_cast<Model*>(m_resourceManager->FindResourceByStringId("Assets/cylinder.obj"_sid));
-			colShape = m_physics->CreateCollisionCylinder(1, 1, 1);
+			collider = m_physics->CreateCollisionCylinder(1, 1, 1);
 			break;
 		case PRIM_CONE:
 			model = static_cast<Model*>(m_resourceManager->FindResourceByStringId("Assets/cone.obj"_sid));
-			colShape = m_physics->CreateCollisionCone(1, 2);
+			collider = m_physics->CreateCollisionCone(1, 2);
 			break;
 		default:
 			break;
@@ -93,10 +84,9 @@ public:
 		transform = m_transformSystem->GetComponentByHandle(transformHandle);
 
 		// y despawn
-		despawn = m_yDespawnSystem->GetComponentByHandle(m_yDespawnSystem->CreateComponent(e, transformHandle, -50));
+		m_yDespawnSystem->GetComponentByHandle(m_yDespawnSystem->CreateComponent(e, transformHandle, -50));
 		
 		// create collider
-		collider = colShape;
 		collider.SetScale(transform->scale);
 
 		// create rigid body
