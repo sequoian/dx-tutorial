@@ -15,7 +15,7 @@ class RBBulletSystem : public ComponentSystem<RBBulletComponent>
 public:
 	bool StartUp(U32 numComponents, EntityManager& em, EventBus& bus)
 	{
-		TParent::StartUp(numComponents, em);
+		Parent::StartUp(numComponents, em);
 
 		SubscribeToCollisionEvents(bus);
 

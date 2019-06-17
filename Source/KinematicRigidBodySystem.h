@@ -21,7 +21,7 @@ public:
 
 	bool StartUp(U32 numComponents, EntityManager& em, TransformSystem& transformSystem, RigidBodySystem& rigidBodySystem)
 	{
-		TParent::StartUp(numComponents, em);
+		Parent::StartUp(numComponents, em);
 
 		m_transformSystem = &transformSystem;
 		m_rigidBodySystem = &rigidBodySystem;
@@ -31,7 +31,7 @@ public:
 
 	U64 CreateComponent(Entity e, U64 hTransform, U64 hRigidBody)
 	{
-		U64 handle = TParent::CreateComponent(e);
+		U64 handle = Parent::CreateComponent(e);
 		KinematicRigidBodyComponent* comp = GetComponentByHandle(handle);
 
 		comp->transform = hTransform;

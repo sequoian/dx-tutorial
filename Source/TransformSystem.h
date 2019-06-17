@@ -21,7 +21,7 @@ public:
 	U64 CreateComponent(Entity e, XMVECTOR position, XMVECTOR rotation = XMQuaternionIdentity(), 
 						XMVECTOR scale = XMVectorSet(1, 1, 1, 1))
 	{
-		U64 handle = TParent::CreateComponent(e);
+		U64 handle = Parent::CreateComponent(e);
 		TransformComponent* comp = GetComponentByHandle(handle);
 		comp->position = position;
 		comp->rotation = rotation;

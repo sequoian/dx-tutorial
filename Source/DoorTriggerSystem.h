@@ -19,7 +19,7 @@ public:
 
 	bool StartUp(U32 numComponents, EntityManager& em, EventBus& bus)
 	{
-		TParent::StartUp(numComponents, em);
+		Parent::StartUp(numComponents, em);
 
 		SubscribeToCollisionEvents(bus);
 		m_eventBus = &bus;
@@ -29,7 +29,7 @@ public:
 
 	U64 CreateComponent(Entity e, Entity door)
 	{
-		U64 handle = TParent::CreateComponent(e);
+		U64 handle = Parent::CreateComponent(e);
 		DoorTriggerComponent* comp = GetComponentByHandle(handle);
 
 		comp->door = door;

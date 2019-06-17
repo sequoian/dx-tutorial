@@ -27,7 +27,7 @@ public:
 
 	U64 CreateComponent(Entity e, U64 hTransform, float speed)
 	{
-		U64 handle = TParent::CreateComponent(e);
+		U64 handle = Parent::CreateComponent(e);
 		RotatorComponent* comp = GetComponentByHandle(handle);
 		comp->transform = hTransform;
 		comp->speed = speed;

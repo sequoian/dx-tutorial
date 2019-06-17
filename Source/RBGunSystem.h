@@ -33,7 +33,7 @@ public:
 
 	U64 CreateComponent(Entity e, U64 hTransform, Material* material, float cooldown)
 	{
-		U64 handle = TParent::CreateComponent(e);
+		U64 handle = Parent::CreateComponent(e);
 		RBGunComponent* comp = GetComponentByHandle(handle);
 		comp->transform = hTransform;
 		comp->material = material;

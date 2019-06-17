@@ -17,7 +17,7 @@ class MeshSystem : public ComponentSystem<MeshComponent>
 public:
 	U64 CreateComponent(Entity e, U64 hTransform, Model* model, Material* material)
 	{
-		U64 handle = TParent::CreateComponent(e);
+		U64 handle = Parent::CreateComponent(e);
 		MeshComponent* comp = GetComponentByHandle(handle);
 		comp->transform = hTransform;
 		comp->model = model;

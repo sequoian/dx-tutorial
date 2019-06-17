@@ -22,7 +22,7 @@ class CameraSystem : public ComponentSystem<CameraComponent>
 public:
 	bool StartUp(U32 numComponents, EntityManager& em, TransformSystem& transformSystem, SampleWindow& window)
 	{
-		TParent::StartUp(numComponents, em);
+		Parent::StartUp(numComponents, em);
 
 		m_transformSystem = &transformSystem;
 		m_window = &window;
@@ -32,7 +32,7 @@ public:
 
 	U64 CreateComponent(Entity e, U64 hTransform, float nearZ, float farZ, float fov)
 	{
-		U64 handle = TParent::CreateComponent(e);
+		U64 handle = Parent::CreateComponent(e);
 		CameraComponent* comp = GetComponentByHandle(handle);
 
 		comp->transform = hTransform;

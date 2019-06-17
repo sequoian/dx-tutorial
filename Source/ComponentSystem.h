@@ -109,7 +109,7 @@ public:
 	}
 
 protected:
-	typedef ComponentSystem<T> TParent;
+	typedef ComponentSystem<T> Parent;
 
 	virtual void SubscribeToCollisionEvents(EventBus& bus)
 	{

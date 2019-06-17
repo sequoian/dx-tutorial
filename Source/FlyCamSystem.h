@@ -26,7 +26,7 @@ public:
 
 	bool StartUp(U32 numComponents, EntityManager& em, InputManager& inputManager, TransformSystem& transformSystem)
 	{
-		TParent::StartUp(numComponents, em);
+		Parent::StartUp(numComponents, em);
 
 		m_inputManager = &inputManager;
 		m_transformSystem = &transformSystem;
@@ -36,7 +36,7 @@ public:
 
 	U64 CreateComponent(Entity e, U64 hTransform, float moveSpeed, float sprintSpeed, float crawlspeed, float lookSpeed)
 	{
-		U64 handle = TParent::CreateComponent(e);
+		U64 handle = Parent::CreateComponent(e);
 		FlyCamComponent* comp = GetComponentByHandle(handle);
 
 		comp->transform = hTransform;

@@ -26,7 +26,7 @@ class DoorSystem : public ComponentSystem<DoorComponent>
 public:
 	bool StartUp(U32 numComponents, EntityManager& em, TransformSystem& transformSystem, EventBus& bus)
 	{
-		TParent::StartUp(numComponents, em);
+		Parent::StartUp(numComponents, em);
 
 		m_transformSystem = &transformSystem;
 		bus.Subscribe(this, &DoorSystem::Activate);
@@ -36,7 +36,7 @@ public:
 
 	U64 CreateComponent(Entity e, U64 hTransform, XMVECTOR startPos, XMVECTOR endPos, float secToMove, bool active = false)
 	{
-		U64 handle = TParent::CreateComponent(e);
+		U64 handle = Parent::CreateComponent(e);
 		DoorComponent* comp = GetComponentByHandle(handle);
 
 		comp->transform = hTransform;

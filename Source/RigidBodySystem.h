@@ -27,7 +27,7 @@ public:
 
 	U64 CreateComponent(Entity e, RigidBody rigidBody)
 	{
-		U64 handle = TParent::CreateComponent(e);
+		U64 handle = Parent::CreateComponent(e);
 		RigidBodyComponent* comp = GetComponentByHandle(handle);
 		comp->body = rigidBody;
 

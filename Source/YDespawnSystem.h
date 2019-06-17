@@ -20,14 +20,14 @@ class YDespawnSystem : public ComponentSystem<YDespawnComponent>
 public:
 	bool StartUp(U32 numComponents, EntityManager& em, TransformSystem& transformSystem)
 	{
-		TParent::StartUp(numComponents, em);
+		Parent::StartUp(numComponents, em);
 		m_transformSystem = &transformSystem;
 		return true;
 	}
 
 	U64 CreateComponent(Entity e, U64 hTransform, I32 yLimit)
 	{
-		U64 handle = TParent::CreateComponent(e);
+		U64 handle = Parent::CreateComponent(e);
 		YDespawnComponent* comp = GetComponentByHandle(handle);
 		comp->entity = e;
 		comp->transform = hTransform;

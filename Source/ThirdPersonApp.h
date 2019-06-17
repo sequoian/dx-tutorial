@@ -208,6 +208,11 @@ public:
 		hTransform = m_transformSystem.CreateComponent(e, Vector3(0, 0, -10));
 		m_cameraSystem.CreateComponent(e, hTransform, 0.01f, 1000, 45);
 		m_pivotCamSystem.CreateComponent(e, originTransform, hTransform, 5, 5);
+
+		// ground
+		e = m_entityManager.CreateEntity();
+		hTransform = m_transformSystem.CreateComponent(e, Vector3(0, -5, 0), Quaternion(), Vector3(5, 1, 5));
+		m_meshSystem.CreateComponent(e, hTransform, modelCube, matSand);
 			
 		return true;
 	}

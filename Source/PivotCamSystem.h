@@ -21,7 +21,7 @@ class PivotCamSystem : public ComponentSystem<PivotCamComponent>
 public:
 	bool StartUp(U32 numComponents, EntityManager& em, TransformSystem& transformSystem, InputManager& inputManager)
 	{
-		TParent::StartUp(numComponents, em);
+		Parent::StartUp(numComponents, em);
 		m_transformSystem = &transformSystem;
 		m_inputManager = &inputManager;
 		return true;
@@ -29,7 +29,7 @@ public:
 
 	U64 CreateComponent(Entity e, U64 hParentTransform, U64 hCameraTransform, float length, float lookSpeed, float pitch = 0, float yaw = 0)
 	{
-		U64 handle = TParent::CreateComponent(e);
+		U64 handle = Parent::CreateComponent(e);
 		PivotCamComponent* comp = GetComponentByHandle(handle);
 
 		comp->hParentTransform = hParentTransform;
@@ -54,7 +54,8 @@ public:
 			HandleInput(comp, deltaTime);
 
 			// set camera position
-			XMVECTOR pivot = XMVectorSubtract(parent->position, Vector3(0, 0, 1) * comp->length);
+			XMVECTOR normal = Vector3(0, 0, 1);
+			XMVECTOR pivot = XMVectorSubtract(parent->position, normal * comp->length);
 			cam->position = XMVector3Rotate(pivot, comp->rotation);
 
 			LookAtParent(comp, parent, cam);
@@ -93,7 +94,7 @@ protected:
 		XMVECTOR pos, rot, scale;
 		XMMATRIX lookAt = DirectX::XMMatrixLookAtLH(cam->position, parent->position, Vector3(0, 1, 0));
 
-		// get the inverse because CameraSystem will also get the inverse
+		// get the inverse because CameraSystem will also get the inverse. probably should fix this?
 		lookAt = XMMatrixInverse(nullptr, lookAt);
 
 		DirectX::XMMatrixDecompose(&scale, &rot, &pos, lookAt);
