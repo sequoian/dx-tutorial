@@ -22,6 +22,7 @@
 #include "TransformSystem.h"
 #include "MeshSystem.h"
 #include "CameraSystem.h"
+#include "PivotCamSystem.h"
 
 struct ModelConstants
 {
@@ -188,9 +189,10 @@ public:
 
 		//  Init Component System
 
-		m_transformSystem.StartUp(50, m_entityManager);
+		m_transformSystem.StartUp(2, m_entityManager);
 		m_cameraSystem.StartUp(1, m_entityManager, m_transformSystem, m_window);
-		m_meshSystem.StartUp(3, m_entityManager);
+		m_meshSystem.StartUp(1, m_entityManager);
+		m_pivotCamSystem.StartUp(1, m_entityManager, m_transformSystem);
 
 
 		// Create Entities
@@ -198,18 +200,19 @@ public:
 		U64 hTransform;
 		TransformComponent transform;
 
-		// camera
-		e = m_entityManager.CreateEntity();
-		hTransform = m_transformSystem.CreateComponent(e, Vector3(0, 0, -5));
-		m_cameraSystem.CreateComponent(e, hTransform, 0.01f, 1000, 45);
-
 		// object
 		e = m_entityManager.CreateEntity();
 		hTransform = m_transformSystem.CreateComponent(e, Vector3(0));
 		m_meshSystem.CreateComponent(e, hTransform, modelMonkey, matStone);
+		U64 originTransform = hTransform;
 
+		// camera
+		e = m_entityManager.CreateEntity();
+		hTransform = m_transformSystem.CreateComponent(e, Vector3(0, 0, -10));
+		m_cameraSystem.CreateComponent(e, hTransform, 0.01f, 1000, 45);
+		m_pivotCamSystem.CreateComponent(e, originTransform, hTransform, Quaternion(), 10);
 
-
+		
 		return true;
 	}
 
@@ -232,9 +235,13 @@ public:
 		float dt = m_timer.GetDeltaTime();
 
 		// update systems
-		m_cameraSystem.Execute(dt);
+		m_pivotCamSystem.Execute(dt);
+		
 		m_physics.RunSimulation(dt);
+
+		
 		m_transformSystem.Execute(dt);
+		m_cameraSystem.Execute(dt);
 
 		// end frame
 		m_entityManager.EndFrame();
@@ -283,7 +290,7 @@ private:
 	TransformSystem m_transformSystem;
 	CameraSystem m_cameraSystem;
 	MeshSystem m_meshSystem;
-
+	PivotCamSystem m_pivotCamSystem;
 
 	// other
 	PrimitiveFactory m_primFactory;
