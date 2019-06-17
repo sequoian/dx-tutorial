@@ -23,6 +23,7 @@
 #include "MeshSystem.h"
 #include "CameraSystem.h"
 #include "PivotCamSystem.h"
+#include "KinematicGravitySystem.h"
 
 struct ModelConstants
 {
@@ -187,10 +188,11 @@ public:
 		m_rtState.SetSize(m_window.GetScreenWidth(), m_window.GetScreenHeight());
 
 		//  Init Component System
-		m_transformSystem.StartUp(2, m_entityManager);
+		m_transformSystem.StartUp(3, m_entityManager);
 		m_cameraSystem.StartUp(1, m_entityManager, m_transformSystem, m_window);
-		m_meshSystem.StartUp(1, m_entityManager);
+		m_meshSystem.StartUp(2, m_entityManager);
 		m_pivotCamSystem.StartUp(1, m_entityManager, m_transformSystem, m_inputManager);
+		m_gravitySystem.StartUp(1, m_entityManager, m_transformSystem);
 
 		// Create Entities
 		Entity e;
@@ -199,10 +201,11 @@ public:
 
 		// object
 		e = m_entityManager.CreateEntity();
-		hTransform = m_transformSystem.CreateComponent(e, Vector3(0));
+		hTransform = m_transformSystem.CreateComponent(e, Vector3(0, -10, 0));
+		U64 originTransform = hTransform; // for use on camera
 		m_meshSystem.CreateComponent(e, hTransform, modelMonkey, matStone);
-		U64 originTransform = hTransform;
-
+		m_gravitySystem.CreateComponent(e, hTransform, 1);
+		
 		// camera
 		e = m_entityManager.CreateEntity();
 		hTransform = m_transformSystem.CreateComponent(e, Vector3(0, 0, -10));
@@ -211,7 +214,7 @@ public:
 
 		// ground
 		e = m_entityManager.CreateEntity();
-		hTransform = m_transformSystem.CreateComponent(e, Vector3(0, -5, 0), Quaternion(), Vector3(5, 1, 5));
+		hTransform = m_transformSystem.CreateComponent(e, Vector3(0, -15, 0), Quaternion(), Vector3(5, 1, 5));
 		m_meshSystem.CreateComponent(e, hTransform, modelCube, matSand);
 			
 		return true;
@@ -236,10 +239,10 @@ public:
 		float dt = m_timer.GetDeltaTime();
 
 		// update systems
+		m_gravitySystem.Execute(dt);
 		m_pivotCamSystem.Execute(dt);
 		
 		m_physics.RunSimulation(dt);
-
 		
 		m_transformSystem.Execute(dt);
 		m_cameraSystem.Execute(dt);
@@ -292,6 +295,7 @@ private:
 	CameraSystem m_cameraSystem;
 	MeshSystem m_meshSystem;
 	PivotCamSystem m_pivotCamSystem;
+	KinematicGravitySystem m_gravitySystem;
 
 	// other
 	PrimitiveFactory m_primFactory;

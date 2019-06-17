@@ -54,9 +54,11 @@ public:
 			HandleInput(comp, deltaTime);
 
 			// set camera position
-			XMVECTOR normal = Vector3(0, 0, 1);
-			XMVECTOR pivot = XMVectorSubtract(parent->position, normal * comp->length);
-			cam->position = XMVector3Rotate(pivot, comp->rotation);
+			XMVECTOR dir = XMVector3Rotate(Vector3(0, 0, 1), comp->rotation);
+			dir *= comp->length;
+			cam->position = XMVectorSubtract(parent->position, dir);
+
+			DEBUG_PRINT("%f", RadiansToDegrees(comp->pitch));
 
 			LookAtParent(comp, parent, cam);
 		}
