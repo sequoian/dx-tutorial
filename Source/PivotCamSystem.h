@@ -58,8 +58,6 @@ public:
 			dir *= comp->length;
 			cam->position = XMVectorSubtract(parent->position, dir);
 
-			DEBUG_PRINT("%f", RadiansToDegrees(comp->pitch));
-
 			LookAtParent(comp, parent, cam);
 		}
 	}

@@ -31,6 +31,8 @@ public:
 
 	void DestroyRigidBody(RigidBody body);
 
+	btCollisionWorld::ClosestRayResultCallback RayCast(XMVECTOR start, XMVECTOR end);
+
 	static btQuaternion QuatFromDX(XMVECTOR quat);
 	static XMVECTOR QuatToDX(btQuaternion quat);
 	static btVector3 VecFromDX(XMVECTOR vec);

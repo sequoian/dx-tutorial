@@ -268,6 +268,19 @@ void Physics::DestroyRigidBody(RigidBody body)
 }
 
 
+btCollisionWorld::ClosestRayResultCallback Physics::RayCast(XMVECTOR startPos, XMVECTOR endPos)
+{
+	btVector3 start = VecFromDX(startPos);
+	btVector3 end = VecFromDX(endPos);
+
+	btCollisionWorld::ClosestRayResultCallback RayCallback(start, end);
+	m_dynamicsWorld->rayTest(start, end, RayCallback);
+
+	return RayCallback;
+}
+
+
+
 btQuaternion Physics::QuatFromDX(XMVECTOR quat)
 {
 	btQuaternion val;
