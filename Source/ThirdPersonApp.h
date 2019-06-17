@@ -180,7 +180,6 @@ public:
 		if (m_dss == nullptr)
 			return false;
 
-
 		m_rtState.SetRenderTarget(m_window.GetRenderTarget());
 		m_rtState.SetDepthTarget(m_dsv);
 		m_rtState.SetClearColor(true, 0.4f, 0.5f, 1.0f, 1.0f);
@@ -188,12 +187,10 @@ public:
 		m_rtState.SetSize(m_window.GetScreenWidth(), m_window.GetScreenHeight());
 
 		//  Init Component System
-
 		m_transformSystem.StartUp(2, m_entityManager);
 		m_cameraSystem.StartUp(1, m_entityManager, m_transformSystem, m_window);
 		m_meshSystem.StartUp(1, m_entityManager);
-		m_pivotCamSystem.StartUp(1, m_entityManager, m_transformSystem);
-
+		m_pivotCamSystem.StartUp(1, m_entityManager, m_transformSystem, m_inputManager);
 
 		// Create Entities
 		Entity e;
@@ -210,9 +207,8 @@ public:
 		e = m_entityManager.CreateEntity();
 		hTransform = m_transformSystem.CreateComponent(e, Vector3(0, 0, -10));
 		m_cameraSystem.CreateComponent(e, hTransform, 0.01f, 1000, 45);
-		m_pivotCamSystem.CreateComponent(e, originTransform, hTransform, Quaternion(), 10);
-
-		
+		m_pivotCamSystem.CreateComponent(e, originTransform, hTransform, 5, 5);
+			
 		return true;
 	}
 
