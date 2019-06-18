@@ -81,7 +81,7 @@ protected:
 
 		XMVECTOR xAxis = XMVectorSet(1, 0, 0, 1);
 		XMVECTOR yAxis = XMVectorSet(0, 1, 0, 1);
-		XMVECTOR yRot = XMQuaternionRotationAxis(yAxis, -yaw);
+		XMVECTOR yRot = XMQuaternionRotationAxis(yAxis, yaw);
 		XMVECTOR xRot = XMQuaternionRotationAxis(xAxis, -pitch);
 
 		comp->pitch = pitch;

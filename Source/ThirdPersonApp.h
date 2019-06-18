@@ -198,7 +198,7 @@ public:
 		m_gravitySystem.StartUp(1, m_entityManager, m_transformSystem);
 		m_rigidBodySystem.StartUp(2, m_entityManager, m_physics);
 		m_legCastSystem.StartUp(1, m_entityManager, m_transformSystem, m_physics);
-		m_platformerSystem.StartUp(1, m_entityManager, m_transformSystem, m_inputManager);
+		m_platformerSystem.StartUp(1, m_entityManager, m_transformSystem, m_inputManager, m_pivotCamSystem);
 
 		// Create Entities
 		Entity e;
@@ -207,20 +207,25 @@ public:
 		ColliderPtr collider;
 		RigidBody rb;
 
-		// object
+		// platformer
 		e = m_entityManager.CreateEntity();
+		Entity platformer = e;
 		hTransform = m_transformSystem.CreateComponent(e, Vector3(0, -10, 0));
 		U64 originTransform = hTransform; // for use on camera
 		m_meshSystem.CreateComponent(e, hTransform, modelMonkey, matStone);
 		m_gravitySystem.CreateComponent(e, hTransform, 1);
 		m_legCastSystem.CreateComponent(e, hTransform, 1.2);
-		m_platformerSystem.CreateComponent(e, hTransform, 5);
+		
 		
 		// camera
 		e = m_entityManager.CreateEntity();
 		hTransform = m_transformSystem.CreateComponent(e, Vector3(0, 0, -10));
 		m_cameraSystem.CreateComponent(e, hTransform, 0.01f, 1000, 45);
-		m_pivotCamSystem.CreateComponent(e, originTransform, hTransform, 5, 5);
+		U64 hPivotCam = m_pivotCamSystem.CreateComponent(e, originTransform, hTransform, 5, 5);
+
+		// finish platformer
+		m_platformerSystem.CreateComponent(platformer, originTransform, hPivotCam, 5);
+
 
 		// ground
 		e = m_entityManager.CreateEntity();
@@ -254,10 +259,10 @@ public:
 		float dt = m_timer.GetDeltaTime();
 
 		// update systems
-		m_pivotCamSystem.Execute(dt);
 		m_platformerSystem.Execute(dt);
 		m_gravitySystem.Execute(dt);
 		m_legCastSystem.Execute(dt);
+		m_pivotCamSystem.Execute(dt);
 		
 		m_physics.RunSimulation(dt);
 		
