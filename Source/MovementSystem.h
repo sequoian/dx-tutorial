@@ -56,6 +56,8 @@ protected:
 		float x = m_inputManager->GetGamepad().GetAxisState(GamepadAxes::LEFT_THUMB_X);
 		float z = m_inputManager->GetGamepad().GetAxisState(GamepadAxes::LEFT_THUMB_Y);
 
+		if (x == 0 && z == 0) return;
+
 		// calculate movement vector
 		XMVECTOR movement = XMVectorSet(x, 0, z, 1);
 
@@ -63,12 +65,21 @@ protected:
 		XMVECTOR quat = XMQuaternionRotationRollPitchYaw(0, camYaw, 0);
 		movement = XMVector3Rotate(movement, quat);
 
-		// scale movement
+		// scale movement and get final position
 		movement *= moveSpeed * dt;
+		XMVECTOR finalPos = XMVectorAdd(transform->position, movement);
 
-		// set position and rotation
-		transform->position += movement;
-		transform->rotation = XMQuaternionRotationRollPitchYaw(0, camYaw + 180.0_rad, 0);
+		// set rotation
+		XMVECTOR pos, rot, scale;
+		// character looks where they are going
+		XMMATRIX lookAt = DirectX::XMMatrixLookAtLH(transform->position, finalPos, Vector3(0, 1, 0));
+		lookAt = XMMatrixInverse(nullptr, lookAt);
+		DirectX::XMMatrixDecompose(&scale, &rot, &pos, lookAt);
+		// need to turn character around
+		transform->rotation = XMQuaternionMultiply(rot, XMQuaternionRotationRollPitchYaw(0, 180.0_rad, 0));
+
+		// set position
+		transform->position = finalPos;
 	}
 
 protected:
