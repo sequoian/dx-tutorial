@@ -268,6 +268,7 @@ void Physics::DestroyRigidBody(RigidBody body)
 }
 
 
+// Copies RayCallback which is inefficient. TODO (ideal): RayCast(const &start, const &end, &result)
 btCollisionWorld::ClosestRayResultCallback Physics::RayCast(XMVECTOR startPos, XMVECTOR endPos)
 {
 	btVector3 start = VecFromDX(startPos);

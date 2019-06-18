@@ -25,6 +25,7 @@
 #include "PivotCamSystem.h"
 #include "KinematicGravitySystem.h"
 #include "RigidBodySystem.h"
+#include "LegCastSystem.h"
 
 struct ModelConstants
 {
@@ -195,6 +196,7 @@ public:
 		m_pivotCamSystem.StartUp(1, m_entityManager, m_transformSystem, m_inputManager);
 		m_gravitySystem.StartUp(1, m_entityManager, m_transformSystem);
 		m_rigidBodySystem.StartUp(2, m_entityManager, m_physics);
+		m_legCastSystem.StartUp(1, m_entityManager, m_transformSystem, m_physics);
 
 		// Create Entities
 		Entity e;
@@ -209,6 +211,7 @@ public:
 		U64 originTransform = hTransform; // for use on camera
 		m_meshSystem.CreateComponent(e, hTransform, modelMonkey, matStone);
 		m_gravitySystem.CreateComponent(e, hTransform, 1);
+		m_legCastSystem.CreateComponent(e, hTransform, 1.2);
 		
 		// camera
 		e = m_entityManager.CreateEntity();
@@ -225,17 +228,6 @@ public:
 		collider.SetScale(transform->scale);
 		rb = m_physics.CreateStaticRigidBody(e, collider, transform->position, transform->rotation);
 		m_rigidBodySystem.CreateComponent(e, rb);
-
-		// test
-		auto result = m_physics.RayCast(Vector3(0), Vector3(0, -16, 0));
-		if (result.hasHit()) 
-		{
-			DEBUG_PRINT("hit!");
-		}
-		else
-		{
-			DEBUG_PRINT("failed");
-		}
 			
 		return true;
 	}
@@ -260,6 +252,7 @@ public:
 
 		// update systems
 		m_gravitySystem.Execute(dt);
+		m_legCastSystem.Execute(dt);
 		m_pivotCamSystem.Execute(dt);
 		
 		m_physics.RunSimulation(dt);
@@ -317,6 +310,7 @@ private:
 	PivotCamSystem m_pivotCamSystem;
 	KinematicGravitySystem m_gravitySystem;
 	RigidBodySystem m_rigidBodySystem;
+	LegCastSystem m_legCastSystem;
 
 	// other
 	PrimitiveFactory m_primFactory;
