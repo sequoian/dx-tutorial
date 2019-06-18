@@ -51,10 +51,6 @@ public:
 				XMVECTOR norm = Physics::VecToDX(normalOnB);
 				transform->position += XMVectorMultiply(norm, XMVector3Dot(diff, norm));
 			}
-			else
-			{
-				DEBUG_PRINT("failed");
-			}
 		}
 	}
 

@@ -26,6 +26,7 @@
 #include "KinematicGravitySystem.h"
 #include "RigidBodySystem.h"
 #include "LegCastSystem.h"
+#include "PlatformerSystem.h"
 
 struct ModelConstants
 {
@@ -197,6 +198,7 @@ public:
 		m_gravitySystem.StartUp(1, m_entityManager, m_transformSystem);
 		m_rigidBodySystem.StartUp(2, m_entityManager, m_physics);
 		m_legCastSystem.StartUp(1, m_entityManager, m_transformSystem, m_physics);
+		m_platformerSystem.StartUp(1, m_entityManager, m_transformSystem, m_inputManager);
 
 		// Create Entities
 		Entity e;
@@ -212,6 +214,7 @@ public:
 		m_meshSystem.CreateComponent(e, hTransform, modelMonkey, matStone);
 		m_gravitySystem.CreateComponent(e, hTransform, 1);
 		m_legCastSystem.CreateComponent(e, hTransform, 1.2);
+		m_platformerSystem.CreateComponent(e, hTransform, 5);
 		
 		// camera
 		e = m_entityManager.CreateEntity();
@@ -251,9 +254,10 @@ public:
 		float dt = m_timer.GetDeltaTime();
 
 		// update systems
+		m_pivotCamSystem.Execute(dt);
+		m_platformerSystem.Execute(dt);
 		m_gravitySystem.Execute(dt);
 		m_legCastSystem.Execute(dt);
-		m_pivotCamSystem.Execute(dt);
 		
 		m_physics.RunSimulation(dt);
 		
@@ -311,6 +315,7 @@ private:
 	KinematicGravitySystem m_gravitySystem;
 	RigidBodySystem m_rigidBodySystem;
 	LegCastSystem m_legCastSystem;
+	PlatformerSystem m_platformerSystem;
 
 	// other
 	PrimitiveFactory m_primFactory;

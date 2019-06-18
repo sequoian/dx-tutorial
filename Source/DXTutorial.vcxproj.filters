@@ -279,5 +279,8 @@
     <ClInclude Include="LegCastSystem.h">
       <Filter>App\Component Systems</Filter>
     </ClInclude>
+    <ClInclude Include="PlatformerSystem.h">
+      <Filter>App\Component Systems</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
