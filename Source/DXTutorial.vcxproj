@@ -189,7 +189,7 @@
     <ClInclude Include="KinematicGravitySystem.h" />
     <ClInclude Include="LegCastSystem.h" />
     <ClInclude Include="PivotCamSystem.h" />
-    <ClInclude Include="PlatformerSystem.h" />
+    <ClInclude Include="MovementSystem.h" />
     <ClInclude Include="TestBed.h" />
     <ClInclude Include="ThirdPersonApp.h" />
     <ClInclude Include="YDespawnSystem.h" />

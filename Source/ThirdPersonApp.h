@@ -26,7 +26,7 @@
 #include "KinematicGravitySystem.h"
 #include "RigidBodySystem.h"
 #include "LegCastSystem.h"
-#include "PlatformerSystem.h"
+#include "MovementSystem.h"
 
 struct ModelConstants
 {
@@ -198,7 +198,7 @@ public:
 		m_gravitySystem.StartUp(1, m_entityManager, m_transformSystem);
 		m_rigidBodySystem.StartUp(2, m_entityManager, m_physics);
 		m_legCastSystem.StartUp(1, m_entityManager, m_transformSystem, m_physics);
-		m_platformerSystem.StartUp(1, m_entityManager, m_transformSystem, m_inputManager, m_pivotCamSystem);
+		m_movementSystem.StartUp(1, m_entityManager, m_transformSystem, m_inputManager, m_pivotCamSystem);
 
 		// Create Entities
 		Entity e;
@@ -207,24 +207,23 @@ public:
 		ColliderPtr collider;
 		RigidBody rb;
 
-		// platformer
-		e = m_entityManager.CreateEntity();
-		Entity platformer = e;
-		hTransform = m_transformSystem.CreateComponent(e, Vector3(0, -10, 0));
-		U64 originTransform = hTransform; // for use on camera
-		m_meshSystem.CreateComponent(e, hTransform, modelMonkey, matStone);
-		m_gravitySystem.CreateComponent(e, hTransform, 1);
-		m_legCastSystem.CreateComponent(e, hTransform, 1.2);
+		
 		
 		
 		// camera
 		e = m_entityManager.CreateEntity();
 		hTransform = m_transformSystem.CreateComponent(e, Vector3(0, 0, -10));
 		m_cameraSystem.CreateComponent(e, hTransform, 0.01f, 1000, 45);
-		U64 hPivotCam = m_pivotCamSystem.CreateComponent(e, originTransform, hTransform, 5, 5);
+		U64 hCamTransform = hTransform;
 
-		// finish platformer
-		m_platformerSystem.CreateComponent(platformer, originTransform, hPivotCam, 5);
+		// platformer
+		e = m_entityManager.CreateEntity();
+		hTransform = m_transformSystem.CreateComponent(e, Vector3(0, -10, 0));
+		m_meshSystem.CreateComponent(e, hTransform, modelMonkey, matStone);
+		U64 hPivotCam = m_pivotCamSystem.CreateComponent(e, hTransform, hCamTransform, 5, 5);
+		m_gravitySystem.CreateComponent(e, hTransform, 1);
+		m_legCastSystem.CreateComponent(e, hTransform, 1.2);
+		m_movementSystem.CreateComponent(e, hTransform, hPivotCam, 5);
 
 
 		// ground
@@ -259,7 +258,7 @@ public:
 		float dt = m_timer.GetDeltaTime();
 
 		// update systems
-		m_platformerSystem.Execute(dt);
+		m_movementSystem.Execute(dt);
 		m_gravitySystem.Execute(dt);
 		m_legCastSystem.Execute(dt);
 		m_pivotCamSystem.Execute(dt);
@@ -320,7 +319,7 @@ private:
 	KinematicGravitySystem m_gravitySystem;
 	RigidBodySystem m_rigidBodySystem;
 	LegCastSystem m_legCastSystem;
-	PlatformerSystem m_platformerSystem;
+	MovementSystem m_movementSystem;
 
 	// other
 	PrimitiveFactory m_primFactory;

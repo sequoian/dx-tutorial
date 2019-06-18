@@ -279,7 +279,7 @@
     <ClInclude Include="LegCastSystem.h">
       <Filter>App\Component Systems</Filter>
     </ClInclude>
-    <ClInclude Include="PlatformerSystem.h">
+    <ClInclude Include="MovementSystem.h">
       <Filter>App\Component Systems</Filter>
     </ClInclude>
   </ItemGroup>

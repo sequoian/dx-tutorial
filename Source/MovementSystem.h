@@ -6,14 +6,14 @@
 #include "InputManager.h"
 #include "MathUtility.h"
 
-struct PlatformerComponent
+struct MovementComponent
 {
 	U64 hTransform;
 	U64 hPivotCam;
 	float moveSpeed;
 };
 
-class PlatformerSystem : public ComponentSystem<PlatformerComponent>
+class MovementSystem : public ComponentSystem<MovementComponent>
 {
 public:
 	bool StartUp(U32 numComponents, EntityManager& em, TransformSystem& transformSystem, InputManager& input, PivotCamSystem& pivotCam)
@@ -28,7 +28,7 @@ public:
 	U64 CreateComponent(Entity e, U64 hTransform, U64 hPivotCam, float moveSpeed)
 	{
 		U64 handle = Parent::CreateComponent(e);
-		PlatformerComponent* comp = GetComponentByHandle(handle);
+		MovementComponent* comp = GetComponentByHandle(handle);
 
 		comp->hTransform = hTransform;
 		comp->hPivotCam = hPivotCam;
@@ -41,10 +41,10 @@ public:
 	{
 		for (U32 i = 0; i < m_pool.Size(); i++)
 		{
-			PlatformerComponent* comp = m_pool[i];
+			MovementComponent* comp = m_pool[i];
 			TransformComponent* transform = m_transformSystem->GetComponentByHandle(comp->hTransform);
 			PivotCamComponent* pivotCam = m_pivotCamSystem->GetComponentByHandle(comp->hPivotCam);
-			
+
 			Move(transform, pivotCam->yaw, comp->moveSpeed, deltaTime);
 		}
 	}
@@ -66,8 +66,9 @@ protected:
 		// scale movement
 		movement *= moveSpeed * dt;
 
-		// set position
+		// set position and rotation
 		transform->position += movement;
+		transform->rotation = XMQuaternionRotationRollPitchYaw(0, camYaw + 180.0_rad, 0);
 	}
 
 protected:
