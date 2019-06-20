@@ -3,12 +3,15 @@
 #include "ComponentSystem.h"
 #include "TransformSystem.h"
 #include "Physics.h"
+#include <math.h>
 #include "MathUtility.h"
 
 struct LegCastComponent
 {
 	U64 hParentTransform;
 	float legLength;
+	float maxSlopeAngle;
+	float angleOfGround;
 	bool grounded;
 };
 
@@ -23,13 +26,14 @@ public:
 		return true;
 	}
 
-	U64 CreateComponent(Entity e, U64 hParentTransform, float legLength)
+	U64 CreateComponent(Entity e, U64 hParentTransform, float legLength, float maxSlopeAngle = 45)
 	{
 		U64 handle = Parent::CreateComponent(e);
 		LegCastComponent* comp = GetComponentByHandle(handle);
 
 		comp->hParentTransform = hParentTransform;
 		comp->legLength = legLength;
+		comp->maxSlopeAngle = maxSlopeAngle;
 
 		return handle;
 	}
@@ -53,6 +57,11 @@ public:
 				transform->position += diff;
 				//transform->position += XMVectorMultiply(norm, XMVector3Dot(diff, norm));
 
+				XMVECTOR angle = XMVector3AngleBetweenVectors(Physics::VecToDX(normalOnB), Vector3(0, 1, 0));
+
+				// print angle of ground
+				//DEBUG_PRINT("%.f", RadiansToDegrees(angle.m128_f32[0]));
+
 				comp->grounded = true;
 			}
 			else
@@ -60,8 +69,9 @@ public:
 				comp->grounded = false;
 			}
 
-			if (comp->grounded) DEBUG_PRINT("grounded");
-			else DEBUG_PRINT("not grounded");
+			// print grounded state
+			//if (comp->grounded) DEBUG_PRINT("grounded");
+			//else DEBUG_PRINT("not grounded");
 		}
 	}
 
