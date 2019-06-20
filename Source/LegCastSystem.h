@@ -9,6 +9,7 @@ struct LegCastComponent
 {
 	U64 hParentTransform;
 	float legLength;
+	bool grounded;
 };
 
 class LegCastSystem : public ComponentSystem<LegCastComponent>
@@ -49,8 +50,18 @@ public:
 
 				XMVECTOR diff = Physics::VecToDX(ptA - ptB);
 				XMVECTOR norm = Physics::VecToDX(normalOnB);
-				transform->position += XMVectorMultiply(norm, XMVector3Dot(diff, norm));
+				transform->position += diff;
+				//transform->position += XMVectorMultiply(norm, XMVector3Dot(diff, norm));
+
+				comp->grounded = true;
 			}
+			else
+			{
+				comp->grounded = false;
+			}
+
+			if (comp->grounded) DEBUG_PRINT("grounded");
+			else DEBUG_PRINT("not grounded");
 		}
 	}
 

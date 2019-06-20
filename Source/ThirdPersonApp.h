@@ -222,7 +222,6 @@ public:
 		m_legCastSystem.CreateComponent(e, hTransform, 1.2);
 		m_movementSystem.CreateComponent(e, hTransform, hPivotCam, 5);
 
-
 		// ground
 		e = m_entityManager.CreateEntity();
 		hTransform = m_transformSystem.CreateComponent(e, Vector3(0, -15, 0), Quaternion(), Vector3(5, 1, 5));
@@ -233,7 +232,7 @@ public:
 		rb = m_physics.CreateStaticRigidBody(e, collider, transform->position, transform->rotation);
 		m_rigidBodySystem.CreateComponent(e, rb);
 
-		// slope
+		// slope 1
 		e = m_entityManager.CreateEntity();
 		hTransform = m_transformSystem.CreateComponent(e, Vector3(0, -12, 7), Quaternion(-45.0_rad, 0, 0), Vector3(5, 1, 5));
 		transform = m_transformSystem.GetComponentByHandle(hTransform);
@@ -242,6 +241,27 @@ public:
 		collider.SetScale(transform->scale);
 		rb = m_physics.CreateStaticRigidBody(e, collider, transform->position, transform->rotation);
 		m_rigidBodySystem.CreateComponent(e, rb);
+
+		// slope 2
+		e = m_entityManager.CreateEntity();
+		hTransform = m_transformSystem.CreateComponent(e, Vector3(7, -11, 0), Quaternion(0, 0, 65.0_rad), Vector3(5, 1, 5));
+		transform = m_transformSystem.GetComponentByHandle(hTransform);
+		m_meshSystem.CreateComponent(e, hTransform, modelCube, matSand);
+		collider = m_physics.CreateCollisionBox(1, 1, 1);
+		collider.SetScale(transform->scale);
+		rb = m_physics.CreateStaticRigidBody(e, collider, transform->position, transform->rotation);
+		m_rigidBodySystem.CreateComponent(e, rb);
+
+		// slope 3
+		e = m_entityManager.CreateEntity();
+		hTransform = m_transformSystem.CreateComponent(e, Vector3(-7, -13, 0), Quaternion(0, 0, -25.0_rad), Vector3(5, 1, 5));
+		transform = m_transformSystem.GetComponentByHandle(hTransform);
+		m_meshSystem.CreateComponent(e, hTransform, modelCube, matSand);
+		collider = m_physics.CreateCollisionBox(1, 1, 1);
+		collider.SetScale(transform->scale);
+		rb = m_physics.CreateStaticRigidBody(e, collider, transform->position, transform->rotation);
+		m_rigidBodySystem.CreateComponent(e, rb);
+		
 			
 		return true;
 	}
