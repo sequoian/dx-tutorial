@@ -207,9 +207,6 @@ public:
 		ColliderPtr collider;
 		RigidBody rb;
 
-		
-		
-		
 		// camera
 		e = m_entityManager.CreateEntity();
 		hTransform = m_transformSystem.CreateComponent(e, Vector3(0, 0, -10));
@@ -221,7 +218,7 @@ public:
 		hTransform = m_transformSystem.CreateComponent(e, Vector3(0, -10, 0));
 		m_meshSystem.CreateComponent(e, hTransform, modelMonkey, matStone);
 		U64 hPivotCam = m_pivotCamSystem.CreateComponent(e, hTransform, hCamTransform, 5, 5);
-		m_gravitySystem.CreateComponent(e, hTransform, 1);
+		m_gravitySystem.CreateComponent(e, hTransform, 3);
 		m_legCastSystem.CreateComponent(e, hTransform, 1.2);
 		m_movementSystem.CreateComponent(e, hTransform, hPivotCam, 5);
 
@@ -229,6 +226,16 @@ public:
 		// ground
 		e = m_entityManager.CreateEntity();
 		hTransform = m_transformSystem.CreateComponent(e, Vector3(0, -15, 0), Quaternion(), Vector3(5, 1, 5));
+		transform = m_transformSystem.GetComponentByHandle(hTransform);
+		m_meshSystem.CreateComponent(e, hTransform, modelCube, matSand);
+		collider = m_physics.CreateCollisionBox(1, 1, 1);
+		collider.SetScale(transform->scale);
+		rb = m_physics.CreateStaticRigidBody(e, collider, transform->position, transform->rotation);
+		m_rigidBodySystem.CreateComponent(e, rb);
+
+		// slope
+		e = m_entityManager.CreateEntity();
+		hTransform = m_transformSystem.CreateComponent(e, Vector3(0, -12, 7), Quaternion(-45.0_rad, 0, 0), Vector3(5, 1, 5));
 		transform = m_transformSystem.GetComponentByHandle(hTransform);
 		m_meshSystem.CreateComponent(e, hTransform, modelCube, matSand);
 		collider = m_physics.CreateCollisionBox(1, 1, 1);
