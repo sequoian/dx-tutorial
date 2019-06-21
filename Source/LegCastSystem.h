@@ -5,10 +5,12 @@
 #include "Physics.h"
 #include <math.h>
 #include "MathUtility.h"
+#include "VelocitySystem.h"
 
 struct LegCastComponent
 {
 	U64 hParentTransform;
+	U64 hParentVelocity;
 	float legLength;
 	float maxSlopeAngle;
 	float angleOfGround;
@@ -18,15 +20,17 @@ struct LegCastComponent
 class LegCastSystem : public ComponentSystem<LegCastComponent>
 {
 public:
-	bool StartUp(U32 numComponents, EntityManager& em, TransformSystem& transformSystem, Physics& physics)
+	bool StartUp(U32 numComponents, EntityManager& em, TransformSystem& transformSystem, Physics& physics,
+				 VelocitySystem& vs)
 	{
 		Parent::StartUp(numComponents, em);
 		m_transformSystem = &transformSystem;
 		m_physics = &physics;
+		m_velocitySystem = &vs;
 		return true;
 	}
 
-	U64 CreateComponent(Entity e, U64 hParentTransform, float legLength, float maxSlopeAngle = 45)
+	U64 CreateComponent(Entity e, U64 hParentTransform, U64 hVelocity, float legLength, float maxSlopeAngle = 45)
 	{
 		U64 handle = Parent::CreateComponent(e);
 		LegCastComponent* comp = GetComponentByHandle(handle);
@@ -34,6 +38,7 @@ public:
 		comp->hParentTransform = hParentTransform;
 		comp->legLength = legLength;
 		comp->maxSlopeAngle = maxSlopeAngle;
+		comp->hParentVelocity = hVelocity;
 
 		return handle;
 	}
@@ -57,10 +62,10 @@ public:
 				transform->position += diff;
 				//transform->position += XMVectorMultiply(norm, XMVector3Dot(diff, norm));
 
-				XMVECTOR angle = XMVector3AngleBetweenVectors(Physics::VecToDX(normalOnB), Vector3(0, 1, 0));
+				XMVECTOR angle = XMVector3AngleBetweenNormals(Physics::VecToDX(normalOnB), Vector3(0, 1, 0));
 
 				// print angle of ground
-				//DEBUG_PRINT("%.f", RadiansToDegrees(angle.m128_f32[0]));
+				DEBUG_PRINT("%.f", RadiansToDegrees(angle.m128_f32[0]));
 
 				comp->grounded = true;
 			}
@@ -78,4 +83,5 @@ public:
 protected:
 	TransformSystem * m_transformSystem;
 	Physics* m_physics;
+	VelocitySystem* m_velocitySystem;
 };

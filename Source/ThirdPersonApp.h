@@ -27,6 +27,7 @@
 #include "RigidBodySystem.h"
 #include "LegCastSystem.h"
 #include "MovementSystem.h"
+#include "VelocitySystem.h"
 
 struct ModelConstants
 {
@@ -197,13 +198,15 @@ public:
 		m_pivotCamSystem.StartUp(1, m_entityManager, m_transformSystem, m_inputManager);
 		m_gravitySystem.StartUp(1, m_entityManager, m_transformSystem);
 		m_rigidBodySystem.StartUp(2, m_entityManager, m_physics);
-		m_legCastSystem.StartUp(1, m_entityManager, m_transformSystem, m_physics);
-		m_movementSystem.StartUp(1, m_entityManager, m_transformSystem, m_inputManager, m_pivotCamSystem);
+		m_legCastSystem.StartUp(1, m_entityManager, m_transformSystem, m_physics, m_velocitySystem);
+		m_movementSystem.StartUp(1, m_entityManager, m_transformSystem, m_inputManager, m_pivotCamSystem, m_velocitySystem);
+		m_velocitySystem.StartUp(1, m_entityManager, m_transformSystem, m_physics);
 
 		// Create Entities
 		Entity e;
 		U64 hTransform;
 		TransformComponent* transform;
+		U64 hVelocity;
 		ColliderPtr collider;
 		RigidBody rb;
 
@@ -216,11 +219,13 @@ public:
 		// platformer
 		e = m_entityManager.CreateEntity();
 		hTransform = m_transformSystem.CreateComponent(e, Vector3(0, -10, 0));
+		hVelocity = m_velocitySystem.CreateComponent(e, hTransform);
 		m_meshSystem.CreateComponent(e, hTransform, modelMonkey, matStone);
 		U64 hPivotCam = m_pivotCamSystem.CreateComponent(e, hTransform, hCamTransform, 5, 5);
 		m_gravitySystem.CreateComponent(e, hTransform, 3);
-		m_legCastSystem.CreateComponent(e, hTransform, 1.2);
-		m_movementSystem.CreateComponent(e, hTransform, hPivotCam, 5);
+		m_legCastSystem.CreateComponent(e, hTransform, hVelocity, 1.2);
+		m_movementSystem.CreateComponent(e, hTransform, hPivotCam, hVelocity, 5);
+		
 
 		// ground
 		e = m_entityManager.CreateEntity();
@@ -292,6 +297,7 @@ public:
 		
 		m_physics.RunSimulation(dt);
 		
+		m_velocitySystem.Execute(dt);
 		m_transformSystem.Execute(dt);
 		m_cameraSystem.Execute(dt);
 
@@ -347,6 +353,7 @@ private:
 	RigidBodySystem m_rigidBodySystem;
 	LegCastSystem m_legCastSystem;
 	MovementSystem m_movementSystem;
+	VelocitySystem m_velocitySystem;
 
 	// other
 	PrimitiveFactory m_primFactory;

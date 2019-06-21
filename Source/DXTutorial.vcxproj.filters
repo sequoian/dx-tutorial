@@ -282,5 +282,8 @@
     <ClInclude Include="MovementSystem.h">
       <Filter>App\Component Systems</Filter>
     </ClInclude>
+    <ClInclude Include="VelocitySystem.h">
+      <Filter>App\Component Systems</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

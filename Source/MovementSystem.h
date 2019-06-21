@@ -5,10 +5,12 @@
 #include "PivotCamSystem.h"
 #include "InputManager.h"
 #include "MathUtility.h"
+#include "VelocitySystem.h"
 
 struct MovementComponent
 {
 	U64 hTransform;
+	U64 hVelocity;
 	U64 hPivotCam;
 	float moveSpeed;
 };
@@ -16,16 +18,17 @@ struct MovementComponent
 class MovementSystem : public ComponentSystem<MovementComponent>
 {
 public:
-	bool StartUp(U32 numComponents, EntityManager& em, TransformSystem& transformSystem, InputManager& input, PivotCamSystem& pivotCam)
+	bool StartUp(U32 numComponents, EntityManager& em, TransformSystem& transformSystem, InputManager& input, PivotCamSystem& pivotCam, VelocitySystem& vs)
 	{
 		Parent::StartUp(numComponents, em);
 		m_transformSystem = &transformSystem;
 		m_inputManager = &input;
 		m_pivotCamSystem = &pivotCam;
+		m_velocitySystem = &vs;
 		return true;
 	}
 
-	U64 CreateComponent(Entity e, U64 hTransform, U64 hPivotCam, float moveSpeed)
+	U64 CreateComponent(Entity e, U64 hTransform, U64 hPivotCam, U64 hVelocity, float moveSpeed)
 	{
 		U64 handle = Parent::CreateComponent(e);
 		MovementComponent* comp = GetComponentByHandle(handle);
@@ -33,6 +36,7 @@ public:
 		comp->hTransform = hTransform;
 		comp->hPivotCam = hPivotCam;
 		comp->moveSpeed = moveSpeed;
+		comp->hVelocity = hVelocity;
 
 		return handle;
 	}
@@ -86,4 +90,5 @@ protected:
 	TransformSystem * m_transformSystem;
 	InputManager* m_inputManager;
 	PivotCamSystem* m_pivotCamSystem;
+	VelocitySystem* m_velocitySystem;
 };

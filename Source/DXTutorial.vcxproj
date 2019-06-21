@@ -192,6 +192,7 @@
     <ClInclude Include="MovementSystem.h" />
     <ClInclude Include="TestBed.h" />
     <ClInclude Include="ThirdPersonApp.h" />
+    <ClInclude Include="VelocitySystem.h" />
     <ClInclude Include="YDespawnSystem.h" />
     <ClInclude Include="CollisionInfo.h" />
     <ClInclude Include="CompactPool.h" />
