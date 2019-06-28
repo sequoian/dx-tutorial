@@ -58,39 +58,46 @@ protected:
 	inline void Move(TransformComponent* transform, VelocityComponent* velocity, float camYaw, float moveSpeed, float dt)
 	{
 		// query input
-		float x = m_inputManager->GetGamepad().GetAxisState(GamepadAxes::LEFT_THUMB_X);
-		float z = m_inputManager->GetGamepad().GetAxisState(GamepadAxes::LEFT_THUMB_Y);
+		float xInput = m_inputManager->GetGamepad().GetAxisState(GamepadAxes::LEFT_THUMB_X);
+		float zInput = m_inputManager->GetGamepad().GetAxisState(GamepadAxes::LEFT_THUMB_Y);
+
+		// separate xz velocity from y vector
+		XMVECTOR xzVel = Vector3(velocity->velocity.m128_f32[0], 0, velocity->velocity.m128_f32[2]);
+		XMVECTOR yVel = Vector3(0, velocity->velocity.m128_f32[1], 0);
 
 		// handle deceleration
-		velocity->velocity *= 0.9;
+		xzVel *= 0.9;
 		
-		// return on no input
-		if (x == 0 && z == 0) return;
+		if (xInput != 0 || zInput != 0)
+		{
+			// set movement vector based on input
+			XMVECTOR movement = XMVectorSet(xInput, 0, zInput, 1);
 
-		// set movement vector based on input
-		XMVECTOR movement = XMVectorSet(x, 0, z, 1);
+			// rotate relative to camera yaw
+			XMVECTOR quat = XMQuaternionRotationRollPitchYaw(0, camYaw, 0);
+			movement = XMVector3Rotate(movement, quat);
 
-		// rotate relative to camera yaw
-		XMVECTOR quat = XMQuaternionRotationRollPitchYaw(0, camYaw, 0);
-		movement = XMVector3Rotate(movement, quat);
+			// scale based on movespeed
+			movement *= moveSpeed * dt;
 
-		// scale based on movespeed
-		movement *= moveSpeed * dt;
+			// add movement to velocity
+			xzVel += movement;
 
-		// calculate velocity
-		XMVECTOR vel = XMVectorAdd(velocity->velocity, movement);
+			// calculate velocity
+			//XMVECTOR vel = XMVectorAdd(velocity->velocity, movement);
 
-		// set rotation
-		XMVECTOR pos, rot, scale;
-		// character looks where they are going
-		XMMATRIX lookAt = DirectX::XMMatrixLookAtLH(transform->position, XMVectorAdd(transform->position, vel), Vector3(0, 1, 0));
-		lookAt = XMMatrixInverse(nullptr, lookAt);
-		DirectX::XMMatrixDecompose(&scale, &rot, &pos, lookAt);
-		// need to turn character around
-		transform->rotation = XMQuaternionMultiply(rot, XMQuaternionRotationRollPitchYaw(0, 180.0_rad, 0));
+			// set rotation
+			XMVECTOR pos, rot, scale;
+			// character looks where they are going
+			XMMATRIX lookAt = DirectX::XMMatrixLookAtLH(transform->position, XMVectorAdd(transform->position, xzVel), Vector3(0, 1, 0));
+			lookAt = XMMatrixInverse(nullptr, lookAt);
+			DirectX::XMMatrixDecompose(&scale, &rot, &pos, lookAt);
+			// need to turn character around
+			transform->rotation = XMQuaternionMultiply(rot, XMQuaternionRotationRollPitchYaw(0, 180.0_rad, 0));
+		}
 
 		// set velocity
-		velocity->velocity = vel;
+		velocity->velocity = XMVectorAdd(xzVel, yVel);
 	}
 
 protected:

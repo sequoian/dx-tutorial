@@ -41,13 +41,10 @@ public:
 		{
 			KinematicGravityComponent* comp = m_pool[i];
 			// still need transform?
-			TransformComponent* transform = m_transformSystem->GetComponentByHandle(comp->hTransform);
+			//TransformComponent* transform = m_transformSystem->GetComponentByHandle(comp->hTransform);
 			VelocityComponent* velocity = m_velocitySystem->GetComponentByHandle(comp->hVelocity);
 
-			//velocity->velocity += Vector3(0, -comp->gravity * deltaTime, 0);
-
-			velocity->velocity -= Vector3(0, comp->gravity, 0) * deltaTime;
-			//transform->position -= Vector3(0, comp->gravity, 0) * deltaTime;
+			velocity->velocity += Vector3(0, -comp->gravity, 0) * deltaTime;
 		}
 	}
 
