@@ -48,42 +48,49 @@ public:
 			MovementComponent* comp = m_pool[i];
 			TransformComponent* transform = m_transformSystem->GetComponentByHandle(comp->hTransform);
 			PivotCamComponent* pivotCam = m_pivotCamSystem->GetComponentByHandle(comp->hPivotCam);
+			VelocityComponent* velocity = m_velocitySystem->GetComponentByHandle(comp->hVelocity);
 
-			Move(transform, pivotCam->yaw, comp->moveSpeed, deltaTime);
+			Move(transform, velocity, pivotCam->yaw, comp->moveSpeed, deltaTime);
 		}
 	}
 
 protected:
-	inline void Move(TransformComponent* transform, float camYaw, float moveSpeed, float dt)
+	inline void Move(TransformComponent* transform, VelocityComponent* velocity, float camYaw, float moveSpeed, float dt)
 	{
-		// calculate move direction
+		// query input
 		float x = m_inputManager->GetGamepad().GetAxisState(GamepadAxes::LEFT_THUMB_X);
 		float z = m_inputManager->GetGamepad().GetAxisState(GamepadAxes::LEFT_THUMB_Y);
 
+		// handle deceleration
+		velocity->velocity *= 0.9;
+		
+		// return on no input
 		if (x == 0 && z == 0) return;
 
-		// calculate movement vector
+		// set movement vector based on input
 		XMVECTOR movement = XMVectorSet(x, 0, z, 1);
 
-		// move relative to camera yaw
+		// rotate relative to camera yaw
 		XMVECTOR quat = XMQuaternionRotationRollPitchYaw(0, camYaw, 0);
 		movement = XMVector3Rotate(movement, quat);
 
-		// scale movement and get final position
+		// scale based on movespeed
 		movement *= moveSpeed * dt;
-		XMVECTOR finalPos = XMVectorAdd(transform->position, movement);
+
+		// calculate velocity
+		XMVECTOR vel = XMVectorAdd(velocity->velocity, movement);
 
 		// set rotation
 		XMVECTOR pos, rot, scale;
 		// character looks where they are going
-		XMMATRIX lookAt = DirectX::XMMatrixLookAtLH(transform->position, finalPos, Vector3(0, 1, 0));
+		XMMATRIX lookAt = DirectX::XMMatrixLookAtLH(transform->position, XMVectorAdd(transform->position, vel), Vector3(0, 1, 0));
 		lookAt = XMMatrixInverse(nullptr, lookAt);
 		DirectX::XMMatrixDecompose(&scale, &rot, &pos, lookAt);
 		// need to turn character around
 		transform->rotation = XMQuaternionMultiply(rot, XMQuaternionRotationRollPitchYaw(0, 180.0_rad, 0));
 
-		// set position
-		transform->position = finalPos;
+		// set velocity
+		velocity->velocity = vel;
 	}
 
 protected:

@@ -49,6 +49,7 @@ public:
 		{
 			LegCastComponent* comp = m_pool[i];
 			TransformComponent* transform = m_transformSystem->GetComponentByHandle(comp->hParentTransform);
+			VelocityComponent* velocity = m_velocitySystem->GetComponentByHandle(comp->hParentVelocity);
 
 			auto result = m_physics->RayCast(transform->position, XMVectorAdd(Vector3(0, -comp->legLength, 0), transform->position) );
 			if (result.hasHit())
@@ -56,16 +57,25 @@ public:
 				const auto& ptB = result.m_rayToWorld;
 				const auto& ptA = result.m_hitPointWorld;
 				const auto& normalOnB = result.m_hitNormalWorld;
+				
+
+				// test
+				XMVECTOR normal = Physics::VecToDX(normalOnB);
+				XMVECTOR penVelocity = XMVectorMultiply(normal, XMVector3Dot(velocity->velocity, normal));
+				velocity->velocity -= penVelocity;
 
 				XMVECTOR diff = Physics::VecToDX(ptA - ptB);
 				XMVECTOR norm = Physics::VecToDX(normalOnB);
 				transform->position += diff;
+
+				// out of date
 				//transform->position += XMVectorMultiply(norm, XMVector3Dot(diff, norm));
 
-				XMVECTOR angle = XMVector3AngleBetweenNormals(Physics::VecToDX(normalOnB), Vector3(0, 1, 0));
+				
 
 				// print angle of ground
-				DEBUG_PRINT("%.f", RadiansToDegrees(angle.m128_f32[0]));
+				//XMVECTOR angle = XMVector3AngleBetweenNormals(Physics::VecToDX(normalOnB), Vector3(0, 1, 0));
+				//DEBUG_PRINT("%.f", RadiansToDegrees(angle.m128_f32[0]));
 
 				comp->grounded = true;
 			}
@@ -73,10 +83,6 @@ public:
 			{
 				comp->grounded = false;
 			}
-
-			// print grounded state
-			//if (comp->grounded) DEBUG_PRINT("grounded");
-			//else DEBUG_PRINT("not grounded");
 		}
 	}
 
