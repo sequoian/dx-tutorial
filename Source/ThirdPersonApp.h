@@ -223,7 +223,7 @@ public:
 		m_meshSystem.CreateComponent(e, hTransform, modelSphere, matStone);
 		U64 hPivotCam = m_pivotCamSystem.CreateComponent(e, hTransform, hCamTransform, 5, 5);
 		U64 hLegCast =  m_legCastSystem.CreateComponent(e, hTransform, hVelocity, 1);
-		m_gravitySystem.CreateComponent(e, hTransform, hVelocity, hLegCast, 0.2);
+		m_gravitySystem.CreateComponent(e, hTransform, hVelocity, hLegCast, 0.3);
 		m_movementSystem.CreateComponent(e, hTransform, hPivotCam, hVelocity, 1);
 
 		// ground
