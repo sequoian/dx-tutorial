@@ -83,9 +83,6 @@ protected:
 			// add movement to velocity
 			xzVel += movement;
 
-			// calculate velocity
-			//XMVECTOR vel = XMVectorAdd(velocity->velocity, movement);
-
 			// set rotation
 			XMVECTOR pos, rot, scale;
 			// character looks where they are going

@@ -39,6 +39,7 @@ public:
 		comp->legLength = legLength;
 		comp->maxSlopeAngle = maxSlopeAngle;
 		comp->hParentVelocity = hVelocity;
+		comp->grounded = false;
 
 		return handle;
 	}
@@ -51,31 +52,19 @@ public:
 			TransformComponent* transform = m_transformSystem->GetComponentByHandle(comp->hParentTransform);
 			VelocityComponent* velocity = m_velocitySystem->GetComponentByHandle(comp->hParentVelocity);
 
-			auto result = m_physics->RayCast(transform->position, XMVectorAdd(Vector3(0, -comp->legLength, 0), transform->position) );
+			XMVECTOR rayStart = XMVectorAdd(transform->position, velocity->velocity);
+			XMVECTOR rayEnd = XMVectorAdd(Vector3(0, -comp->legLength, 0), rayStart);
+
+			auto result = m_physics->RayCast(rayStart, rayEnd);
 			if (result.hasHit())
 			{
 				const auto& ptB = result.m_rayToWorld;
 				const auto& ptA = result.m_hitPointWorld;
 				const auto& normalOnB = result.m_hitNormalWorld;
 				
-
-				// test
 				XMVECTOR normal = Physics::VecToDX(normalOnB);
 				XMVECTOR penVelocity = XMVectorMultiply(normal, XMVector3Dot(velocity->velocity, normal));
 				velocity->velocity -= penVelocity;
-
-				XMVECTOR diff = Physics::VecToDX(ptA - ptB);
-				XMVECTOR norm = Physics::VecToDX(normalOnB);
-				transform->position += diff;
-
-				// out of date
-				//transform->position += XMVectorMultiply(norm, XMVector3Dot(diff, norm));
-
-				
-
-				// print angle of ground
-				//XMVECTOR angle = XMVector3AngleBetweenNormals(Physics::VecToDX(normalOnB), Vector3(0, 1, 0));
-				//DEBUG_PRINT("%.f", RadiansToDegrees(angle.m128_f32[0]));
 
 				comp->grounded = true;
 			}
