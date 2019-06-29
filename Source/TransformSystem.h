@@ -39,7 +39,7 @@ public:
 			XMMATRIX rotation = XMMatrixRotationQuaternion(comp->rotation);
 			XMMATRIX position = XMMatrixTranslationFromVector(comp->position);
 
-			comp->world = scale * rotation * position;
+			comp->world = scale * rotation * position;		
 		}
 	}
 

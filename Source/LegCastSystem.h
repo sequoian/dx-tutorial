@@ -51,7 +51,9 @@ public:
 			LegCastComponent* comp = m_pool[i];
 			TransformComponent* transform = m_transformSystem->GetComponentByHandle(comp->hParentTransform);
 			VelocityComponent* velocity = m_velocitySystem->GetComponentByHandle(comp->hParentVelocity);
-
+			
+			// Before Velocity System
+			/*
 			XMVECTOR rayStart = XMVectorAdd(transform->position, velocity->velocity);
 			XMVECTOR rayEnd = XMVectorAdd(Vector3(0, -comp->legLength, 0), rayStart);
 
@@ -65,6 +67,31 @@ public:
 				XMVECTOR normal = Physics::VecToDX(normalOnB);
 				XMVECTOR penVelocity = XMVectorMultiply(normal, XMVector3Dot(velocity->velocity, normal));
 				velocity->velocity -= penVelocity;
+
+				comp->grounded = true;
+			}
+			else
+			{
+				comp->grounded = false;
+			}
+			*/
+
+			// After Velocity System
+			XMVECTOR rayStart = transform->position;
+			XMVECTOR rayEnd = XMVectorAdd(Vector3(0, -comp->legLength, 0), rayStart);
+
+			auto result = m_physics->RayCast(rayStart, rayEnd);
+			if (result.hasHit())
+			{
+				const auto& ptB = result.m_rayToWorld;
+				const auto& ptA = result.m_hitPointWorld;
+				const auto& normalOnB = result.m_hitNormalWorld;
+
+				XMVECTOR diff = Physics::VecToDX(ptA - ptB);
+				XMVECTOR normal = Physics::VecToDX(normalOnB);
+				XMVECTOR penetration = XMVectorMultiply(normal, XMVector3Dot(diff, normal));
+				transform->position += diff;
+				velocity->velocity += diff;
 
 				comp->grounded = true;
 			}

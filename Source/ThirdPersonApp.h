@@ -220,11 +220,10 @@ public:
 		e = m_entityManager.CreateEntity();
 		hTransform = m_transformSystem.CreateComponent(e, Vector3(0, -10, 0));
 		hVelocity = m_velocitySystem.CreateComponent(e, hTransform);
-		m_meshSystem.CreateComponent(e, hTransform, modelMonkey, matStone);
+		m_meshSystem.CreateComponent(e, hTransform, modelSphere, matStone);
 		U64 hPivotCam = m_pivotCamSystem.CreateComponent(e, hTransform, hCamTransform, 5, 5);
-		U64 hLegCast =  m_legCastSystem.CreateComponent(e, hTransform, hVelocity, 1.2);
+		U64 hLegCast =  m_legCastSystem.CreateComponent(e, hTransform, hVelocity, 1);
 		m_gravitySystem.CreateComponent(e, hTransform, hVelocity, hLegCast, 0.2);
-		
 		m_movementSystem.CreateComponent(e, hTransform, hPivotCam, hVelocity, 1);
 
 		// ground
@@ -292,12 +291,12 @@ public:
 		// update systems
 		m_movementSystem.Execute(dt);
 		m_gravitySystem.Execute(dt);
-		m_legCastSystem.Execute(dt);
-		m_pivotCamSystem.Execute(dt);
 		
 		m_physics.RunSimulation(dt);
 		
 		m_velocitySystem.Execute(dt);
+		m_legCastSystem.Execute(dt);
+		m_pivotCamSystem.Execute(dt);
 		m_transformSystem.Execute(dt);
 		m_cameraSystem.Execute(dt);
 
