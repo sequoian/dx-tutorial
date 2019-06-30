@@ -87,6 +87,7 @@ public:
 		Model* modelSphere;
 		Model* modelCylinder;
 		Model* modelCone;
+		Model* modelCapsule;
 
 		if (!m_resourceManager.LoadModel("Assets/monkey.obj", handle, "Assets/monkey.obj"_sid))
 		{
@@ -129,6 +130,13 @@ public:
 		}
 
 		modelCone = static_cast<Model*>(m_resourceManager.GetResourceByHandle(handle));
+
+		if (!m_resourceManager.LoadModel("Assets/capsule.obj", handle, "Assets/capsule.obj"_sid))
+		{
+			return false;
+		}
+
+		modelCapsule = static_cast<Model*>(m_resourceManager.GetResourceByHandle(handle));
 
 		// Load textures
 		Texture* texStone;
@@ -226,12 +234,12 @@ public:
 		hTransform = m_transformSystem.CreateComponent(e, Vector3(0, -10, 0));
 		transform = m_transformSystem.GetComponentByHandle(hTransform);
 		hVelocity = m_velocitySystem.CreateComponent(e, hTransform);
-		m_meshSystem.CreateComponent(e, hTransform, modelSphere, matStone);
+		m_meshSystem.CreateComponent(e, hTransform, modelCapsule, matStone);
 		U64 hPivotCam = m_pivotCamSystem.CreateComponent(e, hTransform, hCamTransform, 5, 5);
 		U64 hLegCast =  m_legCastSystem.CreateComponent(e, hTransform, hVelocity, 1.5);
 		m_gravitySystem.CreateComponent(e, hTransform, hVelocity, hLegCast, 0.3);
 		m_movementSystem.CreateComponent(e, hTransform, hPivotCam, hVelocity, 1);
-		collider = m_physics.CreateCollisionSphere(1);
+		collider = m_physics.CreateCollisionCapsule(0.5, 1);
 		rb = m_physics.CreateCharacterBody(e, collider, transform->position, transform->rotation);
 		hRigidBody = m_rigidBodySystem.CreateComponent(e, rb);
 		m_kinematicRBSystem.CreateComponent(e, hTransform, hRigidBody);

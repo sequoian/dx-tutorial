@@ -143,6 +143,14 @@ ColliderPtr Physics::CreateCollisionCone(float radius, float height)
 }
 
 
+ColliderPtr Physics::CreateCollisionCapsule(float radius, float height)
+{
+	btCollisionShape* shape = new btCapsuleShape(radius, height);
+
+	return ColliderPtr(shape);
+}
+
+
 RigidBody Physics::CreateDynamicRigidBody(Entity e, ColliderPtr shape, XMVECTOR position, XMVECTOR rotation, float mass)
 {
 	ASSERT_VERBOSE(mass > 0.f, "Dynamic rigid bodies must have a mass greater than 0");

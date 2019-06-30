@@ -19,10 +19,12 @@ public:
 	void ShutDown();
 	void RunSimulation(float deltaTime);
 	void SetGravity(float gravity);
+
 	ColliderPtr CreateCollisionBox(float x, float y, float z);
 	ColliderPtr CreateCollisionSphere(float radius);
 	ColliderPtr CreateCollisionCylinder(float x, float y, float z);
 	ColliderPtr CreateCollisionCone(float radius, float height);
+	ColliderPtr CreateCollisionCapsule(float radius, float height);
 
 	RigidBody CreateDynamicRigidBody(Entity e, ColliderPtr shape, XMVECTOR position, XMVECTOR rotation, float mass = 1.f);
 	RigidBody CreateStaticRigidBody(Entity e, ColliderPtr shape, XMVECTOR position, XMVECTOR rotation, bool isTrigger = false);
