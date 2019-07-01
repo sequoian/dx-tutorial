@@ -186,6 +186,7 @@
     <ClInclude Include="DoorSystem.h" />
     <ClInclude Include="DoorTriggerSystem.h" />
     <ClInclude Include="EngineEvents.h" />
+    <ClInclude Include="JumpSystem.h" />
     <ClInclude Include="KinematicGravitySystem.h" />
     <ClInclude Include="LegCastSystem.h" />
     <ClInclude Include="PivotCamSystem.h" />

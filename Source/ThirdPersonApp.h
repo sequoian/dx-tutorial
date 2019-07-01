@@ -30,6 +30,7 @@
 #include "VelocitySystem.h"
 #include "KinematicRigidBodySystem.h"
 #include "KinematicCharacterControllerSystem.h"
+#include "JumpSystem.h"
 
 struct ModelConstants
 {
@@ -213,6 +214,7 @@ public:
 		m_velocitySystem.StartUp(1, m_entityManager, m_transformSystem, m_physics);
 		m_kinematicRBSystem.StartUp(1, m_entityManager, m_transformSystem, m_rigidBodySystem);
 		m_kinematicCCSystem.StartUp(1, m_entityManager, m_transformSystem, m_eventBus);
+		m_jumpSystem.StartUp(1, m_entityManager, m_velocitySystem, m_legCastSystem, m_inputManager);
 
 		// Create Entities
 		Entity e;
@@ -239,12 +241,12 @@ public:
 		U64 hLegCast =  m_legCastSystem.CreateComponent(e, hTransform, hVelocity, 1.5);
 		m_gravitySystem.CreateComponent(e, hTransform, hVelocity, hLegCast, 0.3);
 		m_movementSystem.CreateComponent(e, hTransform, hPivotCam, hVelocity, 1);
+		m_jumpSystem.CreateComponent(e, hVelocity, hLegCast, 0.2);
 		collider = m_physics.CreateCollisionCapsule(0.5, 1);
 		rb = m_physics.CreateCharacterBody(e, collider, transform->position, transform->rotation);
 		hRigidBody = m_rigidBodySystem.CreateComponent(e, rb);
 		m_kinematicRBSystem.CreateComponent(e, hTransform, hRigidBody);
 		m_kinematicCCSystem.CreateComponent(e, hTransform);
-
 
 		// ground
 		e = m_entityManager.CreateEntity();
@@ -320,6 +322,7 @@ public:
 
 		// update systems
 		m_movementSystem.Execute(dt);
+		m_jumpSystem.Execute(dt);
 		m_gravitySystem.Execute(dt);
 		m_velocitySystem.Execute(dt);
 		
@@ -389,6 +392,7 @@ private:
 	VelocitySystem m_velocitySystem;
 	KinematicRigidBodySystem m_kinematicRBSystem;
 	KinematicCharacterControllerSystem m_kinematicCCSystem;
+	JumpSystem m_jumpSystem;
 
 	// other
 	PrimitiveFactory m_primFactory;

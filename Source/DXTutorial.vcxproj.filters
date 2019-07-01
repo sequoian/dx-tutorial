@@ -285,5 +285,8 @@
     <ClInclude Include="VelocitySystem.h">
       <Filter>App\Component Systems</Filter>
     </ClInclude>
+    <ClInclude Include="JumpSystem.h">
+      <Filter>App\Component Systems</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
