@@ -35,6 +35,7 @@
 #include "RotatorSystem.h"
 #include "SpawnSystem.h"
 #include "DeadlyTouchSystem.h"
+#include "DeathSystem.h"
 
 struct ModelConstants
 {
@@ -223,6 +224,7 @@ public:
 		m_rotatorSystem.StartUp(5, m_entityManager, m_transformSystem);
 		m_spawnSystem.StartUp(1, m_entityManager);
 		m_deadlyTouchSystem.StartUp(1, m_entityManager, m_eventBus);
+		m_deathSystem.StartUp(1, m_entityManager, m_eventBus, m_transformSystem, m_velocitySystem, m_spawnSystem);
 
 		// Create Entities
 		Entity e;
@@ -242,11 +244,6 @@ public:
 		// default spawn
 		e = m_entityManager.CreateEntity();
 		m_spawnSystem.CreateComponent(e, Vector3(0, -10, 0), Quaternion());
-		
-		// new spawn
-		e = m_entityManager.CreateEntity();
-		U64 hSpawn = m_spawnSystem.CreateComponent(e, Vector3(0, 20, 0), Quaternion());
-		m_spawnSystem.SetActiveSpawn(hSpawn);
 
 		// player
 		e = m_entityManager.CreateEntity();
@@ -265,6 +262,7 @@ public:
 		hRigidBody = m_rigidBodySystem.CreateComponent(e, rb);
 		m_kinematicRBSystem.CreateComponent(e, hTransform, hRigidBody);
 		m_kinematicCCSystem.CreateComponent(e, hTransform);
+		m_deathSystem.CreateComponent(e, hTransform, hVelocity);
 
 		// coin 1
 		e = m_entityManager.CreateEntity();
@@ -295,7 +293,6 @@ public:
 		rb = m_physics.CreateStaticRigidBody(e, collider, transform->position, Quaternion(), true);
 		m_coinSystem.CreateComponent(e);
 		m_rotatorSystem.CreateComponent(e, hTransform, 3, transform->rotation);
-		m_deadlyTouchSystem.CreateComponent(e);
 
 		// ground
 		e = m_entityManager.CreateEntity();
@@ -326,6 +323,7 @@ public:
 		collider.SetScale(transform->scale);
 		rb = m_physics.CreateStaticRigidBody(e, collider, transform->position, transform->rotation);
 		m_rigidBodySystem.CreateComponent(e, rb);
+		m_deadlyTouchSystem.CreateComponent(e);
 
 		// slope 3
 		e = m_entityManager.CreateEntity();
@@ -387,6 +385,7 @@ public:
 		m_cameraSystem.Execute(dt);
 
 		// end frame
+		m_deathSystem.EndFrame();
 		m_entityManager.EndFrame();
 	}
 
@@ -446,6 +445,7 @@ private:
 	RotatorSystem m_rotatorSystem;
 	SpawnSystem m_spawnSystem;
 	DeadlyTouchSystem m_deadlyTouchSystem;
+	DeathSystem m_deathSystem;
 
 	// other
 	PrimitiveFactory m_primFactory;

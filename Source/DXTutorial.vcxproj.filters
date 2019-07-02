@@ -297,5 +297,8 @@
     <ClInclude Include="DeadlyTouchSystem.h">
       <Filter>App\Component Systems</Filter>
     </ClInclude>
+    <ClInclude Include="DeathSystem.h">
+      <Filter>App\Component Systems</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

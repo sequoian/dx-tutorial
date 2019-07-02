@@ -30,7 +30,11 @@ protected:
 	void OnCollision(CollisionInfo* collision) override
 	{
 		Entity victim = collision->other.GetEntity();
-		m_eventBus->Publish(&OnDeathEvent(victim));
+
+		if (collision->contactPoints.size() > 0)
+		{
+			m_eventBus->Publish(&OnDeathEvent(victim));
+		}
 	}
 
 protected:
