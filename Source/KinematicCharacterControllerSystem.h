@@ -54,8 +54,11 @@ private:
 	{
 		TransformComponent* transform = m_transformSystem->FindComponent(collision->self.GetEntity());
 
-		for (auto& point : collision->contactPoints)
+		// only handle the first contact point to avoid shaking
+		// this may result in some instablity
+		if (collision->contactPoints.size() > 0)
 		{
+			const auto& point = collision->contactPoints[0];
 			const auto& ptA = point.getPositionWorldOnA();
 			const auto& ptB = point.getPositionWorldOnB();
 			const auto& normalOnB = point.m_normalWorldOnB;

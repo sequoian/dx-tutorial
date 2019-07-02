@@ -46,7 +46,6 @@ public:
 			VelocityComponent* velocity = m_velocitySystem->GetComponentByHandle(comp->hVelocity);
 			LegCastComponent* legCast = m_legCastSystem->GetComponentByHandle(comp->hLegCast);
 
-
 			if (m_inputManager->GetGamepad().GetButtonState(GamepadButtons::A_BUTTON) && legCast->grounded)
 			{
 				velocity->velocity += Vector3(0, comp->impulse, 0);
