@@ -33,6 +33,7 @@
 #include "JumpSystem.h"
 #include "CoinSystem.h"
 #include "RotatorSystem.h"
+#include "SpawnSystem.h"
 
 struct ModelConstants
 {
@@ -219,6 +220,7 @@ public:
 		m_jumpSystem.StartUp(1, m_entityManager, m_velocitySystem, m_legCastSystem, m_inputManager);
 		m_coinSystem.StartUp(5, m_entityManager, m_eventBus);
 		m_rotatorSystem.StartUp(5, m_entityManager, m_transformSystem);
+		m_spawnSystem.StartUp(1, m_entityManager);
 
 		// Create Entities
 		Entity e;
@@ -235,9 +237,19 @@ public:
 		m_cameraSystem.CreateComponent(e, hTransform, 0.01f, 1000, 45);
 		U64 hCamTransform = hTransform;
 
+		// default spawn
+		e = m_entityManager.CreateEntity();
+		m_spawnSystem.CreateComponent(e, Vector3(0, -10, 0), Quaternion());
+		
+		// new spawn
+		e = m_entityManager.CreateEntity();
+		U64 hSpawn = m_spawnSystem.CreateComponent(e, Vector3(0, 20, 0), Quaternion());
+		m_spawnSystem.SetActiveSpawn(hSpawn);
+
 		// player
 		e = m_entityManager.CreateEntity();
-		hTransform = m_transformSystem.CreateComponent(e, Vector3(0, -10, 0));
+		const SpawnComponent* defaultSpawn = m_spawnSystem.GetActiveSpawn();
+		hTransform = m_transformSystem.CreateComponent(e, defaultSpawn->position, defaultSpawn->rotation);
 		transform = m_transformSystem.GetComponentByHandle(hTransform);
 		hVelocity = m_velocitySystem.CreateComponent(e, hTransform);
 		m_meshSystem.CreateComponent(e, hTransform, modelCapsule, matStone);
@@ -430,6 +442,7 @@ private:
 	JumpSystem m_jumpSystem;
 	CoinSystem m_coinSystem;
 	RotatorSystem m_rotatorSystem;
+	SpawnSystem m_spawnSystem;
 
 	// other
 	PrimitiveFactory m_primFactory;

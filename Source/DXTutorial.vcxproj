@@ -192,6 +192,7 @@
     <ClInclude Include="LegCastSystem.h" />
     <ClInclude Include="PivotCamSystem.h" />
     <ClInclude Include="MovementSystem.h" />
+    <ClInclude Include="SpawnSystem.h" />
     <ClInclude Include="TestBed.h" />
     <ClInclude Include="ThirdPersonApp.h" />
     <ClInclude Include="VelocitySystem.h" />
