@@ -31,6 +31,8 @@
 #include "KinematicRigidBodySystem.h"
 #include "KinematicCharacterControllerSystem.h"
 #include "JumpSystem.h"
+#include "CoinSystem.h"
+#include "RotatorSystem.h"
 
 struct ModelConstants
 {
@@ -215,6 +217,8 @@ public:
 		m_kinematicRBSystem.StartUp(1, m_entityManager, m_transformSystem, m_rigidBodySystem);
 		m_kinematicCCSystem.StartUp(1, m_entityManager, m_transformSystem, m_eventBus);
 		m_jumpSystem.StartUp(1, m_entityManager, m_velocitySystem, m_legCastSystem, m_inputManager);
+		m_coinSystem.StartUp(5, m_entityManager, m_eventBus);
+		m_rotatorSystem.StartUp(5, m_entityManager, m_transformSystem);
 
 		// Create Entities
 		Entity e;
@@ -247,6 +251,36 @@ public:
 		hRigidBody = m_rigidBodySystem.CreateComponent(e, rb);
 		m_kinematicRBSystem.CreateComponent(e, hTransform, hRigidBody);
 		m_kinematicCCSystem.CreateComponent(e, hTransform);
+
+		// coin 1
+		e = m_entityManager.CreateEntity();
+		hTransform = m_transformSystem.CreateComponent(e, Vector3(0, -8, 4), Quaternion(90.0_rad, 0, 0), Vector3(0.5, 0.1, 0.5));
+		transform = m_transformSystem.GetComponentByHandle(hTransform);
+		m_meshSystem.CreateComponent(e, hTransform, modelCylinder, matStone);
+		collider = m_physics.CreateCollisionSphere(0.5);
+		rb = m_physics.CreateStaticRigidBody(e, collider, transform->position, Quaternion(), true);
+		m_coinSystem.CreateComponent(e);
+		m_rotatorSystem.CreateComponent(e, hTransform, 3, transform->rotation);
+
+		// coin 2
+		e = m_entityManager.CreateEntity();
+		hTransform = m_transformSystem.CreateComponent(e, Vector3(4, -10, 0), Quaternion(90.0_rad, 0, 0), Vector3(0.5, 0.1, 0.5));
+		transform = m_transformSystem.GetComponentByHandle(hTransform);
+		m_meshSystem.CreateComponent(e, hTransform, modelCylinder, matStone);
+		collider = m_physics.CreateCollisionSphere(0.5);
+		rb = m_physics.CreateStaticRigidBody(e, collider, transform->position, Quaternion(), true);
+		m_coinSystem.CreateComponent(e);
+		m_rotatorSystem.CreateComponent(e, hTransform, 3, transform->rotation);
+
+		// coin 3
+		e = m_entityManager.CreateEntity();
+		hTransform = m_transformSystem.CreateComponent(e, Vector3(-8, -5, 0), Quaternion(90.0_rad, 0, 0), Vector3(0.5, 0.1, 0.5));
+		transform = m_transformSystem.GetComponentByHandle(hTransform);
+		m_meshSystem.CreateComponent(e, hTransform, modelCylinder, matStone);
+		collider = m_physics.CreateCollisionSphere(0.5);
+		rb = m_physics.CreateStaticRigidBody(e, collider, transform->position, Quaternion(), true);
+		m_coinSystem.CreateComponent(e);
+		m_rotatorSystem.CreateComponent(e, hTransform, 3, transform->rotation);
 
 		// ground
 		e = m_entityManager.CreateEntity();
@@ -325,6 +359,7 @@ public:
 		m_jumpSystem.Execute(dt);
 		m_gravitySystem.Execute(dt);
 		m_velocitySystem.Execute(dt);
+		m_rotatorSystem.Execute(dt);
 		
 		m_kinematicRBSystem.Execute(dt);
 		m_physics.RunSimulation(dt);
@@ -393,6 +428,8 @@ private:
 	KinematicRigidBodySystem m_kinematicRBSystem;
 	KinematicCharacterControllerSystem m_kinematicCCSystem;
 	JumpSystem m_jumpSystem;
+	CoinSystem m_coinSystem;
+	RotatorSystem m_rotatorSystem;
 
 	// other
 	PrimitiveFactory m_primFactory;

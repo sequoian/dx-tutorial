@@ -288,7 +288,7 @@ public:
 															XMVectorSet(1, 8, 8, 1));
 		transform = m_transformSystem.GetComponentByHandle(hTransform);
 		m_meshSystem.CreateComponent(e, hTransform, modelCube, matStone);
-		m_rotatorSystem.CreateComponent(e, hTransform, 2);
+		m_rotatorSystem.CreateComponent(e, hTransform, 2, XMQuaternionIdentity());
 		collider = m_physics.CreateCollisionBox(1, 1, 1);
 		collider.SetScale(transform->scale);
 		rb = m_physics.CreateKinematicRigidBody(e, collider, transform->position, transform->rotation);

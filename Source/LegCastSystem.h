@@ -56,8 +56,15 @@ public:
 			XMVECTOR rayEnd = XMVectorAdd(Vector3(0, -comp->legLength, 0), rayStart);
 
 			auto result = m_physics->RayCast(rayStart, rayEnd);
+
 			if (result.hasHit())
 			{
+				// return if trigger
+				const btRigidBody* crb = static_cast<const btRigidBody*>(result.m_collisionObject);
+				btRigidBody* rb = const_cast<btRigidBody*>(crb);
+				RigidBody rigidBody = RigidBody(rb);
+				if (rigidBody.IsTrigger()) return;
+
 				const auto& ptB = result.m_rayToWorld;
 				const auto& ptA = result.m_hitPointWorld;
 				const auto& normalOnB = result.m_hitNormalWorld;

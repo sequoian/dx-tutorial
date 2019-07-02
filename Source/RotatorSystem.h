@@ -10,6 +10,7 @@ struct RotatorComponent
 	U64 transform = 0;
 	float angle = 0;
 	float speed = 0;
+	XMVECTOR baseRotation;
 };
 
 
@@ -25,12 +26,13 @@ public:
 		return true;
 	}
 
-	U64 CreateComponent(Entity e, U64 hTransform, float speed)
+	U64 CreateComponent(Entity e, U64 hTransform, float speed, XMVECTOR baseRotation)
 	{
 		U64 handle = Parent::CreateComponent(e);
 		RotatorComponent* comp = GetComponentByHandle(handle);
 		comp->transform = hTransform;
 		comp->speed = speed;
+		comp->baseRotation = baseRotation;
 
 		return handle;
 	}
@@ -45,7 +47,7 @@ public:
 			RotatorComponent* comp = m_pool[i];
 			TransformComponent* transform = m_transformSystem->GetComponentByHandle(comp->transform);
 			comp->angle += comp->speed * deltaTime;
-			transform->rotation = XMQuaternionRotationAxis(axis, comp->angle);
+			transform->rotation = XMQuaternionMultiply(comp->baseRotation, XMQuaternionRotationAxis(axis, comp->angle));
 		}
 	}
 
