@@ -184,6 +184,7 @@
     <ClInclude Include="CameraSystem.h" />
     <ClInclude Include="CoinSystem.h" />
     <ClInclude Include="ColliderPtr.h" />
+    <ClInclude Include="DeadlyTouchSystem.h" />
     <ClInclude Include="DoorSystem.h" />
     <ClInclude Include="DoorTriggerSystem.h" />
     <ClInclude Include="EngineEvents.h" />

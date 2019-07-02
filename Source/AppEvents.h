@@ -8,3 +8,10 @@ public:
 	OpenDoorEvent(Entity e) : door{ e } {}
 	Entity door;
 };
+
+class OnDeathEvent : public Event
+{
+public:
+	OnDeathEvent(Entity e) : deceased{ e } {}
+	Entity deceased;
+};

@@ -34,6 +34,7 @@
 #include "CoinSystem.h"
 #include "RotatorSystem.h"
 #include "SpawnSystem.h"
+#include "DeadlyTouchSystem.h"
 
 struct ModelConstants
 {
@@ -221,6 +222,7 @@ public:
 		m_coinSystem.StartUp(5, m_entityManager, m_eventBus);
 		m_rotatorSystem.StartUp(5, m_entityManager, m_transformSystem);
 		m_spawnSystem.StartUp(1, m_entityManager);
+		m_deadlyTouchSystem.StartUp(1, m_entityManager, m_eventBus);
 
 		// Create Entities
 		Entity e;
@@ -293,6 +295,7 @@ public:
 		rb = m_physics.CreateStaticRigidBody(e, collider, transform->position, Quaternion(), true);
 		m_coinSystem.CreateComponent(e);
 		m_rotatorSystem.CreateComponent(e, hTransform, 3, transform->rotation);
+		m_deadlyTouchSystem.CreateComponent(e);
 
 		// ground
 		e = m_entityManager.CreateEntity();
@@ -343,7 +346,6 @@ public:
 		collider.SetScale(transform->scale);
 		rb = m_physics.CreateStaticRigidBody(e, collider, transform->position, transform->rotation);
 		m_rigidBodySystem.CreateComponent(e, rb);
-		
 			
 		return true;
 	}
@@ -443,6 +445,7 @@ private:
 	CoinSystem m_coinSystem;
 	RotatorSystem m_rotatorSystem;
 	SpawnSystem m_spawnSystem;
+	DeadlyTouchSystem m_deadlyTouchSystem;
 
 	// other
 	PrimitiveFactory m_primFactory;
