@@ -11,6 +11,7 @@ struct RotatorComponent
 	float angle = 0;
 	float speed = 0;
 	XMVECTOR baseRotation;
+	XMVECTOR axis;
 };
 
 
@@ -26,28 +27,26 @@ public:
 		return true;
 	}
 
-	U64 CreateComponent(Entity e, U64 hTransform, float speed, XMVECTOR baseRotation)
+	U64 CreateComponent(Entity e, U64 hTransform, float speed, XMVECTOR baseRotation, XMVECTOR axis = Vector3(0, 1, 0))
 	{
 		U64 handle = Parent::CreateComponent(e);
 		RotatorComponent* comp = GetComponentByHandle(handle);
 		comp->transform = hTransform;
 		comp->speed = speed;
 		comp->baseRotation = baseRotation;
+		comp->axis = axis;
 
 		return handle;
 	}
 
 	inline void Execute(float deltaTime) override
 	{
-		// hard coded axis
-		XMVECTOR axis = XMVectorSet(0, 1, 0, 1);
-
 		for (U32 i = 0; i < m_pool.Size(); i++)
 		{
 			RotatorComponent* comp = m_pool[i];
 			TransformComponent* transform = m_transformSystem->GetComponentByHandle(comp->transform);
 			comp->angle += comp->speed * deltaTime;
-			transform->rotation = XMQuaternionMultiply(comp->baseRotation, XMQuaternionRotationAxis(axis, comp->angle));
+			transform->rotation = XMQuaternionMultiply(comp->baseRotation, XMQuaternionRotationAxis(comp->axis, comp->angle));
 		}
 	}
 

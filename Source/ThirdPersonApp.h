@@ -326,7 +326,6 @@ public:
 		collider.SetScale(transform->scale);
 		rb = m_physics.CreateStaticRigidBody(e, collider, transform->position, transform->rotation);
 		m_rigidBodySystem.CreateComponent(e, rb);
-		m_deadlyTouchSystem.CreateComponent(e);
 
 		// slope 3
 		e = m_entityManager.CreateEntity();
@@ -350,7 +349,7 @@ public:
 
 		// platform 1 with checkpoint
 		e = m_entityManager.CreateEntity();
-		hTransform = m_transformSystem.CreateComponent(e, Vector3(0, -15, -15), Quaternion(), Vector3(5, 1, 5));
+		hTransform = m_transformSystem.CreateComponent(e, Vector3(0, -15, -18), Quaternion(), Vector3(5, 1, 5));
 		transform = m_transformSystem.GetComponentByHandle(hTransform);
 		m_meshSystem.CreateComponent(e, hTransform, modelCube, matSand);
 		collider = m_physics.CreateCollisionBox(1, 1, 1);
@@ -359,7 +358,7 @@ public:
 		m_rigidBodySystem.CreateComponent(e, rb);
 		
 		e = m_entityManager.CreateEntity();
-		hTransform = m_transformSystem.CreateComponent(e, Vector3(0, -13, -15), Quaternion(), Vector3(5, 1, 5));
+		hTransform = m_transformSystem.CreateComponent(e, Vector3(0, -13, -18), Quaternion(), Vector3(5, 1, 5));
 		transform = m_transformSystem.GetComponentByHandle(hTransform);
 		//m_meshSystem.CreateComponent(e, hTransform, modelCube, matStone);
 		collider = m_physics.CreateCollisionBox(1, 1, 1);
@@ -371,7 +370,7 @@ public:
 
 		// coin 4
 		e = m_entityManager.CreateEntity();
-		hTransform = m_transformSystem.CreateComponent(e, Vector3(0, -10, -15), Quaternion(90.0_rad, 0, 0), Vector3(0.5, 0.1, 0.5));
+		hTransform = m_transformSystem.CreateComponent(e, Vector3(0, -10, -18), Quaternion(90.0_rad, 0, 0), Vector3(0.5, 0.1, 0.5));
 		transform = m_transformSystem.GetComponentByHandle(hTransform);
 		m_meshSystem.CreateComponent(e, hTransform, modelCylinder, matStone);
 		collider = m_physics.CreateCollisionSphere(0.5);
@@ -421,6 +420,31 @@ public:
 		m_rigidBodySystem.CreateComponent(e, rb);
 		m_deadlyTouchSystem.CreateComponent(e);
 
+		// obstacle
+		e = m_entityManager.CreateEntity();
+		hTransform = m_transformSystem.CreateComponent(e, Vector3(0, -15, -10), Quaternion(), Vector3(0.5, 10, 0.5));
+		transform = m_transformSystem.GetComponentByHandle(hTransform);
+		m_meshSystem.CreateComponent(e, hTransform, modelCube, matStone);
+		collider = m_physics.CreateCollisionBox(1, 1, 1);
+		collider.SetScale(transform->scale);
+		rb = m_physics.CreateKinematicRigidBody(e, collider, transform->position, transform->rotation, true);
+		hRigidBody = m_rigidBodySystem.CreateComponent(e, rb);
+		m_kinematicRBSystem.CreateComponent(e, hTransform, hRigidBody);
+		m_deadlyTouchSystem.CreateComponent(e);
+		m_rotatorSystem.CreateComponent(e, hTransform, 2.5, transform->rotation, Vector3(0, 0, 1));
+
+		e = m_entityManager.CreateEntity();
+		hTransform = m_transformSystem.CreateComponent(e, Vector3(0, -15, -10), Quaternion(), Vector3(10, 0.5, 0.5));
+		transform = m_transformSystem.GetComponentByHandle(hTransform);
+		m_meshSystem.CreateComponent(e, hTransform, modelCube, matStone);
+		collider = m_physics.CreateCollisionBox(1, 1, 1);
+		collider.SetScale(transform->scale);
+		rb = m_physics.CreateKinematicRigidBody(e, collider, transform->position, transform->rotation, true);
+		hRigidBody = m_rigidBodySystem.CreateComponent(e, rb);
+		m_kinematicRBSystem.CreateComponent(e, hTransform, hRigidBody);
+		m_deadlyTouchSystem.CreateComponent(e);
+		m_rotatorSystem.CreateComponent(e, hTransform, 2.5, transform->rotation, Vector3(0, 0, 1));
+
 		return true;
 	}
 
@@ -452,11 +476,8 @@ public:
 		m_kinematicRBSystem.Execute(dt);
 		m_physics.RunSimulation(dt);
 		
-		
 		m_legCastSystem.Execute(dt);
 		m_pivotCamSystem.Execute(dt);
-
-		
 		m_transformSystem.Execute(dt);
 		m_cameraSystem.Execute(dt);
 
