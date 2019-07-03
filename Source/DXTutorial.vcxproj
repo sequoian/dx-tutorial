@@ -182,6 +182,7 @@
     <ClInclude Include="BaseWindow.h" />
     <ClInclude Include="Buffer.h" />
     <ClInclude Include="CameraSystem.h" />
+    <ClInclude Include="CheckpointTriggerSystem.h" />
     <ClInclude Include="CoinSystem.h" />
     <ClInclude Include="ColliderPtr.h" />
     <ClInclude Include="DeadlyTouchSystem.h" />

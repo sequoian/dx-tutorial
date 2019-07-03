@@ -36,6 +36,7 @@
 #include "SpawnSystem.h"
 #include "DeadlyTouchSystem.h"
 #include "DeathSystem.h"
+#include "CheckpointTriggerSystem.h"
 
 struct ModelConstants
 {
@@ -225,6 +226,7 @@ public:
 		m_spawnSystem.StartUp(1, m_entityManager);
 		m_deadlyTouchSystem.StartUp(1, m_entityManager, m_eventBus);
 		m_deathSystem.StartUp(1, m_entityManager, m_eventBus, m_transformSystem, m_velocitySystem, m_spawnSystem);
+		m_checkpointTriggerSystem.StartUp(1, m_entityManager, m_eventBus, m_spawnSystem);
 
 		// Create Entities
 		Entity e;
@@ -244,6 +246,18 @@ public:
 		// default spawn
 		e = m_entityManager.CreateEntity();
 		m_spawnSystem.CreateComponent(e, Vector3(0, -10, 0), Quaternion());
+
+		// spawn with checkpoint
+		e = m_entityManager.CreateEntity();
+		hTransform = m_transformSystem.CreateComponent(e, Vector3(1, -13, -4), Quaternion(), Vector3(3, 1, 1));
+		transform = m_transformSystem.GetComponentByHandle(hTransform);
+		m_meshSystem.CreateComponent(e, hTransform, modelCube, matStone);
+		collider = m_physics.CreateCollisionBox(1, 1, 1);
+		collider.SetScale(transform->scale);
+		rb = m_physics.CreateStaticRigidBody(e, collider, transform->position, transform->rotation, true);
+		m_rigidBodySystem.CreateComponent(e, rb);
+		U64 hSpawn = m_spawnSystem.CreateComponent(e, transform->position, transform->rotation);
+		m_checkpointTriggerSystem.CreateComponent(e, hSpawn);
 
 		// player
 		e = m_entityManager.CreateEntity();
@@ -446,6 +460,7 @@ private:
 	SpawnSystem m_spawnSystem;
 	DeadlyTouchSystem m_deadlyTouchSystem;
 	DeathSystem m_deathSystem;
+	CheckpointTriggerSystem m_checkpointTriggerSystem;
 
 	// other
 	PrimitiveFactory m_primFactory;
