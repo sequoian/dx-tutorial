@@ -37,6 +37,7 @@
 #include "DeadlyTouchSystem.h"
 #include "DeathSystem.h"
 #include "CheckpointTriggerSystem.h"
+#include "PistonSystem.h"
 
 struct ModelConstants
 {
@@ -227,6 +228,7 @@ public:
 		m_deadlyTouchSystem.StartUp(1, m_entityManager, m_eventBus);
 		m_deathSystem.StartUp(1, m_entityManager, m_eventBus, m_transformSystem, m_velocitySystem, m_spawnSystem);
 		m_checkpointTriggerSystem.StartUp(1, m_entityManager, m_eventBus, m_spawnSystem);
+		m_pistonSystem.StartUp(1, m_entityManager, m_transformSystem);
 
 		// Create Entities
 		Entity e;
@@ -445,6 +447,20 @@ public:
 		m_deadlyTouchSystem.CreateComponent(e);
 		m_rotatorSystem.CreateComponent(e, hTransform, 2.5, transform->rotation, Vector3(0, 0, 1));
 
+		// piston
+		e = m_entityManager.CreateEntity();
+		hTransform = m_transformSystem.CreateComponent(e, Vector3(5, -13, -28), Quaternion(), Vector3(2, 5, 0.5));
+		transform = m_transformSystem.GetComponentByHandle(hTransform);
+		m_meshSystem.CreateComponent(e, hTransform, modelCube, matStone);
+		collider = m_physics.CreateCollisionBox(1, 1, 1);
+		collider.SetScale(transform->scale);
+		rb = m_physics.CreateKinematicRigidBody(e, collider, transform->position, transform->rotation, true);
+		hRigidBody = m_rigidBodySystem.CreateComponent(e, rb);
+		m_kinematicRBSystem.CreateComponent(e, hTransform, hRigidBody);
+		m_deadlyTouchSystem.CreateComponent(e);
+		m_pistonSystem.CreateComponent(e, hTransform, transform->position, Vector3(-5, -13, -28), 1, 1);
+		
+
 		return true;
 	}
 
@@ -472,6 +488,7 @@ public:
 		m_gravitySystem.Execute(dt);
 		m_velocitySystem.Execute(dt);
 		m_rotatorSystem.Execute(dt);
+		m_pistonSystem.Execute(dt);
 		
 		m_kinematicRBSystem.Execute(dt);
 		m_physics.RunSimulation(dt);
@@ -544,6 +561,7 @@ private:
 	DeadlyTouchSystem m_deadlyTouchSystem;
 	DeathSystem m_deathSystem;
 	CheckpointTriggerSystem m_checkpointTriggerSystem;
+	PistonSystem m_pistonSystem;
 
 	// other
 	PrimitiveFactory m_primFactory;
