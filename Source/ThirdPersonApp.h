@@ -458,7 +458,7 @@ public:
 		hRigidBody = m_rigidBodySystem.CreateComponent(e, rb);
 		m_kinematicRBSystem.CreateComponent(e, hTransform, hRigidBody);
 		m_deadlyTouchSystem.CreateComponent(e);
-		m_pistonSystem.CreateComponent(e, hTransform, transform->position, Vector3(-5, -13, -28), 1, 1);
+		m_pistonSystem.CreateComponent(e, hTransform, transform->position, Vector3(-5, -13, -28), 0.5, 0.5, 0.5, 0.5);
 		
 
 		return true;

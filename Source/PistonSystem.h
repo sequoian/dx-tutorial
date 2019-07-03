@@ -87,6 +87,16 @@ public:
 				transform->position = XMVectorLerp(comp->startPos, comp->endPos, lerp / comp->secToEnd);
 				break;
 			case STOPPED_AT_END:
+				comp->secInCurrentState += deltaTime;
+				lerp = 0;
+				excess = 0;
+				if (comp->secInCurrentState >= comp->secAtEnd)
+				{
+					lerp = comp->secAtEnd;
+					excess = comp->secInCurrentState - comp->secAtEnd;
+					comp->secInCurrentState = excess;
+					comp->currentState = MOVING_TO_START;
+				}
 				break;
 			case MOVING_TO_START:
 				comp->secInCurrentState += deltaTime;
@@ -114,6 +124,16 @@ public:
 				transform->position = XMVectorLerp(comp->endPos, comp->startPos, lerp / comp->secToStart);
 				break;
 			case STOPPED_AT_START:
+				comp->secInCurrentState += deltaTime;
+				lerp = 0;
+				excess = 0;
+				if (comp->secInCurrentState >= comp->secAtStart)
+				{
+					lerp = comp->secAtStart;
+					excess = comp->secInCurrentState - comp->secAtStart;
+					comp->secInCurrentState = excess;
+					comp->currentState = MOVING_TO_END;
+				}
 				break;
 			default:
 				DEBUG_ERROR("Invalid piston state");
