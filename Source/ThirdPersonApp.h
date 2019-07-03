@@ -249,7 +249,7 @@ public:
 
 		// spawn with checkpoint
 		e = m_entityManager.CreateEntity();
-		hTransform = m_transformSystem.CreateComponent(e, Vector3(1, -13, -4), Quaternion(), Vector3(3, 1, 1));
+		hTransform = m_transformSystem.CreateComponent(e, Vector3(1, -14, -4), Quaternion(), Vector3(3, 1, 1));
 		transform = m_transformSystem.GetComponentByHandle(hTransform);
 		m_meshSystem.CreateComponent(e, hTransform, modelCube, matStone);
 		collider = m_physics.CreateCollisionBox(1, 1, 1);

@@ -55,19 +55,38 @@ public:
 			XMVECTOR rayStart = transform->position;
 			XMVECTOR rayEnd = XMVectorAdd(Vector3(0, -comp->legLength, 0), rayStart);
 
-			auto result = m_physics->RayCast(rayStart, rayEnd);
-
+			// This would be more efficient to use the closest raycast function combined with collision masks to filter out triggers
+			auto result = m_physics->RayCastAll(rayStart, rayEnd);
 			if (result.hasHit())
 			{
-				// return if trigger
-				const btRigidBody* crb = static_cast<const btRigidBody*>(result.m_collisionObject);
-				btRigidBody* rb = const_cast<btRigidBody*>(crb);
-				RigidBody rigidBody = RigidBody(rb);
-				if (rigidBody.IsTrigger()) return;
+				RigidBody rigidBody;
+				int idx = -1;
+				float closestFraction = 1;
+				for (int i = 0; i < result.m_collisionObjects.size(); ++i)
+				{
+					if (result.m_hitFractions[i] < closestFraction)
+					{
+						const btRigidBody* crb = static_cast<const btRigidBody*>(result.m_collisionObjects.at(i));
+						btRigidBody* rb = const_cast<btRigidBody*>(crb);
+						rigidBody = RigidBody(rb);
+						if (!rigidBody.IsTrigger())
+						{
+							idx = i;
+							closestFraction = result.m_hitFractions[i];
+						}
+					}
+				}
+
+				// return if it's only hit triggers
+				if (idx < 0)
+				{
+					comp->grounded = false;
+					return;
+				}
 
 				const auto& ptB = result.m_rayToWorld;
-				const auto& ptA = result.m_hitPointWorld;
-				const auto& normalOnB = result.m_hitNormalWorld;
+				const auto& ptA = result.m_hitPointWorld[idx];
+				const auto& normalOnB = result.m_hitNormalWorld[idx];
 
 				// reposition above ground
 				XMVECTOR normal = Physics::VecToDX(normalOnB);

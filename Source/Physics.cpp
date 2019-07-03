@@ -289,6 +289,17 @@ btCollisionWorld::ClosestRayResultCallback Physics::RayCast(XMVECTOR startPos, X
 }
 
 
+btCollisionWorld::AllHitsRayResultCallback Physics::RayCastAll(XMVECTOR startPos, XMVECTOR endPos)
+{
+	btVector3 start = VecFromDX(startPos);
+	btVector3 end = VecFromDX(endPos);
+
+	btCollisionWorld::AllHitsRayResultCallback RayCallback(start, end);
+	m_dynamicsWorld->rayTest(start, end, RayCallback);
+
+	return RayCallback;
+}
+
 
 btQuaternion Physics::QuatFromDX(XMVECTOR quat)
 {
