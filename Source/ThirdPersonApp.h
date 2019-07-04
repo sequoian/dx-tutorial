@@ -255,7 +255,7 @@ public:
 
 		// default spawn
 		e = m_entityManager.CreateEntity();
-		m_spawnSystem.CreateComponent(e, Vector3(0, -10, 0), Quaternion());
+		m_spawnSystem.CreateComponent(e, Vector3(40, 22, -40), Quaternion(0, 180.0_rad, 0));
 
 		// player
 		e = m_entityManager.CreateEntity();
@@ -275,6 +275,50 @@ public:
 		m_kinematicRBSystem.CreateComponent(e, hTransform, hRigidBody);
 		m_kinematicCCSystem.CreateComponent(e, hTransform);
 		m_deathSystem.CreateComponent(e, hTransform, hVelocity);
+
+
+		// intro
+		MakePlatform(Vector3(0, 0, 0), Quaternion(), Vector3(15, 1, 15), m_sand);
+		MakePlatform(Vector3(0, 2, 0), Quaternion(), Vector3(15, 1, 1), m_sand);
+		MakePlatform(Vector3(0, 3.4, 22), Quaternion(65.0_rad, 0, 0), Vector3(5, 8, 1), m_sand);
+		MakePlatform(Vector3(0, 6.7, 33.5), Quaternion(), Vector3(8, 1, 5), m_sand);
+		MakePlatform(Vector3(0, 7, 50), Quaternion(), Vector3(5, 1, 5), m_sand);
+		MakePlatform(Vector3(18, 7, 50), Quaternion(), Vector3(5, 1, 5), m_sand);
+		MakePlatform(Vector3(-18, 7, 50), Quaternion(), Vector3(5, 1, 5), m_sand);
+		MakePlatform(Vector3(-38, 7, 50), Quaternion(), Vector3(5, 1, 5), m_sand);
+		MakePlatform(Vector3(-38, 8.25, 44), Quaternion(), Vector3(5, 0.25, 1), m_sand);
+
+		// stairs
+		MakePlatform(Vector3(-38, 8.75, 43), Quaternion(), Vector3(5, 0.25, 1), m_sand);
+		MakePlatform(Vector3(-38, 9.25, 42), Quaternion(), Vector3(5, 0.25, 1), m_sand);
+		MakePlatform(Vector3(-38, 9.75, 41), Quaternion(), Vector3(5, 0.25, 1), m_sand);
+		MakePlatform(Vector3(-38, 10.25, 40), Quaternion(), Vector3(5, 0.25, 1), m_sand);
+		MakePlatform(Vector3(-38, 10.75, 34.5), Quaternion(), Vector3(5, 0.25, 5), m_sand);
+
+		// climb up
+		MakePlatform(Vector3(-38, 12.5, 22), Quaternion(), Vector3(3, 0.5, 3), m_sand);
+		MakePlatform(Vector3(-48, 15, 15), Quaternion(), Vector3(3, 0.5, 3), m_sand);
+		MakePlatform(Vector3(-40, 18.5, 10), Quaternion(), Vector3(3, 0.5, 3), m_sand);
+
+		// obstacle course
+		MakePlatform(Vector3(-45, 20, -20), Quaternion(), Vector3(10, 0.5, 25), m_sand);
+
+		// obstacles with jumping
+		MakePlatform(Vector3(-25, 20, -40), Quaternion(), Vector3(3, 1, 5), m_sand);
+		MakePlatform(Vector3(-10, 20, -40), Quaternion(), Vector3(3, 1, 5), m_sand);
+		MakePlatform(Vector3(5, 20, -40), Quaternion(), Vector3(3, 1, 5), m_sand);
+		MakePlatform(Vector3(20, 20, -40), Quaternion(), Vector3(3, 1, 3), m_sand);
+		MakePlatform(Vector3(40, 20, -40), Quaternion(), Vector3(8, 1, 8), m_sand);
+		MakePlatform(Vector3(40, 20, -24), Quaternion(), Vector3(4, 1, 8), m_sand);
+		MakePlatform(Vector3(40, 20, -7), Quaternion(), Vector3(9, 1, 9), m_sand);
+
+		// doorway
+		MakePlatform(Vector3(34, 24, 2.5), Quaternion(), Vector3(3, 3, 0.5), m_sand);
+		MakePlatform(Vector3(40, 30, 2.5), Quaternion(), Vector3(3, 3, 0.5), m_sand);
+		MakePlatform(Vector3(46, 24, 2.5), Quaternion(), Vector3(3, 3, 0.5), m_sand);
+		MakePlatform(Vector3(40, 20, 11), Quaternion(), Vector3(9, 1, 9), m_sand);
+		
+		/*
 
 		// ground
 		MakePlatform(Vector3(0, -15, 0), Quaternion(), Vector3(5, 1, 5), m_sand);
@@ -353,6 +397,7 @@ public:
 		m_deadlyTouchSystem.CreateComponent(e);
 		m_pistonSystem.CreateComponent(e, hTransform, transform->position, Vector3(-5, -13, -28), 0.5, 0.5, 0.5, 0.5);
 		
+		*/
 
 		return true;
 	}
