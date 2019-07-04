@@ -1,5 +1,6 @@
 #pragma once
 
+// essentials
 #include "Application.h"
 #include "PrimitiveFactory.h"
 #include "StringId.h"
@@ -38,6 +39,9 @@
 #include "DeathSystem.h"
 #include "CheckpointTriggerSystem.h"
 #include "PistonSystem.h"
+
+// preprocessor directives
+#define SHOW_TRIGGERS false;
 
 struct ModelConstants
 {
@@ -273,96 +277,23 @@ public:
 		m_deathSystem.CreateComponent(e, hTransform, hVelocity);
 
 		// ground
-		e = m_entityManager.CreateEntity();
-		hTransform = m_transformSystem.CreateComponent(e, Vector3(0, -15, 0), Quaternion(), Vector3(5, 1, 5));
-		transform = m_transformSystem.GetComponentByHandle(hTransform);
-		m_meshSystem.CreateComponent(e, hTransform, modelCube, matSand);
-		collider = m_physics.CreateCollisionBox(1, 1, 1);
-		collider.SetScale(transform->scale);
-		rb = m_physics.CreateStaticRigidBody(e, collider, transform->position, transform->rotation);
-		m_rigidBodySystem.CreateComponent(e, rb);
+		MakePlatform(Vector3(0, -15, 0), Quaternion(), Vector3(5, 1, 5), m_sand);
+		// north slope
+		MakePlatform(Vector3(0, -12, 7), Quaternion(-45.0_rad, 0, 0), Vector3(5, 1, 5), m_sand);
+		// east slope
+		MakePlatform(Vector3(7, -11, 0), Quaternion(0, 0, 65.0_rad), Vector3(5, 1, 5), m_sand);
+		// west slope
+		MakePlatform(Vector3(-9, -13, 0), Quaternion(0, 0, -25.0_rad), Vector3(5, 1, 5), m_sand);
+		// west wall
+		MakePlatform(Vector3(-14, -7, 0), Quaternion(0, 0, 90.0_rad), Vector3(5, 1, 5), m_sand);
 
-		// slope 1
-		e = m_entityManager.CreateEntity();
-		hTransform = m_transformSystem.CreateComponent(e, Vector3(0, -12, 7), Quaternion(-45.0_rad, 0, 0), Vector3(5, 1, 5));
-		transform = m_transformSystem.GetComponentByHandle(hTransform);
-		m_meshSystem.CreateComponent(e, hTransform, modelCube, matSand);
-		collider = m_physics.CreateCollisionBox(1, 1, 1);
-		collider.SetScale(transform->scale);
-		rb = m_physics.CreateStaticRigidBody(e, collider, transform->position, transform->rotation);
-		m_rigidBodySystem.CreateComponent(e, rb);
+		// island 1
+		MakePlatform(Vector3(0, -15, -18), Quaternion(), Vector3(5, 1, 5), m_sand);
+		MakeCheckpoint(Vector3(0, -13, -18), Quaternion(), Vector3(0, -13, -18), Quaternion(), Vector3(4, 1, 4));
 
-		// slope 2
-		e = m_entityManager.CreateEntity();
-		hTransform = m_transformSystem.CreateComponent(e, Vector3(7, -11, 0), Quaternion(0, 0, 65.0_rad), Vector3(5, 1, 5));
-		transform = m_transformSystem.GetComponentByHandle(hTransform);
-		m_meshSystem.CreateComponent(e, hTransform, modelCube, matSand);
-		collider = m_physics.CreateCollisionBox(1, 1, 1);
-		collider.SetScale(transform->scale);
-		rb = m_physics.CreateStaticRigidBody(e, collider, transform->position, transform->rotation);
-		m_rigidBodySystem.CreateComponent(e, rb);
-
-		// slope 3
-		e = m_entityManager.CreateEntity();
-		hTransform = m_transformSystem.CreateComponent(e, Vector3(-7, -13, 0), Quaternion(0, 0, -25.0_rad), Vector3(5, 1, 5));
-		transform = m_transformSystem.GetComponentByHandle(hTransform);
-		m_meshSystem.CreateComponent(e, hTransform, modelCube, matSand);
-		collider = m_physics.CreateCollisionBox(1, 1, 1);
-		collider.SetScale(transform->scale);
-		rb = m_physics.CreateStaticRigidBody(e, collider, transform->position, transform->rotation);
-		m_rigidBodySystem.CreateComponent(e, rb);
-
-		// wall 1
-		e = m_entityManager.CreateEntity();
-		hTransform = m_transformSystem.CreateComponent(e, Vector3(-12, -10, 0), Quaternion(0, 0, 90.0_rad), Vector3(5, 1, 5));
-		transform = m_transformSystem.GetComponentByHandle(hTransform);
-		m_meshSystem.CreateComponent(e, hTransform, modelCube, matSand);
-		collider = m_physics.CreateCollisionBox(1, 1, 1);
-		collider.SetScale(transform->scale);
-		rb = m_physics.CreateStaticRigidBody(e, collider, transform->position, transform->rotation);
-		m_rigidBodySystem.CreateComponent(e, rb);
-
-		// platform 1 with checkpoint
-		e = m_entityManager.CreateEntity();
-		hTransform = m_transformSystem.CreateComponent(e, Vector3(0, -15, -18), Quaternion(), Vector3(5, 1, 5));
-		transform = m_transformSystem.GetComponentByHandle(hTransform);
-		m_meshSystem.CreateComponent(e, hTransform, modelCube, matSand);
-		collider = m_physics.CreateCollisionBox(1, 1, 1);
-		collider.SetScale(transform->scale);
-		rb = m_physics.CreateStaticRigidBody(e, collider, transform->position, transform->rotation);
-		m_rigidBodySystem.CreateComponent(e, rb);
-		
-		e = m_entityManager.CreateEntity();
-		hTransform = m_transformSystem.CreateComponent(e, Vector3(0, -13, -18), Quaternion(), Vector3(5, 1, 5));
-		transform = m_transformSystem.GetComponentByHandle(hTransform);
-		//m_meshSystem.CreateComponent(e, hTransform, modelCube, matStone);
-		collider = m_physics.CreateCollisionBox(1, 1, 1);
-		collider.SetScale(transform->scale);
-		rb = m_physics.CreateStaticRigidBody(e, collider, transform->position, transform->rotation, true);
-		m_rigidBodySystem.CreateComponent(e, rb);
-		hSpawn = m_spawnSystem.CreateComponent(e, transform->position, transform->rotation);
-		m_checkpointTriggerSystem.CreateComponent(e, hSpawn);
-
-		// platform 2 with checkpoint
-		e = m_entityManager.CreateEntity();
-		hTransform = m_transformSystem.CreateComponent(e, Vector3(0, -13, -35), Quaternion(), Vector3(5, 1, 5));
-		transform = m_transformSystem.GetComponentByHandle(hTransform);
-		m_meshSystem.CreateComponent(e, hTransform, modelCube, matSand);
-		collider = m_physics.CreateCollisionBox(1, 1, 1);
-		collider.SetScale(transform->scale);
-		rb = m_physics.CreateStaticRigidBody(e, collider, transform->position, transform->rotation);
-		m_rigidBodySystem.CreateComponent(e, rb);
-
-		e = m_entityManager.CreateEntity();
-		hTransform = m_transformSystem.CreateComponent(e, Vector3(0, -11, -35), Quaternion(), Vector3(5, 1, 5));
-		transform = m_transformSystem.GetComponentByHandle(hTransform);
-		//m_meshSystem.CreateComponent(e, hTransform, modelCube, matStone);
-		collider = m_physics.CreateCollisionBox(1, 1, 1);
-		collider.SetScale(transform->scale);
-		rb = m_physics.CreateStaticRigidBody(e, collider, transform->position, transform->rotation, true);
-		m_rigidBodySystem.CreateComponent(e, rb);
-		hSpawn = m_spawnSystem.CreateComponent(e, transform->position, transform->rotation);
-		m_checkpointTriggerSystem.CreateComponent(e, hSpawn);
+		// island 2
+		MakePlatform(Vector3(0, -13, -35), Quaternion(), Vector3(5, 1, 5), m_sand);
+		MakeCheckpoint(Vector3(0, -11, -35), Quaternion(), Vector3(0, -11, -35), Quaternion(), Vector3(4, 1, 4));
 
 		// coins
 		MakeCoin(Vector3(0, -8, 4));
@@ -538,12 +469,28 @@ private:
 
 // Factory method declarations
 private:
+	Entity MakePlatform(XMVECTOR pos, XMVECTOR rot, XMVECTOR scale, Material* material);
 	Entity MakeCoin(XMVECTOR position);
+	Entity MakeCheckpoint(XMVECTOR spawnPos, XMVECTOR spawnRot, XMVECTOR triggerPos, XMVECTOR triggerRot, XMVECTOR triggerScale);
 
 };
 
 
 // Factory Methods
+
+Entity ThirdPersonApp::MakePlatform(XMVECTOR pos, XMVECTOR rot, XMVECTOR scale, Material* material)
+{
+	Entity e = m_entityManager.CreateEntity();
+	U64 hTransform = m_transformSystem.CreateComponent(e, pos, rot, scale);
+	TransformComponent* transform = m_transformSystem.GetComponentByHandle(hTransform);
+	m_meshSystem.CreateComponent(e, hTransform, m_cube, material);
+	ColliderPtr collider = m_physics.CreateCollisionBox(1, 1, 1);
+	collider.SetScale(transform->scale);
+	RigidBody rb = m_physics.CreateStaticRigidBody(e, collider, transform->position, transform->rotation);
+	m_rigidBodySystem.CreateComponent(e, rb);
+
+	return e;
+}
 
 Entity ThirdPersonApp::MakeCoin(XMVECTOR position)
 {
@@ -556,6 +503,28 @@ Entity ThirdPersonApp::MakeCoin(XMVECTOR position)
 	m_rigidBodySystem.CreateComponent(e, rb);
 	m_coinSystem.CreateComponent(e);
 	m_rotatorSystem.CreateComponent(e, hTransform, 3, transform->rotation);
+
+	return e;
+}
+
+Entity ThirdPersonApp::MakeCheckpoint(XMVECTOR spawnPos, XMVECTOR spawnRot, XMVECTOR triggerPos, XMVECTOR triggerRot, XMVECTOR triggerScale)
+{
+	Entity e = m_entityManager.CreateEntity();
+
+	// Create spawn point
+	U64 hSpawn = m_spawnSystem.CreateComponent(e, spawnPos, spawnRot);
+
+	// Create checkpoint trigger
+	U64 hTransform = m_transformSystem.CreateComponent(e, triggerPos, triggerRot, triggerScale);
+	TransformComponent* transform = m_transformSystem.GetComponentByHandle(hTransform);
+	#if SHOW_TRIGGERS == true
+		m_meshSystem.CreateComponent(e, hTransform, m_cube, m_stone);
+	#endif
+	ColliderPtr collider = m_physics.CreateCollisionBox(1, 1, 1);
+	collider.SetScale(transform->scale);
+	RigidBody rb = m_physics.CreateStaticRigidBody(e, collider, transform->position, transform->rotation, true);
+	m_rigidBodySystem.CreateComponent(e, rb);
+	m_checkpointTriggerSystem.CreateComponent(e, hSpawn);
 
 	return e;
 }
