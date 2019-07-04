@@ -118,13 +118,6 @@ public:
 
 		modelSphere = static_cast<Model*>(m_resourceManager.GetResourceByHandle(handle));
 
-		if (!m_resourceManager.LoadModel("Assets/sphere.obj", handle, "Assets/sphere.obj"_sid))
-		{
-			return false;
-		}
-
-		modelSphere = static_cast<Model*>(m_resourceManager.GetResourceByHandle(handle));
-
 		if (!m_resourceManager.LoadModel("Assets/cylinder.obj", handle, "Assets/cylinder.obj"_sid))
 		{
 			return false;
@@ -181,6 +174,16 @@ public:
 		matSand->SetConstantBuffer(0, m_cb);
 		matSand->AddTexture(*texSeafloor);
 		matSand->AddShaderSampler(m_graphics.GetLinearWrapSampler());
+
+		// Add resources to app (used for factory functions)
+		m_monkey = modelMonkey;
+		m_cube = modelCube;
+		m_sphere = modelSphere;
+		m_cone = modelCone;
+		m_capsule = modelCapsule;
+		m_cylinder = modelCylinder;
+		m_stone = matStone;
+		m_sand = matSand;
 
 		// Create render targets
 
@@ -269,36 +272,6 @@ public:
 		m_kinematicCCSystem.CreateComponent(e, hTransform);
 		m_deathSystem.CreateComponent(e, hTransform, hVelocity);
 
-		// coin 1
-		e = m_entityManager.CreateEntity();
-		hTransform = m_transformSystem.CreateComponent(e, Vector3(0, -8, 4), Quaternion(90.0_rad, 0, 0), Vector3(0.5, 0.1, 0.5));
-		transform = m_transformSystem.GetComponentByHandle(hTransform);
-		m_meshSystem.CreateComponent(e, hTransform, modelCylinder, matStone);
-		collider = m_physics.CreateCollisionSphere(0.5);
-		rb = m_physics.CreateStaticRigidBody(e, collider, transform->position, Quaternion(), true);
-		m_coinSystem.CreateComponent(e);
-		m_rotatorSystem.CreateComponent(e, hTransform, 3, transform->rotation);
-
-		// coin 2
-		e = m_entityManager.CreateEntity();
-		hTransform = m_transformSystem.CreateComponent(e, Vector3(4, -10, 0), Quaternion(90.0_rad, 0, 0), Vector3(0.5, 0.1, 0.5));
-		transform = m_transformSystem.GetComponentByHandle(hTransform);
-		m_meshSystem.CreateComponent(e, hTransform, modelCylinder, matStone);
-		collider = m_physics.CreateCollisionSphere(0.5);
-		rb = m_physics.CreateStaticRigidBody(e, collider, transform->position, Quaternion(), true);
-		m_coinSystem.CreateComponent(e);
-		m_rotatorSystem.CreateComponent(e, hTransform, 3, transform->rotation);
-
-		// coin 3
-		e = m_entityManager.CreateEntity();
-		hTransform = m_transformSystem.CreateComponent(e, Vector3(-8, -5, 0), Quaternion(90.0_rad, 0, 0), Vector3(0.5, 0.1, 0.5));
-		transform = m_transformSystem.GetComponentByHandle(hTransform);
-		m_meshSystem.CreateComponent(e, hTransform, modelCylinder, matStone);
-		collider = m_physics.CreateCollisionSphere(0.5);
-		rb = m_physics.CreateStaticRigidBody(e, collider, transform->position, Quaternion(), true);
-		m_coinSystem.CreateComponent(e);
-		m_rotatorSystem.CreateComponent(e, hTransform, 3, transform->rotation);
-
 		// ground
 		e = m_entityManager.CreateEntity();
 		hTransform = m_transformSystem.CreateComponent(e, Vector3(0, -15, 0), Quaternion(), Vector3(5, 1, 5));
@@ -370,16 +343,6 @@ public:
 		hSpawn = m_spawnSystem.CreateComponent(e, transform->position, transform->rotation);
 		m_checkpointTriggerSystem.CreateComponent(e, hSpawn);
 
-		// coin 4
-		e = m_entityManager.CreateEntity();
-		hTransform = m_transformSystem.CreateComponent(e, Vector3(0, -10, -18), Quaternion(90.0_rad, 0, 0), Vector3(0.5, 0.1, 0.5));
-		transform = m_transformSystem.GetComponentByHandle(hTransform);
-		m_meshSystem.CreateComponent(e, hTransform, modelCylinder, matStone);
-		collider = m_physics.CreateCollisionSphere(0.5);
-		rb = m_physics.CreateStaticRigidBody(e, collider, transform->position, Quaternion(), true);
-		m_coinSystem.CreateComponent(e);
-		m_rotatorSystem.CreateComponent(e, hTransform, 3, transform->rotation);
-
 		// platform 2 with checkpoint
 		e = m_entityManager.CreateEntity();
 		hTransform = m_transformSystem.CreateComponent(e, Vector3(0, -13, -35), Quaternion(), Vector3(5, 1, 5));
@@ -401,15 +364,14 @@ public:
 		hSpawn = m_spawnSystem.CreateComponent(e, transform->position, transform->rotation);
 		m_checkpointTriggerSystem.CreateComponent(e, hSpawn);
 
-		// coin 5
-		e = m_entityManager.CreateEntity();
-		hTransform = m_transformSystem.CreateComponent(e, Vector3(0, -8, -35), Quaternion(90.0_rad, 0, 0), Vector3(0.5, 0.1, 0.5));
-		transform = m_transformSystem.GetComponentByHandle(hTransform);
-		m_meshSystem.CreateComponent(e, hTransform, modelCylinder, matStone);
-		collider = m_physics.CreateCollisionSphere(0.5);
-		rb = m_physics.CreateStaticRigidBody(e, collider, transform->position, Quaternion(), true);
-		m_coinSystem.CreateComponent(e);
-		m_rotatorSystem.CreateComponent(e, hTransform, 3, transform->rotation);
+		// coins
+		MakeCoin(Vector3(0, -8, 4));
+		MakeCoin(Vector3(4, -10, 0));
+		MakeCoin(Vector3(-8, -5, 0));
+		MakeCoin(Vector3(0, -10, -18));
+		MakeCoin(Vector3(0, -8, -35));
+		MakeCoin(Vector3(2, -8, -35));
+		MakeCoin(Vector3(-2, -8, -35));
 
 		// kill trigger under platforms
 		e = m_entityManager.CreateEntity();
@@ -562,7 +524,38 @@ private:
 	DeathSystem m_deathSystem;
 	CheckpointTriggerSystem m_checkpointTriggerSystem;
 	PistonSystem m_pistonSystem;
+	
+// Cache resources for use in factory methods
+private:
+	Model* m_monkey;
+	Model* m_cube;
+	Model* m_capsule;
+	Model* m_cylinder;
+	Model* m_cone;
+	Model* m_sphere;
+	Material* m_sand;
+	Material* m_stone;
 
-	// other
-	PrimitiveFactory m_primFactory;
+// Factory method declarations
+private:
+	Entity MakeCoin(XMVECTOR position);
+
 };
+
+
+// Factory Methods
+
+Entity ThirdPersonApp::MakeCoin(XMVECTOR position)
+{
+	Entity e = m_entityManager.CreateEntity();
+	U64 hTransform = m_transformSystem.CreateComponent(e, position, Quaternion(90.0_rad, 0, 0), Vector3(0.5, 0.1, 0.5));
+	TransformComponent* transform = m_transformSystem.GetComponentByHandle(hTransform);
+	m_meshSystem.CreateComponent(e, hTransform, m_cylinder, m_stone);
+	ColliderPtr collider = m_physics.CreateCollisionSphere(0.5);
+	RigidBody rb = m_physics.CreateStaticRigidBody(e, collider, transform->position, Quaternion(), true);
+	m_rigidBodySystem.CreateComponent(e, rb);
+	m_coinSystem.CreateComponent(e);
+	m_rotatorSystem.CreateComponent(e, hTransform, 3, transform->rotation);
+
+	return e;
+}

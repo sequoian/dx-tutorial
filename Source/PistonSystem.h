@@ -138,9 +138,6 @@ public:
 			default:
 				DEBUG_ERROR("Invalid piston state");
 			}
-
-			DEBUG_PRINT("%f", transform->position.m128_f32[1]);
-			//DEBUG_PRINT("%f", lerp);
 		}
 	}
 
