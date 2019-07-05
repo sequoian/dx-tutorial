@@ -255,7 +255,7 @@ public:
 
 		// default spawn
 		e = m_entityManager.CreateEntity();
-		m_spawnSystem.CreateComponent(e, Vector3(20, 22, -40), Quaternion(0, 180.0_rad, 0));
+		m_spawnSystem.CreateComponent(e, Vector3(-18, 9, 50), Quaternion(0, 180.0_rad, 0));
 
 		// player
 		e = m_entityManager.CreateEntity();
@@ -286,6 +286,7 @@ public:
 		MakePlatform(Vector3(18, 7, 50), Quaternion(), Vector3(5, 1, 5), m_sand);
 		MakePlatform(Vector3(-18, 7, 50), Quaternion(), Vector3(5, 1, 5), m_sand);
 		MakePlatform(Vector3(-38, 7, 50), Quaternion(), Vector3(5, 1, 5), m_sand);
+		MakePiston(Vector3(-28, 12, 50), Vector3(-28, 7, 50), Vector3(0.5, 0.5, 5), 1.25, 0, 1.25, 0);
 		MakePlatform(Vector3(-38, 8.25, 44), Quaternion(), Vector3(5, 0.25, 1), m_sand);
 
 		// stairs
@@ -301,9 +302,17 @@ public:
 		MakePlatform(Vector3(-40, 18.5, 10), Quaternion(), Vector3(3, 0.5, 3), m_sand);
 
 		// obstacle course
-		MakePlatform(Vector3(-45, 20, -20), Quaternion(), Vector3(10, 0.5, 25), m_sand);
+		MakePlatform(Vector3(-45, 20, -20), Quaternion(), Vector3(5, 0.5, 25), m_sand);
+		// obstacle 1
+		MakePiston(Vector3(-45, 23.5, -4), Vector3(-45, 30, -4), Vector3(4.5, 3, 2), 1.2, 0.25, 0.25, 1);
+		// obstacle 2
+		MakePiston(Vector3(-42.5, 23, -19), Vector3(-37.5, 23, -19), Vector3(2.5), .9, 0.25, 0.25, 1);
+		MakePiston(Vector3(-47.5, 23, -19), Vector3(-52.5, 23, -19), Vector3(2.5), .9, 0.25, 0.25, 1);
+		//obstacle 3
+		MakePiston(Vector3(-45, 23.5, -33), Vector3(-45, 17.5, -33), Vector3(4.5, 3, 0.5), 0.75, 0, 0.5, 0);
 
 		// obstacles with jumping
+		MakePlatform(Vector3(-37, 20, -40), Quaternion(), Vector3(3, 0.5, 5), m_sand);
 		MakePropeller(Vector3(-30, 20, -40), Quaternion(), Vector3(0.5, 0.5, 7), Vector3(1, 0, 0), 3);
 		MakePlatform(Vector3(-25, 20, -40), Quaternion(), Vector3(3, 1, 5), m_sand);
 		MakePropeller(Vector3(-17, 20, -40), Quaternion(), Vector3(0.5, 7, 0.5), Vector3(1, 0, 0), -2);
@@ -326,37 +335,8 @@ public:
 		MakePlatform(Vector3(40, 30, 2.5), Quaternion(), Vector3(3, 3, 0.5), m_sand);
 		MakePlatform(Vector3(46, 24, 2.5), Quaternion(), Vector3(3, 3, 0.5), m_sand);
 		MakePlatform(Vector3(40, 20, 11), Quaternion(), Vector3(9, 1, 9), m_sand);
-		
+
 		/*
-
-		// ground
-		MakePlatform(Vector3(0, -15, 0), Quaternion(), Vector3(5, 1, 5), m_sand);
-		// north slope
-		MakePlatform(Vector3(0, -12, 7), Quaternion(-45.0_rad, 0, 0), Vector3(5, 1, 5), m_sand);
-		// east slope
-		MakePlatform(Vector3(7, -11, 0), Quaternion(0, 0, 65.0_rad), Vector3(5, 1, 5), m_sand);
-		// west slope
-		MakePlatform(Vector3(-9, -13, 0), Quaternion(0, 0, -25.0_rad), Vector3(5, 1, 5), m_sand);
-		// west wall
-		MakePlatform(Vector3(-14, -7, 0), Quaternion(0, 0, 90.0_rad), Vector3(5, 1, 5), m_sand);
-
-		// island 1
-		MakePlatform(Vector3(0, -15, -18), Quaternion(), Vector3(5, 1, 5), m_sand);
-		MakeCheckpoint(Vector3(0, -13, -18), Quaternion(), Vector3(0, -13, -18), Quaternion(), Vector3(4, 1, 4));
-
-		// island 2
-		MakePlatform(Vector3(0, -13, -35), Quaternion(), Vector3(5, 1, 5), m_sand);
-		MakeCheckpoint(Vector3(0, -11, -35), Quaternion(), Vector3(0, -11, -35), Quaternion(), Vector3(4, 1, 4));
-
-		// coins
-		MakeCoin(Vector3(0, -8, 4));
-		MakeCoin(Vector3(4, -10, 0));
-		MakeCoin(Vector3(-8, -5, 0));
-		MakeCoin(Vector3(0, -10, -18));
-		MakeCoin(Vector3(0, -8, -35));
-		MakeCoin(Vector3(2, -8, -35));
-		MakeCoin(Vector3(-2, -8, -35));
-
 		// kill trigger under platforms
 		e = m_entityManager.CreateEntity();
 		hTransform = m_transformSystem.CreateComponent(e, Vector3(0, -25, -25), Quaternion(), Vector3(40, 1, 40));
@@ -367,45 +347,6 @@ public:
 		rb = m_physics.CreateStaticRigidBody(e, collider, transform->position, transform->rotation, true);
 		m_rigidBodySystem.CreateComponent(e, rb);
 		m_deadlyTouchSystem.CreateComponent(e);
-
-		// obstacle
-		e = m_entityManager.CreateEntity();
-		hTransform = m_transformSystem.CreateComponent(e, Vector3(0, -15, -10), Quaternion(), Vector3(0.5, 10, 0.5));
-		transform = m_transformSystem.GetComponentByHandle(hTransform);
-		m_meshSystem.CreateComponent(e, hTransform, modelCube, matStone);
-		collider = m_physics.CreateCollisionBox(1, 1, 1);
-		collider.SetScale(transform->scale);
-		rb = m_physics.CreateKinematicRigidBody(e, collider, transform->position, transform->rotation, true);
-		hRigidBody = m_rigidBodySystem.CreateComponent(e, rb);
-		m_kinematicRBSystem.CreateComponent(e, hTransform, hRigidBody);
-		m_deadlyTouchSystem.CreateComponent(e);
-		m_rotatorSystem.CreateComponent(e, hTransform, 2.5, transform->rotation, Vector3(0, 0, 1));
-
-		e = m_entityManager.CreateEntity();
-		hTransform = m_transformSystem.CreateComponent(e, Vector3(0, -15, -10), Quaternion(), Vector3(10, 0.5, 0.5));
-		transform = m_transformSystem.GetComponentByHandle(hTransform);
-		m_meshSystem.CreateComponent(e, hTransform, modelCube, matStone);
-		collider = m_physics.CreateCollisionBox(1, 1, 1);
-		collider.SetScale(transform->scale);
-		rb = m_physics.CreateKinematicRigidBody(e, collider, transform->position, transform->rotation, true);
-		hRigidBody = m_rigidBodySystem.CreateComponent(e, rb);
-		m_kinematicRBSystem.CreateComponent(e, hTransform, hRigidBody);
-		m_deadlyTouchSystem.CreateComponent(e);
-		m_rotatorSystem.CreateComponent(e, hTransform, 2.5, transform->rotation, Vector3(0, 0, 1));
-
-		// piston
-		e = m_entityManager.CreateEntity();
-		hTransform = m_transformSystem.CreateComponent(e, Vector3(5, -13, -28), Quaternion(), Vector3(2, 5, 0.5));
-		transform = m_transformSystem.GetComponentByHandle(hTransform);
-		m_meshSystem.CreateComponent(e, hTransform, modelCube, matStone);
-		collider = m_physics.CreateCollisionBox(1, 1, 1);
-		collider.SetScale(transform->scale);
-		rb = m_physics.CreateKinematicRigidBody(e, collider, transform->position, transform->rotation, true);
-		hRigidBody = m_rigidBodySystem.CreateComponent(e, rb);
-		m_kinematicRBSystem.CreateComponent(e, hTransform, hRigidBody);
-		m_deadlyTouchSystem.CreateComponent(e);
-		m_pistonSystem.CreateComponent(e, hTransform, transform->position, Vector3(-5, -13, -28), 0.5, 0.5, 0.5, 0.5);
-		
 		*/
 
 		return true;
@@ -527,8 +468,7 @@ private:
 	Entity MakeCoin(XMVECTOR position);
 	Entity MakeCheckpoint(XMVECTOR spawnPos, XMVECTOR spawnRot, XMVECTOR triggerPos, XMVECTOR triggerRot, XMVECTOR triggerScale);
 	Entity MakePropeller(XMVECTOR pos, XMVECTOR rot, XMVECTOR scale, XMVECTOR axis, float speed);
-	//Entity MakePiston();
-
+	Entity MakePiston(XMVECTOR startPos, XMVECTOR endPos, XMVECTOR scale, float timeToEnd, float timeAtEnd, float timeToStart, float timeAtStart);
 };
 
 
@@ -598,6 +538,23 @@ Entity ThirdPersonApp::MakePropeller(XMVECTOR pos, XMVECTOR rot, XMVECTOR scale,
 	m_kinematicRBSystem.CreateComponent(e, hTransform, hRigidBody);
 	m_deadlyTouchSystem.CreateComponent(e);
 	m_rotatorSystem.CreateComponent(e, hTransform, speed, rot, axis);
+
+	return e;
+}
+
+Entity ThirdPersonApp::MakePiston(XMVECTOR startPos, XMVECTOR endPos, XMVECTOR scale, float timeToEnd, float timeAtEnd, float timeToStart, float timeAtStart)
+{
+	Entity e = m_entityManager.CreateEntity();
+	U64 hTransform = m_transformSystem.CreateComponent(e, startPos, Quaternion(), scale);
+	TransformComponent* transform = m_transformSystem.GetComponentByHandle(hTransform);
+	m_meshSystem.CreateComponent(e, hTransform, m_cube, m_stone);
+	ColliderPtr collider = m_physics.CreateCollisionBox(1, 1, 1);
+	collider.SetScale(transform->scale);
+	RigidBody rb = m_physics.CreateKinematicRigidBody(e, collider, transform->position, transform->rotation, true);
+	U64 hRigidBody = m_rigidBodySystem.CreateComponent(e, rb);
+	m_kinematicRBSystem.CreateComponent(e, hTransform, hRigidBody);
+	m_deadlyTouchSystem.CreateComponent(e);
+	m_pistonSystem.CreateComponent(e, hTransform, startPos, endPos, timeToEnd, timeToStart, timeAtEnd, timeAtStart);
 
 	return e;
 }
