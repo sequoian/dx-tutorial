@@ -149,6 +149,9 @@ public:
 		// Load textures
 		Texture* texStone;
 		Texture* texSeafloor;
+		Texture* texdanger;
+		Texture* texGold;
+		Texture* texBlank;
 
 		if (!m_resourceManager.LoadTexture("Assets/stone.tga", handle, "Assets/stone.tga"_sid))
 		{
@@ -164,9 +167,33 @@ public:
 
 		texSeafloor = static_cast<Texture*>(m_resourceManager.GetResourceByHandle(handle));
 
+		if (!m_resourceManager.LoadTexture("Assets/danger.tga", handle, "Assets/danger.tga"_sid))
+		{
+			return false;
+		}
+
+		texdanger = static_cast<Texture*>(m_resourceManager.GetResourceByHandle(handle));
+
+		if (!m_resourceManager.LoadTexture("Assets/gold.tga", handle, "Assets/gold.tga"_sid))
+		{
+			return false;
+		}
+
+		texGold = static_cast<Texture*>(m_resourceManager.GetResourceByHandle(handle));
+
+		if (!m_resourceManager.LoadTexture("Assets/blank.tga", handle, "Assets/blank.tga"_sid))
+		{
+			return false;
+		}
+
+		texBlank = static_cast<Texture*>(m_resourceManager.GetResourceByHandle(handle));
+
 		// Load materials
 		Material* matStone;
 		Material* matSand;
+		Material* matdanger;
+		Material* matGold;
+		Material* matBlank;
 
 		m_resourceManager.CreateMaterial(handle, "Stone"_sid);
 		matStone = static_cast<Material*>(m_resourceManager.GetResourceByHandle(handle));
@@ -182,6 +209,27 @@ public:
 		matSand->AddTexture(*texSeafloor);
 		matSand->AddShaderSampler(m_graphics.GetLinearWrapSampler());
 
+		m_resourceManager.CreateMaterial(handle, "Danger"_sid);
+		matdanger = static_cast<Material*>(m_resourceManager.GetResourceByHandle(handle));
+		matdanger->SetShaders(vsBase, psBase);
+		matdanger->SetConstantBuffer(0, m_cb);
+		matdanger->AddTexture(*texdanger);
+		matdanger->AddShaderSampler(m_graphics.GetLinearWrapSampler());
+
+		m_resourceManager.CreateMaterial(handle, "Gold"_sid);
+		matGold = static_cast<Material*>(m_resourceManager.GetResourceByHandle(handle));
+		matGold->SetShaders(vsBase, psBase);
+		matGold->SetConstantBuffer(0, m_cb);
+		matGold->AddTexture(*texGold);
+		matGold->AddShaderSampler(m_graphics.GetLinearWrapSampler());
+
+		m_resourceManager.CreateMaterial(handle, "Blank"_sid);
+		matBlank = static_cast<Material*>(m_resourceManager.GetResourceByHandle(handle));
+		matBlank->SetShaders(vsBase, psBase);
+		matBlank->SetConstantBuffer(0, m_cb);
+		matBlank->AddTexture(*texBlank);
+		matBlank->AddShaderSampler(m_graphics.GetLinearWrapSampler());
+
 		// Add resources to app (used for factory functions)
 		m_monkey = modelMonkey;
 		m_cube = modelCube;
@@ -191,6 +239,9 @@ public:
 		m_cylinder = modelCylinder;
 		m_stone = matStone;
 		m_sand = matSand;
+		m_danger = matdanger;
+		m_gold = matGold;
+		m_blank = matBlank;
 
 		// Create render targets
 
@@ -512,6 +563,9 @@ private:
 	Model* m_sphere;
 	Material* m_sand;
 	Material* m_stone;
+	Material* m_danger;
+	Material* m_gold;
+	Material* m_blank;
 
 // Factory method declarations
 private:
@@ -545,7 +599,7 @@ Entity ThirdPersonApp::MakeCoin(XMVECTOR position)
 	Entity e = m_entityManager.CreateEntity();
 	U64 hTransform = m_transformSystem.CreateComponent(e, position, Quaternion(90.0_rad, 0, 0), Vector3(0.5, 0.1, 0.5));
 	TransformComponent* transform = m_transformSystem.GetComponentByHandle(hTransform);
-	m_meshSystem.CreateComponent(e, hTransform, m_cylinder, m_stone);
+	m_meshSystem.CreateComponent(e, hTransform, m_cylinder, m_gold);
 	ColliderPtr collider = m_physics.CreateCollisionSphere(0.5);
 	RigidBody rb = m_physics.CreateStaticRigidBody(e, collider, transform->position, Quaternion(), true);
 	m_rigidBodySystem.CreateComponent(e, rb);
@@ -582,7 +636,7 @@ Entity ThirdPersonApp::MakePropeller(XMVECTOR pos, XMVECTOR rot, XMVECTOR scale,
 	Entity e = m_entityManager.CreateEntity();
 	U64 hTransform = m_transformSystem.CreateComponent(e, pos, rot, scale);
 	TransformComponent* transform = m_transformSystem.GetComponentByHandle(hTransform);
-	m_meshSystem.CreateComponent(e, hTransform, m_cube, m_stone);
+	m_meshSystem.CreateComponent(e, hTransform, m_cube, m_danger);
 	ColliderPtr collider = m_physics.CreateCollisionBox(1, 1, 1);
 	collider.SetScale(transform->scale);
 	RigidBody rb = m_physics.CreateKinematicRigidBody(e, collider, transform->position, transform->rotation, true);
@@ -599,7 +653,7 @@ Entity ThirdPersonApp::MakePiston(XMVECTOR startPos, XMVECTOR endPos, XMVECTOR s
 	Entity e = m_entityManager.CreateEntity();
 	U64 hTransform = m_transformSystem.CreateComponent(e, startPos, Quaternion(), scale);
 	TransformComponent* transform = m_transformSystem.GetComponentByHandle(hTransform);
-	m_meshSystem.CreateComponent(e, hTransform, m_cube, m_stone);
+	m_meshSystem.CreateComponent(e, hTransform, m_cube, m_danger);
 	ColliderPtr collider = m_physics.CreateCollisionBox(1, 1, 1);
 	collider.SetScale(transform->scale);
 	RigidBody rb = m_physics.CreateKinematicRigidBody(e, collider, transform->position, transform->rotation, true);
