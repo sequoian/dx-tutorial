@@ -12,6 +12,7 @@ struct JumpComponent
 	U64 hVelocity;
 	U64 hLegCast;
 	float impulse;
+	bool heldPrevFrame;
 };
 
 class JumpSystem : public ComponentSystem<JumpComponent>
@@ -34,6 +35,7 @@ public:
 		comp->hVelocity = hVelocity;
 		comp->hLegCast = hLegCast;
 		comp->impulse = impulse;
+		comp->heldPrevFrame = false;
 
 		return handle;
 	}
@@ -46,10 +48,14 @@ public:
 			VelocityComponent* velocity = m_velocitySystem->GetComponentByHandle(comp->hVelocity);
 			LegCastComponent* legCast = m_legCastSystem->GetComponentByHandle(comp->hLegCast);
 
-			if (m_inputManager->GetGamepad().GetButtonState(GamepadButtons::A_BUTTON) && legCast->grounded)
+			bool buttonHeld = m_inputManager->GetGamepad().GetButtonState(GamepadButtons::A_BUTTON);
+
+			if (buttonHeld && legCast->grounded && !comp->heldPrevFrame)
 			{
 				velocity->velocity += Vector3(0, comp->impulse, 0);
 			}
+
+			comp->heldPrevFrame = buttonHeld;
 		}
 	}
 
