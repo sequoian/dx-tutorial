@@ -259,6 +259,7 @@ public:
 
 		// default spawn
 		e = m_entityManager.CreateEntity();
+		//m_spawnSystem.CreateComponent(e, Vector3(0, 3, -8), Quaternion(0, 180.0_rad, 0));
 		m_spawnSystem.CreateComponent(e, Vector3(40, 22, -24), Quaternion(0, 180.0_rad, 0));
 
 		// player
@@ -282,17 +283,26 @@ public:
 
 		// intro
 		MakePlatform(Vector3(0, 0, 0), Quaternion(), Vector3(15, 1, 15), m_sand);
+		MakePlatform(Vector3(0, 0, -20), Quaternion(), Vector3(1.5, 1, 5), m_sand);
+		MakeCoin(Vector3(0, 3, -23));
 		MakePlatform(Vector3(0, 2, 0), Quaternion(), Vector3(15, 1, 1), m_sand);
+		MakeCoin(Vector3(0, 6, 0));
 		MakePlatform(Vector3(0, 3.4, 22), Quaternion(65.0_rad, 0, 0), Vector3(5, 8, 1), m_sand);
+		MakeCoin(Vector3(0, 5, 21));
 		MakePlatform(Vector3(0, 6.7, 33.5), Quaternion(), Vector3(8, 1, 5), m_sand);
 		MakeCheckpoint(Vector3(0, 9, 33.5), Quaternion(), Vector3(0, 9, 33.5), Quaternion(), Vector3(7, 1, 4));
 		MakePlatform(Vector3(0, 7, 50), Quaternion(), Vector3(5, 1, 5), m_sand);
+		MakeCoin(Vector3(0, 10, 50));
 		MakePlatform(Vector3(18, 7, 50), Quaternion(), Vector3(5, 1, 5), m_sand);
+		MakePlatform(Vector3(18, 9, 50), Quaternion(), Vector3(2, 1, 2), m_sand);
+		MakeCoin(Vector3(18, 16, 50));
+		MakeCoin(Vector3(-9, 14, 50));
 		MakePlatform(Vector3(-18, 7, 50), Quaternion(), Vector3(5, 1, 5), m_sand);
 		MakeCheckpoint(Vector3(-18, 10, 50), Quaternion(), Vector3(-18, 10, 50), Quaternion(), Vector3(4, 1, 4));
 		MakePlatform(Vector3(-38, 7, 50), Quaternion(), Vector3(5, 1, 5), m_sand);
 		MakePiston(Vector3(-28, 12, 50), Vector3(-28, 7, 50), Vector3(0.5, 0.5, 5), 1.25, 0, 1.25, 0);
 		MakePlatform(Vector3(-38, 8.25, 44), Quaternion(), Vector3(5, 0.25, 1), m_sand);
+		MakeCoin(Vector3(-38, 10, 50));
 		MakeKillTrigger(Vector3(0, -10, 0), Vector3(80, 1, 80));
 
 		// stairs
@@ -305,43 +315,54 @@ public:
 
 		// climb up
 		MakePlatform(Vector3(-38, 12.5, 22), Quaternion(), Vector3(3, 0.5, 3), m_sand);
+		MakeCoin(Vector3(-38, 14.5, 22));
 		MakePlatform(Vector3(-48, 15, 15), Quaternion(), Vector3(3, 0.5, 3), m_sand);
 		MakeCheckpoint(Vector3(-48, 17, 15), Quaternion(), Vector3(-48, 17, 15), Quaternion(), Vector3(2, 1, 2));
+		MakeCoin(Vector3(-48, 17, 15));
 		MakePlatform(Vector3(-40, 18.5, 10), Quaternion(), Vector3(3, 0.5, 3), m_sand);
 		MakeCheckpoint(Vector3(-40, 20.5, 10), Quaternion(), Vector3(-40, 20.5, 10), Quaternion(), Vector3(2, 1, 2));
+		MakeCoin(Vector3(-40, 20.5, 10));
 
 		// obstacle course
 		MakePlatform(Vector3(-45, 20, -20), Quaternion(), Vector3(5, 0.5, 25), m_sand);
 		// obstacle 1
 		MakePiston(Vector3(-45, 23.5, -4), Vector3(-45, 30, -4), Vector3(4.5, 3, 2), 1.2, 0.25, 0.25, 1);
 		MakeCheckpoint(Vector3(-45, 22, -11.5), Quaternion(), Vector3(-45, 22, -11.5), Quaternion(), Vector3(5, 3, 0.5));
+		MakeCoin(Vector3(-45, 24, -11.5));
 		// obstacle 2
 		MakePiston(Vector3(-42.5, 23, -19), Vector3(-37.5, 23, -19), Vector3(2.5), .9, 0.25, 0.25, 1);
 		MakePiston(Vector3(-47.5, 23, -19), Vector3(-52.5, 23, -19), Vector3(2.5), .9, 0.25, 0.25, 1);
 		MakeCheckpoint(Vector3(-45, 22, -26), Quaternion(), Vector3(-45, 22, -26), Quaternion(), Vector3(5, 3, 0.5));
+		MakeCoin(Vector3(-45, 24, -26));
 		//obstacle 3
 		MakePiston(Vector3(-45, 23.5, -33), Vector3(-45, 17.5, -33), Vector3(4.5, 3, 0.5), 0.75, 0, 0.5, 0);
 
 		// obstacles with jumping
 		MakePlatform(Vector3(-37, 20, -40), Quaternion(), Vector3(3, 0.5, 5), m_sand);
+		MakeCoin(Vector3(-47, 25.5, -43));
 		MakeCheckpoint(Vector3(-37, 22, -40), Quaternion(), Vector3(-37, 22, -40), Quaternion(), Vector3(2, 1, 4));
 		MakePropeller(Vector3(-30, 20, -40), Quaternion(), Vector3(0.5, 0.5, 7), Vector3(1, 0, 0), 3);
 		MakePlatform(Vector3(-25, 20, -40), Quaternion(), Vector3(3, 1, 5), m_sand);
 		MakeCheckpoint(Vector3(-25, 22, -40), Quaternion(), Vector3(-25, 22, -40), Quaternion(), Vector3(2, 1, 4));
+		MakeCoin(Vector3(-25, 22, -40));
 		MakePropeller(Vector3(-17, 20, -40), Quaternion(), Vector3(0.5, 7, 0.5), Vector3(1, 0, 0), -2);
 		MakePropeller(Vector3(-17, 20, -40), Quaternion(), Vector3(0.5, 0.5, 7), Vector3(1, 0, 0), -2);
 		MakePlatform(Vector3(-10, 20, -40), Quaternion(), Vector3(3, 1, 5), m_sand);
 		MakeCheckpoint(Vector3(-10, 22, -40), Quaternion(), Vector3(-10, 22, -40), Quaternion(), Vector3(2, 1, 4));
+		MakeCoin(Vector3(-10, 22, -40));
 		MakePropeller(Vector3(-1, 20, -40), Quaternion(), Vector3(0.5, 7, 0.5), Vector3(1, 0, 0), -2);
 		MakePropeller(Vector3(-4, 20, -40), Quaternion(), Vector3(0.5, 7, 0.5), Vector3(1, 0, 0), 2);
 		MakePlatform(Vector3(5, 20, -40), Quaternion(), Vector3(3, 1, 5), m_sand);
 		MakeCheckpoint(Vector3(5, 22, -40), Quaternion(), Vector3(5, 22, -40), Quaternion(), Vector3(2, 1, 4));
+		MakeCoin(Vector3(5, 22, -40));
 		MakePropeller(Vector3(12, 20, -40), Quaternion(), Vector3(0.5, 0.5, 7), Vector3(1, 0, 0), -4);
 		MakePlatform(Vector3(20, 20, -40), Quaternion(), Vector3(3, 1, 3), m_sand);
 		MakeCheckpoint(Vector3(20, 22, -40), Quaternion(), Vector3(20, 22, -40), Quaternion(), Vector3(2, 1, 2));
+		MakeCoin(Vector3(20, 22, -40));
 		MakePlatform(Vector3(40, 20, -40), Quaternion(), Vector3(8, 1, 8), m_sand);
 		MakePropeller(Vector3(40, 22, -40), Quaternion(), Vector3(10, 0.5, 0.5), Vector3(0, 1, 0), -2);
 		MakePropeller(Vector3(40, 22, -40), Quaternion(), Vector3(0.5, 0.5, 10), Vector3(0, 1, 0), -2);
+		MakeCoin(Vector3(45.5, 25.5, -45.5));
 		MakePlatform(Vector3(40, 20, -24), Quaternion(), Vector3(4, 1, 8), m_sand);
 		MakeCheckpoint(Vector3(40, 22, -24), Quaternion(), Vector3(40, 22, -24), Quaternion(), Vector3(3, 1, 5));
 		MakePlatform(Vector3(40, 20, -7), Quaternion(), Vector3(9, 1, 9), m_sand);
@@ -366,8 +387,11 @@ public:
 		Entity doorEntity = e;
 		
 		// trigger
-		e = MakeCoin(Vector3(40, 24, -7));
+		e = MakeCoin(Vector3(40, 25, -7));
 		m_doorTriggerSystem.CreateComponent(e, doorEntity);
+
+		// end trigger
+		e = MakeCoin(Vector3(40, 25, 13));
 
 		return true;
 	}
