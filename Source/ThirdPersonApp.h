@@ -41,6 +41,7 @@
 #include "PistonSystem.h"
 #include "DoorSystem.h"
 #include "DoorTriggerSystem.h"
+#include "EndTriggerSystem.h"
 
 // preprocessor directives
 #define SHOW_TRIGGERS false;
@@ -240,6 +241,7 @@ public:
 		m_pistonSystem.StartUp(1, m_entityManager, m_transformSystem);
 		m_doorSystem.StartUp(1, m_entityManager, m_transformSystem, m_eventBus);
 		m_doorTriggerSystem.StartUp(1, m_entityManager, m_eventBus);
+		m_endTriggerSystem.StartUp(1, m_entityManager, m_eventBus, m_timer, m_deathSystem, m_coinSystem);
 
 		// Create Entities
 		Entity e;
@@ -259,11 +261,11 @@ public:
 
 		// default spawn
 		e = m_entityManager.CreateEntity();
-		//m_spawnSystem.CreateComponent(e, Vector3(0, 3, -8), Quaternion(0, 180.0_rad, 0));
-		m_spawnSystem.CreateComponent(e, Vector3(40, 22, -24), Quaternion(0, 180.0_rad, 0));
+		m_spawnSystem.CreateComponent(e, Vector3(0, 3, -8), Quaternion(0, 180.0_rad, 0));
 
 		// player
 		e = m_entityManager.CreateEntity();
+		Entity player = e;
 		const SpawnComponent* defaultSpawn = m_spawnSystem.GetActiveSpawn();
 		hTransform = m_transformSystem.CreateComponent(e, defaultSpawn->position, defaultSpawn->rotation);
 		transform = m_transformSystem.GetComponentByHandle(hTransform);
@@ -392,6 +394,7 @@ public:
 
 		// end trigger
 		e = MakeCoin(Vector3(40, 25, 13));
+		m_endTriggerSystem.CreateComponent(e, player);
 
 		return true;
 	}
@@ -497,6 +500,7 @@ private:
 	PistonSystem m_pistonSystem;
 	DoorSystem m_doorSystem;
 	DoorTriggerSystem m_doorTriggerSystem;
+	EndTriggerSystem m_endTriggerSystem;
 	
 // Cache resources for use in factory methods
 private:

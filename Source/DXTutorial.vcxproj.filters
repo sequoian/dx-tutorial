@@ -306,5 +306,8 @@
     <ClInclude Include="PistonSystem.h">
       <Filter>App\Component Systems</Filter>
     </ClInclude>
+    <ClInclude Include="EndTriggerSystem.h">
+      <Filter>App\Component Systems</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

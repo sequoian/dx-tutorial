@@ -189,6 +189,7 @@
     <ClInclude Include="DeathSystem.h" />
     <ClInclude Include="DoorSystem.h" />
     <ClInclude Include="DoorTriggerSystem.h" />
+    <ClInclude Include="EndTriggerSystem.h" />
     <ClInclude Include="EngineEvents.h" />
     <ClInclude Include="JumpSystem.h" />
     <ClInclude Include="KinematicGravitySystem.h" />

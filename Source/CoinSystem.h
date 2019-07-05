@@ -40,6 +40,16 @@ public:
 	{
 	}
 
+	U32 GetNumCollected()
+	{
+		return coinsCollected;
+	}
+
+	U32 GetTotal()
+	{
+		return coinsCollected + m_pool.Size();
+	}
+
 private:
 	void OnCollision(CollisionInfo* collision) override
 	{
@@ -49,7 +59,6 @@ private:
 			coin->collected = true;
 			coinsCollected++;
 			m_entityManager->Destroy(collision->self.GetEntity());
-			DEBUG_PRINT("Collected %u coins", coinsCollected);
 		}
 	}
 

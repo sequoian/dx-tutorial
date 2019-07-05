@@ -6,13 +6,14 @@
 #include "Types.h"
 #include "EventBus.h"
 #include "AppEvents.h"
-#include <vector>
+#include <unordered_set>
 
 
 struct DeathComponent
 {
 	U64 hTransform;
 	U64 hVelocity;
+	U32 deathCount;
 };
 
 
@@ -38,6 +39,7 @@ public:
 
 		comp->hTransform = hTransform;
 		comp->hVelocity = hVelocity;
+		comp->deathCount = 0;
 
 		return handle;
 	}
@@ -49,9 +51,8 @@ public:
 	inline void EndFrame()
 	{
 		// respawn entities at end of the frame
-		for (int i = 0; i < m_condemned.size(); ++i)
+		for (auto comp : m_condemned)
 		{
-			DeathComponent* comp = m_condemned[i];
 			TransformComponent* transform = m_transformSystem->GetComponentByHandle(comp->hTransform);
 			VelocityComponent* velocity = m_velocitySystem->GetComponentByHandle(comp->hVelocity);
 			const SpawnComponent* spawn = m_spawnSystem->GetActiveSpawn();
@@ -59,6 +60,8 @@ public:
 			transform->position = spawn->position;
 			transform->rotation = spawn->rotation;
 			velocity->velocity = Vector3(0);
+
+			comp->deathCount++;
 		}
 		m_condemned.clear();
 	}
@@ -67,15 +70,15 @@ protected:
 	void OnDeath(OnDeathEvent* deathInfo)
 	{
 		DeathComponent* comp = FindComponent(deathInfo->deceased);
-		if (comp)
+		if (comp);
 		{
-			m_condemned.push_back(comp);
-		}
+			m_condemned.insert(comp);
+		}		
 	}
 
 protected:
 	TransformSystem* m_transformSystem;
 	VelocitySystem* m_velocitySystem;
 	SpawnSystem* m_spawnSystem;
-	std::vector<DeathComponent*> m_condemned;
+	std::unordered_set<DeathComponent*> m_condemned;
 };
