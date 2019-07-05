@@ -39,6 +39,8 @@
 #include "DeathSystem.h"
 #include "CheckpointTriggerSystem.h"
 #include "PistonSystem.h"
+#include "DoorSystem.h"
+#include "DoorTriggerSystem.h"
 
 // preprocessor directives
 #define SHOW_TRIGGERS false;
@@ -236,6 +238,8 @@ public:
 		m_deathSystem.StartUp(1, m_entityManager, m_eventBus, m_transformSystem, m_velocitySystem, m_spawnSystem);
 		m_checkpointTriggerSystem.StartUp(1, m_entityManager, m_eventBus, m_spawnSystem);
 		m_pistonSystem.StartUp(1, m_entityManager, m_transformSystem);
+		m_doorSystem.StartUp(1, m_entityManager, m_transformSystem, m_eventBus);
+		m_doorTriggerSystem.StartUp(1, m_entityManager, m_eventBus);
 
 		// Create Entities
 		Entity e;
@@ -275,7 +279,6 @@ public:
 		m_kinematicRBSystem.CreateComponent(e, hTransform, hRigidBody);
 		m_kinematicCCSystem.CreateComponent(e, hTransform);
 		m_deathSystem.CreateComponent(e, hTransform, hVelocity);
-
 
 		// intro
 		MakePlatform(Vector3(0, 0, 0), Quaternion(), Vector3(15, 1, 15), m_sand);
@@ -344,25 +347,27 @@ public:
 		MakePlatform(Vector3(40, 20, -7), Quaternion(), Vector3(9, 1, 9), m_sand);
 		MakeKillTrigger(Vector3(0, 15, -40), Vector3(50, 1, 20));
 		
-
 		// doorway
 		MakePlatform(Vector3(34, 24, 2.5), Quaternion(), Vector3(3, 3, 0.5), m_sand);
-		MakePlatform(Vector3(40, 30, 2.5), Quaternion(), Vector3(3, 3, 0.5), m_sand);
 		MakePlatform(Vector3(46, 24, 2.5), Quaternion(), Vector3(3, 3, 0.5), m_sand);
 		MakePlatform(Vector3(40, 20, 11), Quaternion(), Vector3(9, 1, 9), m_sand);
 
-		/*
-		// kill trigger under platforms
+		// door
 		e = m_entityManager.CreateEntity();
-		hTransform = m_transformSystem.CreateComponent(e, Vector3(0, -25, -25), Quaternion(), Vector3(40, 1, 40));
+		hTransform = m_transformSystem.CreateComponent(e, Vector3(40, 24, 2.5), Quaternion(), Vector3(3, 3, 0.5));
 		transform = m_transformSystem.GetComponentByHandle(hTransform);
-		//m_meshSystem.CreateComponent(e, hTransform, modelCube, matStone);
+		m_meshSystem.CreateComponent(e, hTransform, modelCube, matSand);
 		collider = m_physics.CreateCollisionBox(1, 1, 1);
 		collider.SetScale(transform->scale);
-		rb = m_physics.CreateStaticRigidBody(e, collider, transform->position, transform->rotation, true);
-		m_rigidBodySystem.CreateComponent(e, rb);
-		m_deadlyTouchSystem.CreateComponent(e);
-		*/
+		rb = m_physics.CreateKinematicRigidBody(e, collider, transform->position, transform->rotation);
+		hRigidBody = m_rigidBodySystem.CreateComponent(e, rb);
+		m_kinematicRBSystem.CreateComponent(e, hTransform, hRigidBody);
+		m_doorSystem.CreateComponent(e, hTransform, transform->position, Vector3(40, 30, 2.5), 5);
+		Entity doorEntity = e;
+		
+		// trigger
+		e = MakeCoin(Vector3(40, 24, -7));
+		m_doorTriggerSystem.CreateComponent(e, doorEntity);
 
 		return true;
 	}
@@ -392,6 +397,7 @@ public:
 		m_velocitySystem.Execute(dt);
 		m_rotatorSystem.Execute(dt);
 		m_pistonSystem.Execute(dt);
+		m_doorSystem.Execute(dt);
 		
 		m_kinematicRBSystem.Execute(dt);
 		m_physics.RunSimulation(dt);
@@ -465,6 +471,8 @@ private:
 	DeathSystem m_deathSystem;
 	CheckpointTriggerSystem m_checkpointTriggerSystem;
 	PistonSystem m_pistonSystem;
+	DoorSystem m_doorSystem;
+	DoorTriggerSystem m_doorTriggerSystem;
 	
 // Cache resources for use in factory methods
 private:
