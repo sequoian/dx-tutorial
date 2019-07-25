@@ -11,9 +11,9 @@ struct LegCastComponent
 {
 	U64 hParentTransform;
 	U64 hParentVelocity;
+	XMVECTOR groundNormal;
 	float legLength;
 	float maxSlopeAngle;
-	float angleOfGround;
 	bool grounded;
 };
 
@@ -40,6 +40,7 @@ public:
 		comp->maxSlopeAngle = maxSlopeAngle;
 		comp->hParentVelocity = hVelocity;
 		comp->grounded = false;
+		comp->groundNormal = Vector3(0, 1, 0);
 
 		return handle;
 	}
@@ -54,6 +55,11 @@ public:
 
 			XMVECTOR rayStart = transform->position;
 			XMVECTOR rayEnd = XMVectorAdd(Vector3(0, -comp->legLength, 0), rayStart);
+
+			if (!comp->grounded && velocity->velocity.m128_f32[1] > 0)
+			{
+				return;
+			}
 
 			// This would be more efficient to use the closest raycast function combined with collision masks to filter out triggers
 			auto result = m_physics->RayCastAll(rayStart, rayEnd);
@@ -90,6 +96,7 @@ public:
 
 				// reposition above ground
 				XMVECTOR normal = Physics::VecToDX(normalOnB);
+				comp->groundNormal = normal;
 				XMVECTOR diff = Physics::VecToDX(ptA - ptB);
 				transform->position += diff;
 

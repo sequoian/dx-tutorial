@@ -278,7 +278,7 @@ public:
 		m_gravitySystem.StartUp(1, m_entityManager, m_transformSystem, m_velocitySystem, m_legCastSystem);
 		m_rigidBodySystem.StartUp(2, m_entityManager, m_physics);
 		m_legCastSystem.StartUp(1, m_entityManager, m_transformSystem, m_physics, m_velocitySystem);
-		m_movementSystem.StartUp(1, m_entityManager, m_transformSystem, m_inputManager, m_pivotCamSystem, m_velocitySystem);
+		m_movementSystem.StartUp(1, m_entityManager, m_transformSystem, m_inputManager, m_pivotCamSystem, m_velocitySystem, m_legCastSystem);
 		m_velocitySystem.StartUp(1, m_entityManager, m_transformSystem, m_physics);
 		m_kinematicRBSystem.StartUp(1, m_entityManager, m_transformSystem, m_rigidBodySystem);
 		m_kinematicCCSystem.StartUp(1, m_entityManager, m_transformSystem, m_eventBus);
@@ -325,7 +325,7 @@ public:
 		U64 hPivotCam = m_pivotCamSystem.CreateComponent(e, hTransform, hCamTransform, 5, 5);
 		U64 hLegCast =  m_legCastSystem.CreateComponent(e, hTransform, hVelocity, 1.5);
 		m_gravitySystem.CreateComponent(e, hTransform, hVelocity, hLegCast, 0.3);
-		m_movementSystem.CreateComponent(e, hTransform, hPivotCam, hVelocity, 1);
+		m_movementSystem.CreateComponent(e, hTransform, hPivotCam, hVelocity, hLegCast, 1);
 		m_jumpSystem.CreateComponent(e, hVelocity, hLegCast, 0.2);
 		collider = m_physics.CreateCollisionCapsule(0.5, 1);
 		rb = m_physics.CreateCharacterBody(e, collider, transform->position, transform->rotation);
