@@ -4,6 +4,7 @@
 #include "TransformSystem.h"
 #include "InputManager.h"
 #include "MathUtility.h"
+#include "Physics.h"
 
 struct PivotCamComponent
 {
@@ -19,11 +20,12 @@ struct PivotCamComponent
 class PivotCamSystem : public ComponentSystem<PivotCamComponent>
 {
 public:
-	bool StartUp(U32 numComponents, EntityManager& em, TransformSystem& transformSystem, InputManager& inputManager)
+	bool StartUp(U32 numComponents, EntityManager& em, TransformSystem& transformSystem, InputManager& inputManager, Physics& physics)
 	{
 		Parent::StartUp(numComponents, em);
 		m_transformSystem = &transformSystem;
 		m_inputManager = &inputManager;
+		m_physics = &physics;
 		return true;
 	}
 
@@ -59,6 +61,8 @@ public:
 			cam->position = XMVectorSubtract(parent->position, dir);
 
 			LookAtParent(comp, parent, cam);
+
+			AdjustSpring(comp);
 		}
 	}
 
@@ -103,7 +107,53 @@ protected:
 		cam->scale = scale;
 	}
 
+	void AdjustSpring(PivotCamComponent* comp)
+	{
+		TransformComponent* parentTransform = m_transformSystem->GetComponentByHandle(comp->hParentTransform);
+		TransformComponent* camTransform = m_transformSystem->GetComponentByHandle(comp->hCameraTransform);
+
+		XMVECTOR rayStart = parentTransform->position;
+		XMVECTOR rayEnd = camTransform->position;
+
+		// This would be more efficient to use the closest raycast function combined with collision masks to filter out triggers
+		auto result = m_physics->RayCastAll(rayStart, rayEnd);
+		if (result.hasHit())
+		{
+			RigidBody rigidBody;
+			int idx = -1;
+			float closestFraction = 1;
+
+			// filter out triggers and get closest object
+			for (int i = 0; i < result.m_collisionObjects.size(); ++i)
+			{
+				if (result.m_hitFractions[i] < closestFraction)
+				{
+					const btRigidBody* crb = static_cast<const btRigidBody*>(result.m_collisionObjects.at(i));
+					btRigidBody* rb = const_cast<btRigidBody*>(crb);
+					rigidBody = RigidBody(rb);
+					if (!rigidBody.IsTrigger())
+					{
+						idx = i;
+						closestFraction = result.m_hitFractions[i];
+					}
+				}
+			}
+
+			// return if it's only hit triggers
+			if (idx < 0)
+			{
+				return;
+			}
+
+			XMVECTOR ptA = Physics::VecToDX(result.m_hitPointWorld[idx]);
+
+			// set camera outside obstruction
+			camTransform->position = ptA;
+		}
+	}
+
 protected:
 	TransformSystem* m_transformSystem;
 	InputManager* m_inputManager;
+	Physics* m_physics;
 };

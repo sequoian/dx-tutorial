@@ -69,6 +69,8 @@ public:
 				RigidBody rigidBody;
 				int idx = -1;
 				float closestFraction = 1;
+				
+				// filter out triggers
 				for (int i = 0; i < result.m_collisionObjects.size(); ++i)
 				{
 					if (result.m_hitFractions[i] < closestFraction)
@@ -91,8 +93,8 @@ public:
 					return;
 				}
 
-				const auto& ptB = result.m_rayToWorld + btVector3(0, 0.01, 0);
-				const auto& ptA = result.m_hitPointWorld[idx];
+				const auto& ptB = result.m_rayToWorld;
+				const auto& ptA = result.m_hitPointWorld[idx] - btVector3(0, 0.01, 0); // extend ray so player stays grounded
 				const auto& normalOnB = result.m_hitNormalWorld[idx];
 
 				// reposition above ground
