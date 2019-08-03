@@ -340,7 +340,7 @@ public:
 		MakeCoin(Vector3(0, 3, -23));
 		MakePlatform(Vector3(0, 2, 0), Quaternion(), Vector3(15, 1, 1), m_stone);
 		MakeCoin(Vector3(0, 6, 0));
-		MakePlatform(Vector3(0, 3.4, 22), Quaternion(65.0_rad, 0, 0), Vector3(5, 8, 1), m_stone);
+		MakePlatform(Vector3(0, 3.41, 21.7), Quaternion(65.0_rad, 0, 0), Vector3(5, 8, 1), m_stone);
 		MakeCoin(Vector3(0, 5, 21));
 		MakePlatform(Vector3(0, 6.7, 33.5), Quaternion(), Vector3(8, 1, 5), m_stone);
 		MakeCheckpoint(Vector3(0, 9, 33.5), Quaternion(), Vector3(0, 9, 33.5), Quaternion(), Vector3(7, 1, 4));
@@ -473,14 +473,15 @@ public:
 		m_jumpSystem.Execute(dt);
 		m_gravitySystem.Execute(dt);
 		m_velocitySystem.Execute(dt);
+
 		m_rotatorSystem.Execute(dt);
 		m_pistonSystem.Execute(dt);
 		m_doorSystem.Execute(dt);
 		
 		m_kinematicRBSystem.Execute(dt);
 		m_physics.RunSimulation(dt);
-		
 		m_legCastSystem.Execute(dt);
+
 		m_pivotCamSystem.Execute(dt);
 		m_transformSystem.Execute(dt);
 		m_cameraSystem.Execute(dt);

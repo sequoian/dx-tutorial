@@ -47,14 +47,13 @@ public:
 			// still need transform?
 			//TransformComponent* transform = m_transformSystem->GetComponentByHandle(comp->hTransform);
 			VelocityComponent* velocity = m_velocitySystem->GetComponentByHandle(comp->hVelocity);
-			velocity->velocity += Vector3(0, -comp->gravity * deltaTime, 0);
 
-			// still need leg cast?
-			//LegCastComponent* legCast = m_legCastSystem->GetComponentByHandle(comp->hLegCast);
-			//if (!legCast->grounded)
-			//{
-			//	velocity->velocity += Vector3(0, -comp->gravity * deltaTime, 0);
-			//}
+			// do not apply gravity while grounded
+			LegCastComponent* legCast = m_legCastSystem->GetComponentByHandle(comp->hLegCast);
+			if (!legCast->grounded)
+			{
+				velocity->velocity += Vector3(0, -comp->gravity * deltaTime, 0);
+			}
 		}
 	}
 

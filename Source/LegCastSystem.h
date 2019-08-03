@@ -56,6 +56,7 @@ public:
 			XMVECTOR rayStart = transform->position;
 			XMVECTOR rayEnd = XMVectorAdd(Vector3(0, -comp->legLength, 0), rayStart);
 
+			// do not vault onto ledges while jumping
 			if (!comp->grounded && velocity->velocity.m128_f32[1] > 0)
 			{
 				return;
@@ -90,7 +91,7 @@ public:
 					return;
 				}
 
-				const auto& ptB = result.m_rayToWorld;
+				const auto& ptB = result.m_rayToWorld + btVector3(0, 0.01, 0);
 				const auto& ptA = result.m_hitPointWorld[idx];
 				const auto& normalOnB = result.m_hitNormalWorld[idx];
 
@@ -98,18 +99,18 @@ public:
 				XMVECTOR normal = Physics::VecToDX(normalOnB);
 				comp->groundNormal = normal;
 				XMVECTOR diff = Physics::VecToDX(ptA - ptB);
-				transform->position += diff;
+				transform->position += XMVectorMultiply(normal, XMVector3Dot(diff, normal));
 
-				// cancel out gravity velocity
-				XMVECTOR gravNormal = Vector3(0, -1, 0);
-				XMVECTOR velOfGravity = XMVectorMultiply(gravNormal, XMVector3Dot(velocity->velocity, gravNormal));
-				velocity->velocity -= velOfGravity;
-
+				// adjust velocity
+				XMVECTOR dot = XMVector3Dot(normal, velocity->velocity);
+				velocity->velocity -= XMVectorScale(normal, dot.m128_f32[0]);
+				
 				comp->grounded = true;
 			}
 			else
 			{
 				comp->grounded = false;
+				comp->groundNormal = Vector3(0, 1, 0);
 			}
 		}
 	}

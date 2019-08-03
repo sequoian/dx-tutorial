@@ -10,6 +10,7 @@ struct VelocityComponent
 {
 	U64 hTransform;
 	XMVECTOR velocity;
+	XMVECTOR prevPos;
 };
 
 
@@ -31,6 +32,7 @@ public:
 
 		comp->hTransform = hTransform;
 		comp->velocity = Vector3(0);
+		comp->prevPos = Vector3(0);
 
 		return handle;
 	}
@@ -42,7 +44,23 @@ public:
 			VelocityComponent* comp = m_pool[i];
 			TransformComponent* transform = m_transformSystem->GetComponentByHandle(comp->hTransform);
 
+			comp->prevPos = transform->position;
 			transform->position += comp->velocity;
+		}
+	}
+
+	// Verlet Integration
+	inline void LateExecute(float deltaTime)
+	{
+		for (U32 i = 0; i < m_pool.Size(); i++)
+		{
+			VelocityComponent* comp = m_pool[i];
+			TransformComponent* transform = m_transformSystem->GetComponentByHandle(comp->hTransform);
+
+			XMVECTOR currentPos = transform->position;
+			comp->velocity = XMVectorSubtract(currentPos, comp->prevPos);
+
+			XMVECTOR vel = comp->velocity;
 		}
 	}
 

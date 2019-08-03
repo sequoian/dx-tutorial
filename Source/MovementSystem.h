@@ -6,6 +6,7 @@
 #include "InputManager.h"
 #include "MathUtility.h"
 #include "VelocitySystem.h"
+#include <math.h>
 
 struct MovementComponent
 {
@@ -71,51 +72,38 @@ protected:
 
 		// handle deceleration
 		xzVel *= 0.9;
-		
+
 		if (xInput != 0 || zInput != 0)
 		{
 			// set movement vector based on input
 			XMVECTOR movement = XMVectorSet(xInput, 0, zInput, 1);
 
-			// rotate relative to camera yaw
+			// rotate movement relative to camera yaw
 			XMVECTOR quat = XMQuaternionRotationRollPitchYaw(0, camYaw, 0);
 			movement = XMVector3Rotate(movement, quat);
+
+			// rotate character so they point toward their velocity
+			XMVECTOR pos, rot, scale;
+			XMMATRIX lookAt = DirectX::XMMatrixLookAtLH(transform->position, XMVectorAdd(transform->position, movement), Vector3(0, 1, 0));
+			lookAt = XMMatrixInverse(nullptr, lookAt);
+			DirectX::XMMatrixDecompose(&scale, &rot, &pos, lookAt);
+			// need to turn character around
+			transform->rotation = XMQuaternionMultiply(rot, XMQuaternionRotationRollPitchYaw(0, 180.0_rad, 0));
+
+			// project movement along ground slope
+			float dot = XMVector3Dot(groundNormal, movement).m128_f32[0];
+			XMVECTOR parallel = dot * groundNormal;
+			XMVECTOR perpendicular = XMVectorSubtract(movement, parallel);
+			movement = perpendicular;
 
 			// scale based on movespeed
 			movement *= moveSpeed * dt;
 
 			// add movement to velocity
 			xzVel += movement;
-			
-			// set rotation
-			XMVECTOR pos, rot, scale;
-			// character looks where they are going
-			XMMATRIX lookAt = DirectX::XMMatrixLookAtLH(transform->position, XMVectorAdd(transform->position, xzVel), Vector3(0, 1, 0));
-			lookAt = XMMatrixInverse(nullptr, lookAt);
-			DirectX::XMMatrixDecompose(&scale, &rot, &pos, lookAt);
-			// need to turn character around
-			transform->rotation = XMQuaternionMultiply(rot, XMQuaternionRotationRollPitchYaw(0, 180.0_rad, 0));
 		}
 
-		// move along ground slope
-		if (grounded)
-		{
-			float dot = XMVector3Dot(groundNormal, xzVel).m128_f32[0];
-			XMVECTOR parallel = dot * groundNormal;
-			XMVECTOR perpendicular = XMVectorSubtract(xzVel, parallel);
-
-			// inefficient
-			float xzMag = XMVector3Length(xzVel).m128_f32[0];
-			XMVECTOR perpNorm = XMVector3Normalize(perpendicular);
-
-			DEBUG_PRINT("%f, %f, %f", perpNorm.m128_f32[0], perpNorm.m128_f32[1], perpNorm.m128_f32[2]);
-				
-			xzVel = xzMag * perpNorm;
-		}
-
-		// set velocity
-		//DEBUG_PRINT("%f", XMVector3Length(xzVel).m128_f32[0]);
-
+		// recombine xyz velocity
 		velocity->velocity = XMVectorAdd(xzVel, yVel);
 	}
 

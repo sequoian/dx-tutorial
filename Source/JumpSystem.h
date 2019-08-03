@@ -52,7 +52,7 @@ public:
 
 			if (buttonHeld && legCast->grounded && !comp->heldPrevFrame)
 			{
-				velocity->velocity += Vector3(0, comp->impulse, 0);
+				velocity->velocity.m128_f32[1] = comp->impulse;
 			}
 
 			comp->heldPrevFrame = buttonHeld;
