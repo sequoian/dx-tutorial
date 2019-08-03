@@ -12,6 +12,7 @@ struct PivotCamComponent
 	U64 hCameraTransform;
 	XMVECTOR rotation;
 	float length;
+	float maxLength;
 	float pitch;
 	float yaw;
 	float lookSpeed;
@@ -37,6 +38,7 @@ public:
 		comp->hParentTransform = hParentTransform;
 		comp->hCameraTransform = hCameraTransform;
 		comp->length = length;
+		comp->maxLength = length;
 		comp->lookSpeed = 5;
 		comp->pitch = pitch;
 		comp->yaw = yaw;
@@ -55,14 +57,9 @@ public:
 
 			HandleInput(comp, deltaTime);
 
-			// set camera position
-			XMVECTOR dir = XMVector3Rotate(Vector3(0, 0, 1), comp->rotation);
-			dir *= comp->length;
-			cam->position = XMVectorSubtract(parent->position, dir);
+			AdjustSpring(comp, parent, cam, deltaTime);
 
 			LookAtParent(comp, parent, cam);
-
-			AdjustSpring(comp);
 		}
 	}
 
@@ -107,13 +104,16 @@ protected:
 		cam->scale = scale;
 	}
 
-	void AdjustSpring(PivotCamComponent* comp)
+	void AdjustSpring(PivotCamComponent* comp, TransformComponent* parent, TransformComponent* cam, float dt)
 	{
-		TransformComponent* parentTransform = m_transformSystem->GetComponentByHandle(comp->hParentTransform);
-		TransformComponent* camTransform = m_transformSystem->GetComponentByHandle(comp->hCameraTransform);
+		// set the rotation of the cam relative to the parent
+		XMVECTOR dir = XMVector3Rotate(Vector3(0, 0, 1), comp->rotation);
 
-		XMVECTOR rayStart = parentTransform->position;
-		XMVECTOR rayEnd = camTransform->position;
+		// set temporary position to use in raycast
+		cam->position = XMVectorSubtract(parent->position, dir * comp->maxLength);
+
+		XMVECTOR rayStart = parent->position;
+		XMVECTOR rayEnd = cam->position;
 
 		// This would be more efficient to use the closest raycast function combined with collision masks to filter out triggers
 		auto result = m_physics->RayCastAll(rayStart, rayEnd);
@@ -148,8 +148,18 @@ protected:
 			XMVECTOR ptA = Physics::VecToDX(result.m_hitPointWorld[idx]);
 
 			// set camera outside obstruction
-			camTransform->position = ptA;
+			// reduce the length by a small amount to keep the camera out of walls
+			comp->length = XMVector3Length(XMVectorSubtract(parent->position, ptA)).m128_f32[0] - 0.1;
 		}
+		else
+		{
+			// move back to max length over time
+			float diff = comp->maxLength - comp->length;
+			comp->length += diff * dt * 2;
+		}
+
+		// set final position using the calculated length
+		cam->position = cam->position = XMVectorSubtract(parent->position, dir * comp->length);
 	}
 
 protected:

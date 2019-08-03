@@ -25,6 +25,11 @@ inline float operator "" _rad(long double degrees)
 	return DegreesToRadians(degrees);
 }
 
+inline float Lerp(float start, float end, float t)
+{
+	return start + t * (end - start);
+}
+
 // =======================================================================
 // DirectX Math functions
 // =======================================================================
