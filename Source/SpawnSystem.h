@@ -7,19 +7,23 @@ struct SpawnComponent
 {
 	XMVECTOR position;
 	XMVECTOR rotation;
+	float camPitch;
+	float camYaw;
 };
 
 
 class SpawnSystem : public ComponentSystem<SpawnComponent>
 {
 public:
-	U64 CreateComponent(Entity e, XMVECTOR position, XMVECTOR rotation)
+	U64 CreateComponent(Entity e, XMVECTOR position, XMVECTOR rotation, float camPitch = 0, float camYaw = 0)
 	{
 		U64 handle = Parent::CreateComponent(e);
 		SpawnComponent* comp = GetComponentByHandle(handle);
 
 		comp->position = position;
 		comp->rotation = rotation;
+		comp->camPitch = camPitch;
+		comp->camYaw = camYaw;
 
 		return handle;
 	}
